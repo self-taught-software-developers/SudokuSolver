@@ -44,7 +44,7 @@
 Here's why:
 * 
 * 
-*  --> -->
+*  -->
 
 ### Built With
 
