@@ -30,10 +30,9 @@ class MainActivity : ComponentActivity() {
 }
 
 
-//test comment
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Dolphin $name!")
+    Text(text = "Android Studio Dolphin $name!")
 }
 
 @Preview(showBackground = true)
