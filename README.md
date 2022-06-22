@@ -48,23 +48,23 @@ Here's why:
 
 ### Built With
 
-* [Kotlin](https://kotlinlang.org/)
-* [Coroutines](https://developer.android.com/kotlin/coroutines)
-* [ML Kit](https://developers.google.com/ml-kit)
-* [Jetpack Compose](https://developer.android.com/jetpack)
-* [DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
-* [Room](https://developer.android.com/training/data-storage/room)
-* [Dagger-Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
-* [Androidx](https://developer.android.com/jetpack/androidx)
-* [MVVM](https://developer.android.com/topic/architecture/intro)
+* [Kotlin - Primary Language](https://kotlinlang.org/)
+* [Coroutines - Async Jobs](https://developer.android.com/kotlin/coroutines)
+* [ML Kit - Machine Learning](https://developers.google.com/ml-kit)
+* [Jetpack Compose - UI Components](https://developer.android.com/jetpack)
+* [DataStore - Flag Storage](https://developer.android.com/topic/libraries/architecture/datastore)
+* [Room - SQLite Storage](https://developer.android.com/training/data-storage/room)
+* [Dagger-Hilt Dependency Injection](https://developer.android.com/training/dependency-injection/hilt-android)
+* [Androidx - MAD Principles](https://developer.android.com/jetpack/androidx)
+* [MVVM - MAD Architecture](https://developer.android.com/topic/architecture/intro)
 
 <!-- GETTING STARTED -->
 <!-- ## Getting Started
  -->
 ### Prerequisites
 
-* [Chipmunk Production](https://developer.android.com/studio)
-* [Dolphin Beta 3](https://developer.android.com/studio/preview)
+* [Chipmunk - Production](https://developer.android.com/studio)
+* [Dolphin - Beta](https://developer.android.com/studio/preview)
 * [Java 11](https://docs.oracle.com/en/java/javase/11/)
 
 ### Installation
