@@ -67,6 +67,11 @@ Here's why:
 * [Dolphin - Beta](https://developer.android.com/studio/preview)
 * [Java 11](https://docs.oracle.com/en/java/javase/11/)
 
+### Reference UI
+
+* [By - Andrii Chernysh](https://dribbble.com/shots/16990994-Concept-for-Sudoku-App)
+* [By - Genadi Georgiev](https://dribbble.com/shots/17376960-Sudoku-Game-UX-UI-Mobile-App-Game)
+ 
 ### Installation
 
 1. Clone the repo
