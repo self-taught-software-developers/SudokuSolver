@@ -29,6 +29,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+//test comment
 @Composable
 fun Greeting(name: String) {
     Text(text = "Dolphin $name!")
