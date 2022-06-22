@@ -39,12 +39,12 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
-
+<!-- ## About The Project
+<!-- 
 Here's why:
 * 
 * 
-* 
+*  --> -->
 
 ### Built With
 
@@ -59,9 +59,8 @@ Here's why:
 * [MVVM](https://developer.android.com/topic/architecture/intro)
 
 <!-- GETTING STARTED -->
-## Getting Started
-
-
+<!-- ## Getting Started
+ -->
 ### Prerequisites
 
 * [Chipmunk Production](https://developer.android.com/studio)
@@ -76,8 +75,8 @@ Here's why:
    ```
    
 <!-- USAGE EXAMPLES -->
-## Usage
-
+<!-- ## Usage
+ -->
 <!-- ROADMAP -->
 ## Roadmap
 
@@ -142,8 +141,8 @@ Project Lead:
 Project Organization: 
 * [Self-Taught Software Developers](https://www.linkedin.com/company/self-taught-software-developers/)
 
-## Acknowledgments
-
+<!-- ## Acknowledgments
+ -->
 <!-- 
 * [Choose an Open Source License](https://choosealicense.com)
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
