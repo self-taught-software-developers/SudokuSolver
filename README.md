@@ -52,6 +52,7 @@ Here's why:
 * [Coroutines - Async Jobs](https://developer.android.com/kotlin/coroutines)
 * [ML Kit - Machine Learning](https://developers.google.com/ml-kit)
 * [Jetpack Compose - UI Components](https://developer.android.com/jetpack)
+* [Accompanist - UI Helpers](https://google.github.io/accompanist/)
 * [DataStore - Flag Storage](https://developer.android.com/topic/libraries/architecture/datastore)
 * [Room - SQLite Storage](https://developer.android.com/training/data-storage/room)
 * [Dagger-Hilt Dependency Injection](https://developer.android.com/training/dependency-injection/hilt-android)
