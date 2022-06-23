@@ -28,9 +28,9 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/27d982fd421a3fff8904604313131958/transformed/material-icons-core-1.2.0-rc01-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/970c8d97344556bcee8d84fe467e3b58/transformed/animation-1.1.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/e78f2078fb5af507667af54b0aa5d730/transformed/foundation-layout-1.2.0-rc01-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/7930558b2cdfc74cf622847944731dab/transformed/ui-1.2.0-rc01-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/a72537d826915d26241cdb0c2efe4868/transformed/runtime-saveable-1.2.0-rc01-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/dcda9e694a2647ebd2410c823342ab2b/transformed/runtime-1.2.0-rc01-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/997562d9b6be745194991f32e9846c82/transformed/ui-1.2.0-rc02-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/4f837cb165439e2b9023d4fa46206a5b/transformed/runtime-saveable-1.2.0-rc02-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/71e42e0d7690194e2db0ad5f02cef0fa/transformed/runtime-1.2.0-rc02-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/d60e9febeaee264e28d69e55d7e3d435/transformed/animation-core-1.1.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/e4d1f213897202cf97d7f1c1eee46e97/transformed/datastore-preferences-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/3299e4bafa3163b3a8f8fd320e7f04ab/transformed/datastore-1.0.0-api.jar</arg>
@@ -44,9 +44,9 @@
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/df9559eb589799ff44c0abead6a0a470/transformed/core-ktx-1.8.0-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/2cacdc8e6348287f9f697896e744d9dd/transformed/hilt-android-2.42-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.6.0/da6bdc87391322974a43ccc00a25536ae74dad51/kotlin-stdlib-jdk7-1.6.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/98132048a533c42c033e65e6121572da/transformed/hilt-android-2.38.1-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/8cd2eddbe29510ddf033f246ab82edcb/transformed/fragment-1.3.2-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/e18c73d2de64285b0366c8ba541b8882/transformed/fragment-1.3.6-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/244d4cef5acad7d3557e289f49445b62/transformed/activity-1.4.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/cb574ca5c50568ce5a58d22eb450f6bb/transformed/lifecycle-viewmodel-savedstate-2.3.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/613f39b134fdbc0b30e1302343ae408e/transformed/savedstate-ktx-1.2.0-rc01-api.jar</arg>
@@ -58,10 +58,10 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/3ef2bb315efecc651fc062703ba378f1/transformed/loader-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/fab31e4ee2e7260aa8ddb8fd60f74885/transformed/customview-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/65e103ed186cef65feb2bfe6f293e634/transformed/core-1.8.0-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/a581adf9456397299e2c90942e7c7081/transformed/ui-text-1.2.0-rc01-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/fd74182a2e556e03a16bb8aa362c4241/transformed/ui-graphics-1.2.0-rc01-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/2f21c64d446a8fd8119288cf5eff19ea/transformed/ui-unit-1.2.0-rc01-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/8fb836eedc7ab3cab424d4710e31d68e/transformed/ui-geometry-1.2.0-rc01-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/4a518cb895df7cabf217acb85b283592/transformed/ui-text-1.2.0-rc02-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/6a0eb04c2a631e6df48cff0b7d88728c/transformed/ui-graphics-1.2.0-rc02-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/b97f74b9a2cfb473cc46e23a22c5684c/transformed/ui-unit-1.2.0-rc02-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/31a313554b322d1b9b8a3a1cf9be12a8/transformed/ui-geometry-1.2.0-rc02-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/401533d936e8d9b013b79830e3eb583c/transformed/lifecycle-runtime-2.4.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/e6b9b49b27d66a8773793d82f6213cd1/transformed/lifecycle-livedata-2.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/8c285d432c9c801c44163551e2251e88/transformed/lifecycle-livedata-core-2.3.1-api.jar</arg>
@@ -73,11 +73,12 @@
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.1.0/b3152fc64428c9354344bd89848ecddc09b6f07e/core-common-2.1.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation/1.2.0/57136ff68ee784c6e19db34ed4a175338fadfde1/annotation-1.2.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/102828e939263682c7b35c8f94d48753/transformed/annotation-experimental-1.1.0-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.dagger/hilt-core/2.38.1/91b62f98577af0800c2f8296dbe3c717ba718da9/hilt-core-2.38.1.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.dagger/dagger/2.38.1/c490eaafb5eb341c4aa374a9554e580d313db4db/dagger-2.38.1.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/374657893c9592e9c61273513f4478b0/transformed/accompanist-systemuicontroller-0.24.12-rc-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.dagger/hilt-core/2.42/affe409aba4a2af374218d976de70b6fdd09e86f/hilt-core-2.42.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.dagger/dagger/2.42/e0c9267991f4c4e167fc612947a948ffd27f3017/dagger-2.42.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/098ea326584ea9ed94b6184872ce2ec5/transformed/dagger-lint-aar-2.38.1-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.1/f7be08ec23c21485b9b5a1cf1654c2ec8c58168d/jsr305-3.0.1.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/b3ea49e208d23f03d781f3b919255e0a/transformed/dagger-lint-aar-2.42-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar</arg>
                 <arg>$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-32/android.jar</arg>
                 <arg>$USER_HOME$/AppData/Local/Android/Sdk/build-tools/30.0.3/core-lambda-stubs.jar</arg>
               </args>
@@ -154,22 +155,22 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.lifecycle:lifecycle-common:2.4.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.arch.core:core-common:2.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.collection:collection:1.1.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:dagger:2.38.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:dagger:2.42" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:hilt-core:2.38.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.google.code.findbugs:jsr305:3.0.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:hilt-core:2.42" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.datastore:datastore-core:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.datastore:datastore-preferences-core:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.13.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-tooling:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.runtime:runtime:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.runtime:runtime-saveable:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-geometry:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-graphics:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-unit:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-text:1.2.0-rc01@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.runtime:runtime:1.2.0-rc02@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui:1.2.0-rc02@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.runtime:runtime-saveable:1.2.0-rc02@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-geometry:1.2.0-rc02@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-graphics:1.2.0-rc02@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-unit:1.2.0-rc02@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-text:1.2.0-rc02@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-tooling-data:1.2.0-rc01@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-tooling-preview:1.2.0-rc01@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.ui:ui-test-manifest:1.2.0-rc01@aar" level="project" />
@@ -191,9 +192,10 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.material:material-icons-core:1.2.0-rc01@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.material:material-ripple:1.2.0-rc01@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.compose.material:material-icons-extended:1.2.0-rc01@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:hilt-android:2.38.1@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:dagger-lint-aar:2.38.1@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.fragment:fragment:1.3.2@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.google.accompanist:accompanist-systemuicontroller:0.24.12-rc@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:hilt-android:2.42@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.google.dagger:dagger-lint-aar:2.42@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.fragment:fragment:1.3.6@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.viewpager:viewpager:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.customview:customview:1.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.loader:loader:1.0.0@aar" level="project" />
