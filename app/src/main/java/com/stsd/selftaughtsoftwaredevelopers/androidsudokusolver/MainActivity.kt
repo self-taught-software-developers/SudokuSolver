@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Dolphin $name!")
+    Text(text = "I need help $name!")
 }
 
 @Preview(showBackground = true)
