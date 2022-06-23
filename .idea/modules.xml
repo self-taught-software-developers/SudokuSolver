@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/SudokuSolver.iml" filepath="$PROJECT_DIR$/.idea/SudokuSolver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android_Sudoku_Solver.iml" filepath="$PROJECT_DIR$/.idea/modules/Android_Sudoku_Solver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android_Sudoku_Solver.app.unitTest.iml" />
     </modules>
   </component>
 </project>
