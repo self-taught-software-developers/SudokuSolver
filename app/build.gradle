@@ -54,6 +54,8 @@ dependencies {
 
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
     implementation 'androidx.activity:activity-compose:1.4.0'
     testImplementation 'junit:junit:4.13.2'
