@@ -55,12 +55,17 @@ fun SudokuBoard(
             board.forEachIndexed { rowIndex , row ->
                 if (rowIndex % 3 == 0) {
                     Divider(
-                        color = Color.Black,
                         modifier = Modifier
                             .height(2.dp)
                             .fillMaxWidth()
-                            .background(Color.Black),
-                        thickness = 3.dp
+                            .background(Color.Black)
+                    )
+                } else {
+                    Divider(
+                        modifier = Modifier
+                            .height(1.dp)
+                            .fillMaxWidth()
+                            .background(Color.Black.copy(alpha = 0.1F)),
                     )
                 }
                 Row(
@@ -70,12 +75,17 @@ fun SudokuBoard(
 
                         if (tileIndex % 3 == 0) {
                             Divider(
-                                color = Color.Black,
                                 modifier = Modifier
                                     .height(36.dp)
                                     .width(2.dp)
                                     .background(Color.Black),
-                                thickness = 3.dp
+                            )
+                        } else {
+                            Divider(
+                                modifier = Modifier
+                                    .height(36.dp)
+                                    .width(1.dp)
+                                    .background(Color.Black.copy(alpha = 0.1F)),
                             )
                         }
 
