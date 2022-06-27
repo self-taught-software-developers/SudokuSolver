@@ -27,7 +27,7 @@ fun BoardTile(
 
     Box(
         modifier = Modifier
-            .size(36.dp) //TODO DYNAMIC BOX
+            .size(CustomTheme.sizing.massive) //TODO DYNAMIC BOX
             .clickable { onClick() }
             .drawBehind { drawRect(color) },
         contentAlignment = Alignment.Center) {
