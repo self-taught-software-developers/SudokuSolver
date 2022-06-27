@@ -34,7 +34,6 @@ fun BoardTile(
         Text(text = value)
     }
 
-
 }
 
 /**
