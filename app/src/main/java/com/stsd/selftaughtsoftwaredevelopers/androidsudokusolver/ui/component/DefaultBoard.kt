@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile
@@ -39,16 +40,21 @@ fun BoardTile(
 
 }
 
+/**
+ * This sudoku board is completely clickable.
+ * when a user clicks on any of the @[Tile] they'll have the ability to change the value within it.
+ */
 @Composable
 fun SudokuBoard(
 
 ) {
 
+    LocalContext.current
     var selected by remember { mutableStateOf(Pair(-1,-1)) }
     val board by remember { mutableStateOf(sudokuBoard) }
     
     Surface(
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(8.dp),
         border = BorderStroke(width = 2.dp, color = Color.Black)
     ) {
         Column(Modifier.width(IntrinsicSize.Max)) {
