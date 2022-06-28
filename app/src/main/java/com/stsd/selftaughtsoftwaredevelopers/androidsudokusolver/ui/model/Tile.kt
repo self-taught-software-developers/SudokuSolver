@@ -8,17 +8,18 @@ data class Tile(
     var state: TileState = TileState.VALID
 )
 
-val sudokuBoard = listOf(
-    (1..9).map { Tile(it.toString()) },
-    (1..9).map { Tile() },
-    (1..9).map { Tile() },
-    (1..9).map { Tile() },
-    (1..9).map { Tile() },
-    (1..9).map { Tile() },
-    (1..9).map { Tile() },
-    (1..9).map { Tile() },
+val sudokuBoard = (1..9).map {
     (1..9).map { Tile() }
-)
+}
+
+/**
+ * as list [] holds our rows in on the board.
+ * so all elements in our top level lists ranges from 1..9(9 positions in each board)
+ *
+ *
+ *
+ *
+ */
 
 enum class TileState(val color: Color? = null) {
     VALID,
