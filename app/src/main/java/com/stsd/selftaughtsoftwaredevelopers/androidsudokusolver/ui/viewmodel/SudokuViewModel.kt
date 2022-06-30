@@ -41,7 +41,13 @@ class SudokuViewModel @Inject constructor(
     ) = viewModelScope.launch {
 
         val position = selectedPosition.value
-        sudokuBoardState[0][position.first][position.second].value = newValue
+        val board = sudokuBoardState[0].toMutableList()
+        val row = board[position.first].toMutableList()
+        row[position.second].text = newValue
+        board[position.first] = row
+
+        sudokuBoardState.clear()
+        sudokuBoardState.add(board)
 
     }
 
