@@ -23,7 +23,9 @@ fun SudokuScreen(
 
     Scaffold(
         bottomBar = {
-            TwoRowsOfButtonsOffset()
+            TwoRowsOfButtonsOffset{
+                vm.enterNewValue(it)
+            }
         }
     ) { bounds ->
 

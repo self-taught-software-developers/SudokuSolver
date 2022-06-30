@@ -20,7 +20,7 @@ import com.google.accompanist.flowlayout.MainAxisAlignment
 
 
 @Composable
-fun ButtonWithNumber(num: Int) {
+fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
     val context = LocalContext.current
 
     Surface(
@@ -28,7 +28,7 @@ fun ButtonWithNumber(num: Int) {
         shape = RoundedCornerShape(24.dp)
     ) {
         Button(
-            { Toast.makeText(context, "Button Works", Toast.LENGTH_SHORT).show() },
+            onClick = { onButtonClick(num.toString()) },
             Modifier
                 .width(60.dp)
                 .height(60.dp)
@@ -44,10 +44,12 @@ fun ButtonWithNumber(num: Int) {
 }
 
 @Composable
-fun TwoRowsOfButtonsOffset() {
+fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
     FlowRow(mainAxisAlignment = MainAxisAlignment.Center) {
         for (i in 1..9) {
-            ButtonWithNumber(num = i)
+            ButtonWithNumber(num = i){
+                onButtonClick(it)
+            }
         }
     }
 }
@@ -55,5 +57,7 @@ fun TwoRowsOfButtonsOffset() {
 @Composable
 @Preview
 fun Preview() {
-    TwoRowsOfButtonsOffset()
+    TwoRowsOfButtonsOffset{
+
+    }
 }
