@@ -1,26 +1,30 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.sudokuBoard
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.sudokuBoardArray
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
 class SudokuViewModel @Inject constructor(
-
+//    private val worker: SudokuSolverWorker
 ) : ViewModel() {
 
     val sudokuBoardState = mutableStateListOf(sudokuBoard)
 
-    private val _selectedPosition = MutableStateFlow(Pair(1, 1))
+    private val _sudokuBoardStateAlt = MutableStateFlow(sudokuBoardArray)
+    val sudokuBoardStateAlt : StateFlow<Array<Array<Tile>>> = _sudokuBoardStateAlt.asStateFlow()
+
+    private val _selectedPosition = MutableStateFlow(Pair(-1, -1))
     val selectedPosition : StateFlow<Pair<Int, Int>> = _selectedPosition.asStateFlow()
 
     fun updateSelectedPosition(
@@ -40,19 +44,34 @@ class SudokuViewModel @Inject constructor(
         newValue: String
     ) = viewModelScope.launch {
 
-        val position = selectedPosition.value
-        val board = sudokuBoardState[0].toMutableList()
-        val row = board[position.first].toMutableList()
-        row[position.second].text = newValue
-        board[position.first] = row
+        _sudokuBoardStateAlt.update { board ->
 
-        sudokuBoardState.clear()
-        sudokuBoardState.add(board)
+            val position = selectedPosition.value
+            val copy = board.copyOf()
+
+            copy[position.first][position.second].text = newValue
+            return@update copy
+
+        }
+
+    }
+
+    fun unDoRecentChange() = viewModelScope.launch {
+
+    }
+
+    fun clearBoard() = viewModelScope.launch {
+
+    }
+
+    fun solveBoard() = viewModelScope.launch {
+
 
     }
 
     companion object {
         fun newEntryTest() = Random.nextInt(0, 9).toString()
+        const val TAG = "SudokuViewModel_TAG"
     }
 
 }

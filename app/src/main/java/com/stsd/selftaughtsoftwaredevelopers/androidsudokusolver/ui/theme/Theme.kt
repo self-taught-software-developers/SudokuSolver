@@ -59,7 +59,8 @@ fun AndroidSudokuSolverTheme(
 
     CompositionLocalProvider(
         LocalPadding provides Sizing(),
-        LocalSizing provides Sizing()
+        LocalSizing provides Sizing(),
+        LocalElevation provides Sizing()
     ) {
 
         MaterialTheme(

@@ -1,6 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.Transformations.map
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Purple200
 
 data class Tile(
@@ -15,6 +16,11 @@ data class Tile(
 val sudokuBoard = (1..9).map {
     (1..9).map { Tile() }
 }
+
+val sudokuBoardArray = (1..9).map {
+    (1..9).map { Tile() }.toTypedArray()
+}.toTypedArray()
+
 
 val fillSudokuBoard = (1..9).map {
     (1..9).map { Tile(text = it.toString()) }
