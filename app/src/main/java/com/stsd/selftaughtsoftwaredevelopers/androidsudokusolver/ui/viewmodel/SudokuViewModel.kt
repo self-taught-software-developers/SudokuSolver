@@ -3,10 +3,13 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.sudokuBoardArray
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,7 +17,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class SudokuViewModel @Inject constructor(
-//    private val worker: SudokuSolverWorker
+    private val worker: SudokuSolverWorker
 ) : ViewModel() {
 
     private val _sudokuBoardStateAlt = MutableStateFlow(sudokuBoardArray)
@@ -36,9 +39,7 @@ class SudokuViewModel @Inject constructor(
     /**
      * Call this function when a numbered button is clicked.
      */
-    fun enterNewValue(
-        newValue: String
-    ) = viewModelScope.launch {
+    fun enterNewValue(newValue: String) = viewModelScope.launch {
 
         _sudokuBoardStateAlt.update { board ->
 
@@ -66,7 +67,7 @@ class SudokuViewModel @Inject constructor(
 
     }
 
-    fun clearBoard()  {
+    fun clearBoard() = viewModelScope.launch {
 
         _sudokuBoardStateAlt.update { board ->
             val copy = board.copyOf()
@@ -79,9 +80,29 @@ class SudokuViewModel @Inject constructor(
         }
     }
 
-    fun solveBoard() = viewModelScope.launch {
+    fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
         Log.d(TAG, "solveBoard")
 
+        _sudokuBoardStateAlt.update { board ->
+            val modifiedBoard = board.map { row ->
+                row.map {
+                    if(it.text == EMPTY_TILE) {
+                        0
+                    } else {
+                        it.text.toInt()
+                    }
+                }.toTypedArray()
+            }.toTypedArray()
+
+            val solved = CompletableDeferred<Pair<Array<Array<Int>>, Boolean>>().apply {
+                 complete(worker.solveBoard(modifiedBoard))
+            }.await()
+
+            return@update solved.first.map { row ->
+                row.map { Tile(it.toString()) }.toTypedArray()
+            }.toTypedArray()
+
+        }
 
     }
 

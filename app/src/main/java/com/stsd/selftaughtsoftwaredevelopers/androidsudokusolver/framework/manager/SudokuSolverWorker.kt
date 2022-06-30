@@ -1,16 +1,18 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager
 
+import java.util.stream.IntStream.range
 import javax.inject.Inject
 
 class SudokuSolverWorker @Inject constructor(
 
 ) {
 
-    fun solveBoard(board: List<MutableList<Int>>) : Pair<List<List<Int>>, Boolean> {
+    suspend fun solveBoard(board: Array<Array<Int>>) : Pair<Array<Array<Int>>, Boolean> {
 
         val position = findNextEmptyPosition(board)
 
         return if (position.first == -1) {
+            board.map { it.contentToString() }.forEach(::println)
             Pair(board, true)
         } else {
             (1..9).forEach { number ->
@@ -30,7 +32,7 @@ class SudokuSolverWorker @Inject constructor(
     }
 
     private fun findNextEmptyPosition(
-        board: List<List<Int>>
+        board: Array<Array<Int>>
     ) : Pair<Int, Int> {
 
         board.forEachIndexed { rowIndex, row ->
@@ -48,32 +50,26 @@ class SudokuSolverWorker @Inject constructor(
     }
 
     private fun validateBoard(
-        board: List<List<Int>>,
+        board: Array<Array<Int>>,
         number: Int,
         position: Pair<Int, Int>
     ) : Boolean {
-        
-        if (board[position.first].contains(number)) return false
-        
-        board.forEach { row ->
-            if (row[position.second] == number) return false
-        }
-        
-        val x = position.second / 3
-        val y = position.first / 3
 
-        ((y*3)..(y*3 + 3)).forEach { gridColumn ->
+        //check row
+        if (board[position.first].contains(number)) { return false }
+        //check column
+        for (i in board) {
+            if (i[position.second] == number){ return false} }
 
-            ((x*3)..(x*3 + 3)).forEach { gridRow ->
-                
-                if (board[gridColumn][gridRow] == number 
-                    && Pair(gridColumn, gridRow) != position
-                ) return false
-                
+        val cordX = position.second / 3
+        val cordY = position.first / 3
+
+        for (i in range(cordY*3, (cordY*3)+ 3)){
+            for (j in range(cordX*3, (cordX*3)+3)){
+                if (board[i][j] == number && Pair(i,j) != position) { return false }
             }
-            
         }
-        
+
         return true
         
     }
