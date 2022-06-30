@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -17,6 +18,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile.Companion.EMPTY_TILE
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.fillSudokuBoard
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.sudokuBoard
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
@@ -52,6 +55,10 @@ fun SudokuBoard(
     onPositionSelected: (Pair<Int, Int>) -> Unit
 ) {
 
+    val borderColor by remember(board) {
+        derivedStateOf { (board.filledBoard()) }
+    }
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -61,37 +68,51 @@ fun SudokuBoard(
             shape = RoundedCornerShape(CustomTheme.sizing.small),
             border = BorderStroke(
                 width = CustomTheme.sizing.xTiny,
-                color = Color.Black
+                color = borderColor.borderColor()
             )
         ) {
+
             Column(modifier = Modifier.width(IntrinsicSize.Max)) {
 
-                board.forEachIndexed { rowIndex , row ->
+                board.forEachIndexed { rowIndex, row ->
 
-                    (rowIndex % 3 == 0).HorizontalDivider()
+                    (rowIndex % 3 == 0).HorizontalDivider(borderColor.borderColor())
 
                     Row(modifier = Modifier.height(IntrinsicSize.Max)) {
 
                         row.forEachIndexed { tileIndex, tile ->
 
-                            (tileIndex % 3 == 0).VerticalDivider()
+                            (tileIndex % 3 == 0).VerticalDivider(borderColor.borderColor())
 
                             BoardTile(
                                 value = tile.value,
-                                color = (Pair(rowIndex, tileIndex) == selectedPosition).tileColor()
+                                color = (Pair(rowIndex, tileIndex) == selectedPosition)
+                                    .tileColor()
                             ) {
                                 onPositionSelected(Pair(rowIndex, tileIndex))
                             }
                         }
+
                     }
                 }
             }
+
         }
 
     }
-
 }
 
+fun List<List<Tile>>.filledBoard() : Boolean =
+    flatten().firstOrNull { it.value == EMPTY_TILE } == null
+
+@Composable
+fun Boolean.borderColor() : Color {
+    return if(this) {
+        CustomTheme.colors.primary.copy(alpha = 0.5F)
+    } else {
+        Color.Black
+    }
+}
 @Composable
 fun Boolean?.tileColor() : Color {
     return if (this == true) {
@@ -102,40 +123,40 @@ fun Boolean?.tileColor() : Color {
 }
 
 @Composable
-fun Boolean.HorizontalDivider() {
+fun Boolean.HorizontalDivider(color: Color) {
     if (this) {
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(CustomTheme.sizing.xTiny)
-                .background(Color.Black)
+                .background(color)
         )
     } else {
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(CustomTheme.sizing.xTiny)
-                .background(Color.Black.copy(alpha = 0.001F)),
+                .background(color.copy(alpha = 0.001F)),
         )
     }
 
 }
 
 @Composable
-fun Boolean.VerticalDivider() {
+fun Boolean.VerticalDivider(color: Color) {
     if (this) {
         Divider(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(CustomTheme.sizing.xTiny)
-                .background(Color.Black),
+                .background(color),
         )
     } else {
         Divider(
             modifier = Modifier
                 .fillMaxHeight()
                 .width(CustomTheme.sizing.xTiny)
-                .background(Color.Black.copy(alpha = 0.001F)),
+                .background(color.copy(alpha = 0.001F)),
         )
     }
 }
@@ -143,8 +164,26 @@ fun Boolean.VerticalDivider() {
 @Preview
 @Composable
 fun SudokuBoardPreview() {
+
     AndroidSudokuSolverTheme {
         val board by remember { mutableStateOf(sudokuBoard) }
+
+        SudokuBoard(
+            modifier = Modifier,
+            board = board
+        ) {
+
+        }
+    }
+
+}
+
+@Preview
+@Composable
+fun FillSudokuBoardPreview() {
+
+    AndroidSudokuSolverTheme {
+        val board by remember { mutableStateOf(fillSudokuBoard) }
 
         SudokuBoard(
             modifier = Modifier,

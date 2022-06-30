@@ -55,7 +55,6 @@ fun AndroidSudokuSolverTheme(
     content: @Composable () -> Unit
 ) {
 
-    MaterialTheme.colors.primary
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
 
     CompositionLocalProvider(
