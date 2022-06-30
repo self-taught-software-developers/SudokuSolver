@@ -112,6 +112,8 @@ Here's why:
 - [ ] Multi-language Support
     - [ ] Spanish
     - [ ] German
+    
+  - [ ] Allow users select different Grid Sizes to solve.
 
 See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
