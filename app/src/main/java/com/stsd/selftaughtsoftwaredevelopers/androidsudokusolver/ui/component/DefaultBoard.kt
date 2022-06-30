@@ -52,30 +52,25 @@ fun SudokuBoard(
     onPositionSelected: (Pair<Int, Int>) -> Unit
 ) {
 
-    Box(modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
 
         Surface(
-            modifier = Modifier.align(Alignment.Center),
             shape = RoundedCornerShape(CustomTheme.sizing.small),
             border = BorderStroke(
                 width = CustomTheme.sizing.xTiny,
                 color = Color.Black
             )
         ) {
-            Column(
-                modifier = Modifier.width(IntrinsicSize.Max),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
+            Column(modifier = Modifier.width(IntrinsicSize.Max)) {
 
                 board.forEachIndexed { rowIndex , row ->
 
                     (rowIndex % 3 == 0).HorizontalDivider()
 
-                    Row(
-                        modifier = Modifier.height(IntrinsicSize.Max),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
+                    Row(modifier = Modifier.height(IntrinsicSize.Max)) {
 
                         row.forEachIndexed { tileIndex, tile ->
 
@@ -88,15 +83,12 @@ fun SudokuBoard(
                                 onPositionSelected(Pair(rowIndex, tileIndex))
                             }
                         }
-
                     }
-
                 }
             }
         }
 
     }
-
 
 }
 
@@ -167,8 +159,10 @@ fun SudokuBoardPreview() {
 @Composable
 fun BoardTilePreview() {
 
-    BoardTile(
-        value = "1"
-    ) {}
+    AndroidSudokuSolverTheme {
+        BoardTile(value = "1") {
+
+        }
+    }
 
 }
