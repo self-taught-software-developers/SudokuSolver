@@ -95,7 +95,12 @@ class SudokuViewModel @Inject constructor(
             }.toTypedArray()
 
             val solved = CompletableDeferred<Pair<Array<Array<Int>>, Boolean>>().apply {
-                 complete(worker.solveBoard(modifiedBoard))
+                Log.d(TAG, "solver started")
+                worker.solveBoard(modifiedBoard).also {
+                    Log.d(TAG, "solver Ended")
+                    complete(it)
+                }
+
             }.await()
 
             return@update solved.first.map { row ->

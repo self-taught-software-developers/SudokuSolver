@@ -7,71 +7,59 @@ class SudokuSolverWorker @Inject constructor(
 
 ) {
 
-    suspend fun solveBoard(board: Array<Array<Int>>) : Pair<Array<Array<Int>>, Boolean> {
+    fun solveBoard(board: Array<Array<Int>>) : Pair<Array<Array<Int>>, Boolean> {
 
-        val position = findNextEmptyPosition(board)
+        val position = findEmptyPosition(board)
+        println(position)
 
-        return if (position.first == -1) {
-            board.map { it.contentToString() }.forEach(::println)
+        return if (position.isEmpty()) {
             Pair(board, true)
         } else {
-            (1..9).forEach { number ->
-                if(validateBoard(board, number, position)) {
-                    board[position.first][position.second] = number
+            for (i in 1..9) {
+                if (validateBoard(board, i , position)) {
+                    board[position[0]][position[1]] = i
 
-                    if (solveBoard(board).second) {
-                        Pair(board, true)
+                     if (solveBoard(board).second) {
+                        return Pair(board, true)
                     }
 
-                    board[position.first][position.second] = 0
+                    board[position[0]][position[1]] = 0
                 }
             }
             Pair(board, false)
+
         }
 
     }
 
-    private fun findNextEmptyPosition(
-        board: Array<Array<Int>>
-    ) : Pair<Int, Int> {
+    private fun validateBoard(board: Array<Array<Int>>, number: Int, position: List<Int> ): Boolean {
+        // validate row
+        if (board[position[0]].contains(number)) return false
 
-        board.forEachIndexed { rowIndex, row ->
-
-            row.forEachIndexed { columnIndex, column ->
-
-                if (column == 0) return Pair(rowIndex, columnIndex)
-
-            }
-
-        }
-
-        return Pair(-1, -1)
-
-    }
-
-    private fun validateBoard(
-        board: Array<Array<Int>>,
-        number: Int,
-        position: Pair<Int, Int>
-    ) : Boolean {
-
-        //check row
-        if (board[position.first].contains(number)) { return false }
-        //check column
+        // validate column
         for (i in board) {
-            if (i[position.second] == number){ return false} }
+            if (i[position[1]] == number) return false
+        }
 
-        val cordX = position.second / 3
-        val cordY = position.first / 3
+        val x = position[1] / 3
+        val y = position[0] / 3
 
-        for (i in range(cordY*3, (cordY*3)+ 3)){
-            for (j in range(cordX*3, (cordX*3)+3)){
-                if (board[i][j] == number && Pair(i,j) != position) { return false }
+        for (row in range(y*3, (y*3)+ 3)){
+            for (column in range(x*3, (x*3)+3)){
+                if (board[row][column] == number && listOf(row,column) != position) return false
             }
         }
 
         return true
-        
+    }
+    private fun findEmptyPosition(board: Array<Array<Int>>): List<Int> {
+
+        for (row in board) {
+            for (column in row) {
+                if (column == 0) return listOf(board.indexOf(row), row.indexOf(column))
+            }
+        }
+        return emptyList()
     }
 
 }
