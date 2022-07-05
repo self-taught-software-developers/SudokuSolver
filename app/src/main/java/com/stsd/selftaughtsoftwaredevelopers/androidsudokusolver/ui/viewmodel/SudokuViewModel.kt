@@ -81,26 +81,10 @@ class SudokuViewModel @Inject constructor(
     }
 
     fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
-        Log.d(TAG, "solveBoard")
 
         _sudokuBoardStateAlt.update { board ->
-            val modifiedBoard = board.map { row ->
-                row.map {
-                    if(it.text == EMPTY_TILE) {
-                        0
-                    } else {
-                        it.text.toInt()
-                    }
-                }.toTypedArray()
-            }.toTypedArray()
-
             val solved = CompletableDeferred<Pair<Array<Array<Int>>, Boolean>>().apply {
-                Log.d(TAG, "solver started")
-                worker.solveBoard(modifiedBoard).also {
-                    Log.d(TAG, "solver Ended")
-                    complete(it)
-                }
-
+                complete(worker.solveBoard(board.convertFromUiBoard()))
             }.await()
 
             return@update solved.first.map { row ->
@@ -108,6 +92,19 @@ class SudokuViewModel @Inject constructor(
             }.toTypedArray()
 
         }
+
+    }
+
+    private fun Array<Array<Tile>>.convertFromUiBoard() : Array<Array<Int>> {
+        return this.map { row ->
+            row.map {
+                if(it.text == EMPTY_TILE) {
+                    0
+                } else {
+                    it.text.toInt()
+                }
+            }.toTypedArray()
+        }.toTypedArray()
 
     }
 
