@@ -15,9 +15,7 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Androi
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 
 @Composable
-fun SudokuScreen(
-    vm: SudokuViewModel = viewModel()
-) {
+fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
 
     val board by vm.sudokuBoardStateAlt.collectAsState()
     val position by vm.selectedPosition.collectAsState(null)

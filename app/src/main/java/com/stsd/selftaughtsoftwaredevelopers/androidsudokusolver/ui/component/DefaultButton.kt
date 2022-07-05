@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.EmojiObjects
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
@@ -36,7 +37,7 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
             .padding(padding.small)
             .clickable { onButtonClick(num.toString()) }
             .size(sizing.xxx_large),
-        shape = RoundedCornerShape(10.dp),
+        shape = CustomTheme.shapes.small,
         color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)
     ) {
 
@@ -106,6 +107,47 @@ fun IconButton(
 }
 
 @Composable
+fun IconButton(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color,
+    imageVector: ImageVector,
+    text: String,
+    onClick: () -> Unit
+) {
+
+    val sizing = LocalSizing.current
+    val padding = LocalPadding.current
+    Surface(
+        color = backgroundColor,
+        shape = CustomTheme.shapes.small
+    ) {
+        IconButton(
+            onClick = { onClick() },
+            modifier = modifier
+                .defaultMinSize(sizing.xxx_large)
+                .padding(padding.small)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = imageVector,
+                    contentDescription = imageVector.name
+                )
+                Text(
+                    text = text.uppercase(),
+                    style = MaterialTheme.typography.caption.copy(fontSize = 10.sp),
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+        }
+    }
+
+}
+
+@Composable
 @Preview
 fun Preview() {
     TwoRowsOfButtonsOffset {
@@ -118,7 +160,7 @@ fun Preview() {
 fun IconButtonPreview() {
     IconButton(
         imageVector = Icons.Default.EmojiObjects,
-        text = "Held"
+        text = "IDEA"
     ) {
 
     }

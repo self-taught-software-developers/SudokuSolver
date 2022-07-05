@@ -14,11 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile.Companion.EMPTY_TILE
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.fillSudokuBoard
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.sudokuBoard
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.sudokuBoardArray
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.sudokuBoardArray
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
@@ -43,12 +41,12 @@ fun BoardTile(
 
 /**
  * This sudoku board is completely clickable.
- * when a user clicks on any of the @[Tile] they'll have the ability to change the value within it.
+ * when a user clicks on any of the @[TileState] they'll have the ability to change the value within it.
  */
 @Composable
 fun SudokuBoard(
     modifier: Modifier = Modifier,
-    board: Array<Array<Tile>>,
+    board: Array<Array<TileState>>,
     selectedPosition: Pair<Int, Int>? = null,
     onPositionSelected: (Pair<Int, Int>) -> Unit
 ) {
@@ -100,7 +98,7 @@ fun SudokuBoard(
     }
 }
 
-fun Array<Array<Tile>>.filledBoard() : Boolean =
+fun Array<Array<TileState>>.filledBoard() : Boolean =
     flatten().firstOrNull { it.text == EMPTY_TILE } == null
 
 @Composable

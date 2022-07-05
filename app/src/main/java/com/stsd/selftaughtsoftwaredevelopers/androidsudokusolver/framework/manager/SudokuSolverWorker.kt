@@ -1,32 +1,31 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager
 
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import java.util.stream.IntStream.range
 import javax.inject.Inject
 
-class SudokuSolverWorker @Inject constructor(
+class SudokuSolverWorker @Inject constructor() {
 
-) {
-
-    fun solveBoard(board: Array<Array<Int>>) : Pair<Array<Array<Int>>, Boolean> {
+    fun solveBoard(board: Array<Array<Int>>) : BoardState {
 
         val position = findEmptyPosition(board)
         println(position)
 
         return if (position.isEmpty()) {
-            Pair(board, true)
+            BoardState(board, true)
         } else {
             for (i in 1..9) {
                 if (validateBoard(board, i , position)) {
                     board[position[0]][position[1]] = i
 
-                     if (solveBoard(board).second) {
-                        return Pair(board, true)
+                     if (solveBoard(board).solved) {
+                        return BoardState(board, true)
                     }
 
                     board[position[0]][position[1]] = 0
                 }
             }
-            Pair(board, false)
+            BoardState(board, false)
 
         }
 

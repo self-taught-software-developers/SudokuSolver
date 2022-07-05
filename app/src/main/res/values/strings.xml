@@ -1,3 +1,8 @@
 <resources>
+
     <string name="app_name">Android Sudoku Solver</string>
+    <string name="BUTTON_undo">Undo</string>
+    <string name="BUTTON_erase">Erase</string>
+    <string name="BUTTON_solve">Solve</string>
+
 </resources>

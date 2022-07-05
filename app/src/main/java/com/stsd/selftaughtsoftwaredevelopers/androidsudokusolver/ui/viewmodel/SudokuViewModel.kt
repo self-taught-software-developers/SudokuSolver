@@ -1,16 +1,19 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Tile.Companion.EMPTY_TILE
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.sudokuBoardArray
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.sudokuBoardArray
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -21,7 +24,7 @@ class SudokuViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _sudokuBoardStateAlt = MutableStateFlow(sudokuBoardArray)
-    val sudokuBoardStateAlt : StateFlow<Array<Array<Tile>>> = _sudokuBoardStateAlt.asStateFlow()
+    val sudokuBoardStateAlt : StateFlow<Array<Array<TileState>>> = _sudokuBoardStateAlt.asStateFlow()
 
     private val _selectedPosition = MutableStateFlow(Pair(0, 0))
     val selectedPosition : StateFlow<Pair<Int, Int>> = _selectedPosition.asStateFlow()
@@ -83,19 +86,20 @@ class SudokuViewModel @Inject constructor(
     fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
 
         _sudokuBoardStateAlt.update { board ->
-            val solved = CompletableDeferred<Pair<Array<Array<Int>>, Boolean>>().apply {
-                complete(worker.solveBoard(board.convertFromUiBoard()))
+            val solved = CompletableDeferred<BoardState>().apply {
+                worker.solveBoard(board.convertFromUiBoard())
+                    .also { deferred ->
+                        complete(deferred)
+                    }
             }.await()
 
-            return@update solved.first.map { row ->
-                row.map { Tile(it.toString()) }.toTypedArray()
-            }.toTypedArray()
+            return@update solved.board.convertToUiBoard()
 
         }
 
     }
 
-    private fun Array<Array<Tile>>.convertFromUiBoard() : Array<Array<Int>> {
+    private fun Array<Array<TileState>>.convertFromUiBoard() : Array<Array<Int>> {
         return this.map { row ->
             row.map {
                 if(it.text == EMPTY_TILE) {
@@ -106,6 +110,11 @@ class SudokuViewModel @Inject constructor(
             }.toTypedArray()
         }.toTypedArray()
 
+    }
+    private fun Array<Array<Int>>.convertToUiBoard() : Array<Array<TileState>> {
+        return this.map { row ->
+            row.map { TileState(it.toString()) }.toTypedArray()
+        }.toTypedArray()
     }
 
     companion object {
