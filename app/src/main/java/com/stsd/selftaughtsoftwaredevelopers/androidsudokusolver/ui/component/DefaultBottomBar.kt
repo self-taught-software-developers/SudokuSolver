@@ -39,6 +39,7 @@ fun DefaultBottomBar(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             IconButton(
                 imageVector = rounded.Replay,
                 text = stringResource(id = R.string.BUTTON_undo)
@@ -54,7 +55,6 @@ fun DefaultBottomBar(
                 imageVector = rounded.PublishedWithChanges,
                 text = stringResource(id = R.string.BUTTON_solve)
             ) { onSolveBoard() }
-
 
         }
     }

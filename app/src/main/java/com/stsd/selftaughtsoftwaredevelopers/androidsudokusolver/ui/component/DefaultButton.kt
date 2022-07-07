@@ -52,7 +52,8 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
 fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
 
     FlowRow(
-        modifier = Modifier.fillMaxWidth(), mainAxisAlignment = MainAxisAlignment.Center
+        modifier = Modifier.fillMaxWidth(),
+        mainAxisAlignment = MainAxisAlignment.Center
     ) {
         for (i in 1..9) {
             ButtonWithNumber(num = i) {
@@ -64,7 +65,10 @@ fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
 
 @Composable
 fun IconButton(
-    modifier: Modifier = Modifier, imageVector: ImageVector, text: String, onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector,
+    text: String,
+    onClick: () -> Unit
 ) {
 
     val sizing = LocalSizing.current
@@ -105,8 +109,10 @@ fun IconButton(
 
     val sizing = LocalSizing.current
     val padding = LocalPadding.current
+
     Surface(
-        color = backgroundColor, shape = CustomTheme.shapes.small
+        color = backgroundColor,
+        shape = CustomTheme.shapes.small
     ) {
         IconButton(
             onClick = { onClick() },
@@ -145,7 +151,8 @@ fun Preview() {
 @Composable
 fun IconButtonPreview() {
     IconButton(
-        imageVector = Icons.Default.EmojiObjects, text = "IDEA"
+        imageVector = Icons.Default.EmojiObjects,
+        text = "IDEA"
     ) {
 
     }
