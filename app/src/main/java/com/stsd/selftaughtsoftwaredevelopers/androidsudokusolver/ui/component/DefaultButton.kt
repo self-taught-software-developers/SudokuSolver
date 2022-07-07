@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalSizing
@@ -140,21 +141,31 @@ fun IconButton(
 
 }
 
-@Composable
 @Preview
+@Composable
 fun Preview() {
-    TwoRowsOfButtonsOffset {
+
+    AndroidSudokuSolverTheme {
+
+        TwoRowsOfButtonsOffset {
+
+        }
 
     }
+
 }
 
 @Preview
 @Composable
 fun IconButtonPreview() {
-    IconButton(
-        imageVector = Icons.Default.EmojiObjects,
-        text = "IDEA"
-    ) {
 
+    AndroidSudokuSolverTheme {
+        IconButton(
+            imageVector = Icons.Default.EmojiObjects,
+            text = "IDEA"
+        ) {
+
+        }
     }
+
 }
