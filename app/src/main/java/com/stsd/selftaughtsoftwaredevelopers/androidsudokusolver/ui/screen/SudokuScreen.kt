@@ -1,12 +1,14 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
@@ -21,6 +23,9 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
     val position by vm.selectedPosition.collectAsState(null)
 
     Scaffold(
+        modifier = Modifier.onGloballyPositioned { coordinates ->
+            Log.d("TEST", "${coordinates.size}")
+                                                 },
         bottomBar = {
             DefaultBottomBar(
                 onUndoRecentChange = vm::unDoRecentChange,
