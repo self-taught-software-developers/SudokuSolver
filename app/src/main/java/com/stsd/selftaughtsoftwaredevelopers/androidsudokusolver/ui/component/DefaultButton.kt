@@ -1,25 +1,20 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiObjects
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
@@ -32,20 +27,18 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
     val sizing = LocalSizing.current
     val padding = LocalPadding.current
 
-    Surface(
-        modifier = Modifier
-            .padding(padding.small)
-            .clickable { onButtonClick(num.toString()) }
-            .size(sizing.xxx_large),
-        shape = CustomTheme.shapes.small,
-        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)
-    ) {
+    Surface(modifier = Modifier
+        .padding(padding.small)
+        .clip(shape = CustomTheme.shapes.small)
+        .clickable { onButtonClick(num.toString()) }
+        .size(sizing.xxx_large),
+
+        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)) {
 
         Box(contentAlignment = Alignment.Center) {
 
             Text(
-                text = num.toString(),
-                textAlign = TextAlign.Center
+                text = num.toString(), textAlign = TextAlign.Center
             )
 
         }
@@ -59,8 +52,7 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
 fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
 
     FlowRow(
-        modifier = Modifier.fillMaxWidth(),
-        mainAxisAlignment = MainAxisAlignment.Center
+        modifier = Modifier.fillMaxWidth(), mainAxisAlignment = MainAxisAlignment.Center
     ) {
         for (i in 1..9) {
             ButtonWithNumber(num = i) {
@@ -72,10 +64,7 @@ fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
 
 @Composable
 fun IconButton(
-    modifier: Modifier = Modifier,
-    imageVector: ImageVector,
-    text: String,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier, imageVector: ImageVector, text: String, onClick: () -> Unit
 ) {
 
     val sizing = LocalSizing.current
@@ -92,8 +81,7 @@ fun IconButton(
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = imageVector,
-                contentDescription = imageVector.name
+                imageVector = imageVector, contentDescription = imageVector.name
             )
             Text(
                 text = text.uppercase(),
@@ -118,8 +106,7 @@ fun IconButton(
     val sizing = LocalSizing.current
     val padding = LocalPadding.current
     Surface(
-        color = backgroundColor,
-        shape = CustomTheme.shapes.small
+        color = backgroundColor, shape = CustomTheme.shapes.small
     ) {
         IconButton(
             onClick = { onClick() },
@@ -132,8 +119,7 @@ fun IconButton(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    imageVector = imageVector,
-                    contentDescription = imageVector.name
+                    imageVector = imageVector, contentDescription = imageVector.name
                 )
                 Text(
                     text = text.uppercase(),
@@ -159,8 +145,7 @@ fun Preview() {
 @Composable
 fun IconButtonPreview() {
     IconButton(
-        imageVector = Icons.Default.EmojiObjects,
-        text = "IDEA"
+        imageVector = Icons.Default.EmojiObjects, text = "IDEA"
     ) {
 
     }

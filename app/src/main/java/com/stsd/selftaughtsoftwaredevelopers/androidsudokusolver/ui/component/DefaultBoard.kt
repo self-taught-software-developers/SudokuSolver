@@ -88,7 +88,6 @@ fun SudokuBoard(
                                 onPositionSelected(Pair(rowIndex, tileIndex))
                             }
                         }
-
                     }
                 }
             }
