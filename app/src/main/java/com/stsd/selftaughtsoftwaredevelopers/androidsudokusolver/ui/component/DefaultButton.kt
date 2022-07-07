@@ -45,7 +45,6 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
 
         }
 
-
     }
 }
 
