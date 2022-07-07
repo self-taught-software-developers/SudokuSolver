@@ -2,7 +2,8 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val SeaWeedBlue200 = Color(0xFFC2DED1)
+val Beige200 = Color(0xFFF8ECD1)
+val Wine200 = Color(0xFFDEB6AB)
+val Wine500 = Color(0xFFAC7D88)
+val Wine700 = Color(0xFF85586F)

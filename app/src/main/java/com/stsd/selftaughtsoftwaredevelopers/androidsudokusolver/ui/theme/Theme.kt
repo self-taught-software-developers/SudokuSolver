@@ -5,17 +5,21 @@ import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = Wine200,
+    primaryVariant = Wine700,
+    secondary = SeaWeedBlue200
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = Wine500,
+    primaryVariant = Wine700,
+    secondary = SeaWeedBlue200,
+
+    background = Beige200
 
     /* Other default colors to override
     background = Color.White,
@@ -56,6 +60,15 @@ fun AndroidSudokuSolverTheme(
 ) {
 
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
+
+    val systemUiController = rememberSystemUiController()
+
+    LaunchedEffect(colors) {
+        systemUiController.setSystemBarsColor(
+            color = colors.background,
+            darkIcons = !darkTheme
+        )
+    }
 
     CompositionLocalProvider(
         LocalPadding provides Sizing(),
