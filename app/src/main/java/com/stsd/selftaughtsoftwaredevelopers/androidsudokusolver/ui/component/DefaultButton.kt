@@ -27,18 +27,20 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
     val sizing = LocalSizing.current
     val padding = LocalPadding.current
 
-    Surface(modifier = Modifier
-        .padding(padding.small)
-        .clip(shape = CustomTheme.shapes.small)
-        .clickable { onButtonClick(num.toString()) }
-        .size(sizing.xxx_large),
-
-        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)) {
+    Surface(
+        modifier = Modifier
+            .padding(padding.small)
+            .clip(shape = CustomTheme.shapes.small)
+            .clickable { onButtonClick(num.toString()) }
+            .size(sizing.xxx_large),
+        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)
+    ) {
 
         Box(contentAlignment = Alignment.Center) {
 
             Text(
-                text = num.toString(), textAlign = TextAlign.Center
+                text = num.toString(),
+                textAlign = TextAlign.Center
             )
 
         }
