@@ -4,15 +4,15 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.filledBoard
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 
@@ -23,9 +23,6 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
     val position by vm.selectedPosition.collectAsState(null)
 
     Scaffold(
-        modifier = Modifier.onGloballyPositioned { coordinates ->
-            Log.d("TEST", "${coordinates.size}")
-                                                 },
         bottomBar = {
             DefaultBottomBar(
                 onUndoRecentChange = vm::unDoRecentChange,
@@ -55,7 +52,7 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
 fun SudokuScreenPreview() {
 
     AndroidSudokuSolverTheme {
-        SudokuScreen()
+        SudokuScreen(vm = SudokuViewModel(SudokuSolverWorker()))
     }
 
 }

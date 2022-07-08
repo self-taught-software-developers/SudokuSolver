@@ -3,28 +3,37 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.Surface
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.vector.VectorProperty
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.sudokuBoardArray
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.sudokuBoardFilledArray
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.sizing
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalSizing
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Wine500
+import kotlin.math.floor
 
 @Composable
 fun BoardTile(
@@ -36,8 +45,6 @@ fun BoardTile(
 
     Box(
         modifier = modifier
-            .height(intrinsicSize = IntrinsicSize.Max)
-            .width(intrinsicSize = IntrinsicSize.Max)
             .clickable { onClick() }
             .drawBehind { drawRect(color) },
         contentAlignment = Alignment.Center
@@ -55,123 +62,130 @@ fun BoardTile(
 fun SudokuBoard(
     modifier: Modifier = Modifier,
     board: Array<Array<TileState>>,
+    borderColor: Color = board.filledBoard(),
     selectedPosition: Pair<Int, Int>? = null,
     onPositionSelected: (Pair<Int, Int>) -> Unit
 ) {
 
-    val borderColor by remember(board) { derivedStateOf { (board.filledBoard()) } }
-    var size by remember { mutableStateOf(IntSize.Zero) }
-
-    Box(
-        modifier = modifier.fillMaxSize()
-            .onGloballyPositioned { coordinates ->
-                Log.d("TEST", "${coordinates.size}")
-                size = coordinates.size
-          },
+    BoxWithConstraints(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = padding.medium),
         contentAlignment = Alignment.Center
     ) {
 
-        Surface(
-            shape = RoundedCornerShape(sizing.small),
-            border = BorderStroke(
-                width = sizing.x_small,
-                color = borderColor.borderColor()
-            )
-        ) {
+        val tileSize =  (minOf(maxWidth, maxHeight) / 9)
 
-            Column(
-                modifier = Modifier
-                    .width(IntrinsicSize.Max)
-
-            ) {
-
-                board.forEachIndexed { rowIndex, row ->
-
-                    (rowIndex % 3 == 0).HorizontalDivider(borderColor.borderColor())
-
-                    Row(modifier = Modifier.height(IntrinsicSize.Max)) {
-
-                        row.forEachIndexed { tileIndex, tile ->
-
-                            (tileIndex % 3 == 0).VerticalDivider(borderColor.borderColor())
-
-                            BoardTile(
-                                modifier = Modifier.size(
-                                    width = (size.width/row.size).dp,
-                                    height = (size.height/board.size).dp
-                                ),
-                                value = tile.text,
-                                color = (Pair(rowIndex, tileIndex) == selectedPosition)
-                                    .tileColor()
-                            ) {
-                                onPositionSelected(Pair(rowIndex, tileIndex))
-                            }
-                        }
+        Column(
+            modifier = Modifier
+                .border(
+                    border = BorderStroke(
+                        width = sizing.xx_small,
+                        color = borderColor
+                    ),
+                    shape = CustomTheme.shapes.medium
+                )
+                .drawWithCache {
+                    this.onDrawBehind {
+                        drawGrid(borderColor)
                     }
                 }
-            }
+        ) {
 
+            PlaceTiles(
+                tileSize = tileSize,
+                boardOfTiles = board,
+                currentlySelectedTile = selectedPosition
+            ) { onPositionSelected(Pair(it.first, it.second)) }
+
+        }
+    }
+
+}
+
+@Composable
+fun Array<Array<TileState>>.filledBoard() : Color {
+
+    return if(flatten().firstOrNull { it.text == EMPTY_TILE } == null) {
+        Color.Green
+    } else {
+        CustomTheme.colors.primary
+    }
+
+}
+
+private fun DrawScope.drawGrid(color: Color) {
+    val (width, height) = size
+    val tileWidth = width / 9
+
+    repeat(9) { index ->
+
+        val x = tileWidth * index
+
+        if (index != 0) {
+            drawLine(
+                start = Offset(x = x, y = 0f),
+                end = Offset(x = x, y = height),
+                color = color,
+                strokeWidth = Stroke.DefaultMiter,
+                alpha = if(index % 3 != 0) 0.1f else 1f
+            )
+        }
+
+    }
+
+    repeat(9) { index ->
+
+        val y = tileWidth * index
+
+        if (index != 0) {
+            drawLine(
+                start = Offset(x = 0f, y = y),
+                end = Offset(x = width, y = y),
+                color = color,
+                strokeWidth = Stroke.DefaultMiter,
+                alpha = if(index % 3 != 0) 0.1f else 1f
+            )
         }
 
     }
 }
 
-fun Array<Array<TileState>>.filledBoard() : Boolean =
-    flatten().firstOrNull { it.text == EMPTY_TILE } == null
+@Composable
+private fun ColumnScope.PlaceTiles(
+    tileSize: Dp,
+    boardOfTiles: Array<Array<TileState>>,
+    currentlySelectedTile: Pair<Int, Int>?,
+    onTileSelected: (Pair<Int, Int>) -> Unit
+) {
+    this.apply {
+        boardOfTiles.forEachIndexed { rowIndex, rowOfTiles ->
+
+            Row {
+
+                rowOfTiles.forEachIndexed { tileIndex, tile ->
+
+                    BoardTile(
+                        modifier = Modifier.size(tileSize),
+                        value = tile.text,
+                        color = (Pair(rowIndex, tileIndex) == currentlySelectedTile)
+                            .tileColor()
+                    ) { onTileSelected(Pair(rowIndex, tileIndex)) }
+
+                }
+
+            }
+        }
+    }
+
+}
 
 @Composable
-fun Boolean.borderColor() : Color {
-    return if(this) {
-        CustomTheme.colors.primary.copy(alpha = 0.5F)
-    } else {
-        Color.Black
-    }
-}
-@Composable
-fun Boolean?.tileColor() : Color {
+private fun Boolean?.tileColor() : Color {
     return if (this == true) {
         CustomTheme.colors.primary.copy(alpha = 0.15F)
     } else {
         Color.Unspecified
-    }
-}
-
-@Composable
-fun Boolean.HorizontalDivider(color: Color) {
-    if (this) {
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(sizing.x_small)
-                .background(color)
-        )
-    } else {
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(sizing.x_small)
-                .background(color.copy(alpha = 0.001F)),
-        )
-    }
-
-}
-
-@Composable
-fun Boolean.VerticalDivider(color: Color) {
-    if (this) {
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(sizing.x_small)
-                .background(color),
-        )
-    } else {
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(sizing.x_small)
-                .background(color.copy(alpha = 0.001F)),
-        )
     }
 }
 
@@ -197,7 +211,7 @@ fun SudokuBoardPreview() {
 fun FillSudokuBoardPreview() {
 
     AndroidSudokuSolverTheme {
-        val board by remember { mutableStateOf(sudokuBoardArray) }
+        val board by remember { mutableStateOf(sudokuBoardFilledArray) }
 
         SudokuBoard(
             modifier = Modifier,

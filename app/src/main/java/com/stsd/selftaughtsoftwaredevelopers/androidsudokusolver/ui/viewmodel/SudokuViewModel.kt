@@ -117,9 +117,4 @@ class SudokuViewModel @Inject constructor(
         }.toTypedArray()
     }
 
-    companion object {
-        fun newEntryTest() = Random.nextInt(0, 9).toString()
-        const val TAG = "SudokuViewModel_TAG"
-    }
-
 }
