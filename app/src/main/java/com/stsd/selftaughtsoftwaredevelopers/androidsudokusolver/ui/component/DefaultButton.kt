@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalSizing
@@ -28,23 +27,22 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
     val sizing = LocalSizing.current
     val padding = LocalPadding.current
 
-    Surface(
-        modifier = Modifier
-            .padding(padding.small)
-            .clip(shape = CustomTheme.shapes.small)
-            .clickable { onButtonClick(num.toString()) }
-            .size(sizing.xxx_large),
-        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)
-    ) {
+    Surface(modifier = Modifier
+        .padding(padding.small)
+        .clip(shape = CustomTheme.shapes.small)
+        .clickable { onButtonClick(num.toString()) }
+        .size(sizing.xxx_large),
+
+        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)) {
 
         Box(contentAlignment = Alignment.Center) {
 
             Text(
-                text = num.toString(),
-                textAlign = TextAlign.Center
+                text = num.toString(), textAlign = TextAlign.Center
             )
 
         }
+
 
     }
 }
@@ -54,8 +52,7 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
 fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
 
     FlowRow(
-        modifier = Modifier.fillMaxWidth(),
-        mainAxisAlignment = MainAxisAlignment.Center
+        modifier = Modifier.fillMaxWidth(), mainAxisAlignment = MainAxisAlignment.Center
     ) {
         for (i in 1..9) {
             ButtonWithNumber(num = i) {
@@ -67,10 +64,7 @@ fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
 
 @Composable
 fun IconButton(
-    modifier: Modifier = Modifier,
-    imageVector: ImageVector,
-    text: String,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier, imageVector: ImageVector, text: String, onClick: () -> Unit
 ) {
 
     val sizing = LocalSizing.current
@@ -111,10 +105,8 @@ fun IconButton(
 
     val sizing = LocalSizing.current
     val padding = LocalPadding.current
-
     Surface(
-        color = backgroundColor,
-        shape = CustomTheme.shapes.small
+        color = backgroundColor, shape = CustomTheme.shapes.small
     ) {
         IconButton(
             onClick = { onClick() },
@@ -141,31 +133,20 @@ fun IconButton(
 
 }
 
-@Preview
 @Composable
+@Preview
 fun Preview() {
-
-    AndroidSudokuSolverTheme {
-
-        TwoRowsOfButtonsOffset {
-
-        }
+    TwoRowsOfButtonsOffset {
 
     }
-
 }
 
 @Preview
 @Composable
 fun IconButtonPreview() {
+    IconButton(
+        imageVector = Icons.Default.EmojiObjects, text = "IDEA"
+    ) {
 
-    AndroidSudokuSolverTheme {
-        IconButton(
-            imageVector = Icons.Default.EmojiObjects,
-            text = "IDEA"
-        ) {
-
-        }
     }
-
 }
