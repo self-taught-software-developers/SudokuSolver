@@ -1,18 +1,16 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.filledBoard
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.bordColor
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 
@@ -36,7 +34,8 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
 
         SudokuBoard(
             modifier = Modifier.padding(bounds),
-            board = board,
+            board = board.board,
+            borderColor = board.solved.bordColor(),
             selectedPosition = position
         ) { newPosition ->
             vm.updateSelectedPosition(newPosition)

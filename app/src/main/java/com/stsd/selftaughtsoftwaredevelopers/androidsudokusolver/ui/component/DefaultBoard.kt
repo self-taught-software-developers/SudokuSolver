@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.emptySudokuBoard
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.sudokuBoardFilled
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.sudokuBoardArray
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.sudokuBoardFilledArray
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
 
@@ -41,7 +41,7 @@ fun BoardTile(
 fun SudokuBoard(
     modifier: Modifier = Modifier,
     board: Array<Array<TileState>>,
-    borderColor: Color = board.filledBoard(),
+    borderColor: Color,
     selectedPosition: Pair<Int, Int>? = null,
     onPositionSelected: (Pair<Int, Int>) -> Unit
 ) {
@@ -76,11 +76,12 @@ fun SudokuBoard(
 fun SudokuBoardPreview() {
 
     AndroidSudokuSolverTheme {
-        val board by remember { mutableStateOf(sudokuBoardArray) }
+        val board by remember { mutableStateOf(emptySudokuBoard) }
 
         SudokuBoard(
             modifier = Modifier,
-            board = board
+            board = board,
+            borderColor = null.bordColor()
         ) {
 
         }
@@ -93,11 +94,12 @@ fun SudokuBoardPreview() {
 fun FillSudokuBoardPreview() {
 
     AndroidSudokuSolverTheme {
-        val board by remember { mutableStateOf(sudokuBoardFilledArray) }
+        val board by remember { mutableStateOf(sudokuBoardFilled) }
 
         SudokuBoard(
             modifier = Modifier,
-            board = board
+            board = board,
+            borderColor = null.bordColor()
         ) {
 
         }

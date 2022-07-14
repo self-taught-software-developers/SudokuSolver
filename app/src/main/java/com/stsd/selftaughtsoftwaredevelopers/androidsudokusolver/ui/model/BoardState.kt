@@ -1,25 +1,38 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
+
 data class BoardState(
-    val board: Array<Array<Int>>,
-    val solved: Boolean
+    val board: Array<Array<TileState>> = emptySudokuBoard,
+    val solved: Boolean? = null
 ) {
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    fun convertFromUiBoard() : Array<Array<Int>> {
+        return board.map { row ->
+            row.map { value ->
+                if(value.text == EMPTY_TILE) 0 else value.text.toInt()
+            }.toTypedArray()
+        }.toTypedArray()
 
-        other as BoardState
-
-        if (!board.contentDeepEquals(other.board)) return false
-        if (solved != other.solved) return false
-
-        return true
     }
 
-    override fun hashCode(): Int {
-        var result = board.contentDeepHashCode()
-        result = 31 * result + solved.hashCode()
-        return result
+    companion object {
+
+        fun Array<Array<Int>>.convertToUiBoard() : Array<Array<TileState>> {
+            return this.map { row ->
+                row.map { value ->
+                    if(value == 0) TileState(EMPTY_TILE) else TileState(value.toString())
+                }.toTypedArray()
+            }.toTypedArray()
+        }
+
+        val emptySudokuBoard = (1..9).map {
+            (1..9).map { TileState() }.toTypedArray()
+        }.toTypedArray()
+
+        val sudokuBoardFilled = (1..9).map {
+            (1..9).map { TileState(it.toString()) }.toTypedArray()
+        }.toTypedArray()
     }
+
 }

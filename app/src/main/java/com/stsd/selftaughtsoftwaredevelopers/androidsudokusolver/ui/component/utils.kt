@@ -12,16 +12,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
+import androidx.core.graphics.PathUtils.flatten
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
 @Composable
-fun Array<Array<TileState>>.filledBoard() : Color {
+fun Boolean?.bordColor() : Color {
 
-    return if(flatten().firstOrNull { it.text == TileState.EMPTY_TILE } == null) {
-        Color.Green
-    } else {
-        CustomTheme.colors.primary
+    return when(this) {
+        true -> Color.Green
+        false -> CustomTheme.colors.error
+        else -> CustomTheme.colors.onSurface
     }
 
 }
