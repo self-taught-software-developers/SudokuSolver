@@ -89,13 +89,13 @@ Here's why:
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Allow users to create a Sudoku board
-- [ ] Validate a user created Sudoku board
-- [ ] Solve a user created Sudoku board 
-- [ ] Display a Solved board
+- [x] Allow users to create a Sudoku board
+- [x] Validate a user created Sudoku board
+- [x] Solve a user created Sudoku board 
+- [x] Display a Solved board
 
-- [ ] Create graphical assets
-- [ ] Publish to the Google app store
+- [x] Create graphical assets
+- [x] Publish to the Google app store
 
 - [ ] Allow users to take a photo of a Sudoku board
   - [ ] Anaylze the image
