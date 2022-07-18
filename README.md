@@ -4,7 +4,7 @@
 
   <p align="center">
     <br />
-    <a href="">View Demo</a>
+    <a href="https://play.google.com/store/apps/details?id=com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver">Download on the App Store</a>
     ·
     <a href="https://github.com/Self-Taught-Software-Developers/SudokuSolver/issues">Report Bug</a>
     ·
