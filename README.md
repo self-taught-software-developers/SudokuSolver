@@ -1,6 +1,8 @@
 <div align="center">
 
-  <h3 align="center">Sudoku Solver App</h3>
+  <img src=https://raw.githubusercontent.com/Self-Taught-Software-Developers/SudokuSolver/main/Artboard%201.png width="150" height="150">
+  
+  <h2 align="center">Sudoku Solver App</h2>
 
   <p align="center">
     <br />
