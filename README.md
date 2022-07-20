@@ -97,16 +97,22 @@ Here's why:
 - [x] Create graphical assets
 - [x] Publish to the Google app store
 
+- [ ] Allow users to upload of a Sudoku board
+  - [ ] Anaylze the image
+  - [ ] Generate a Sudoku board from the anaylzed image
+  - [ ] Validate generated Sudoku board
+  - [ ] Solve generated Sudoku board
+  - [ ] Display a Solved board
+  
 - [ ] Allow users to take a photo of a Sudoku board
   - [ ] Anaylze the image
   - [ ] Generate a Sudoku board from the anaylzed image
   - [ ] Validate generated Sudoku board
   - [ ] Solve generated Sudoku board
   - [ ] Display a Solved board
-
-- [ ] Allow users to upload of a Sudoku board
-  - [ ] Anaylze the image
-  - [ ] Generate a Sudoku board from the anaylzed image
+  
+- [ ] Allow users to use their camera to recognize a Sudoku board
+  - [ ] Generate a Sudoku board from the anaylzed frames
   - [ ] Validate generated Sudoku board
   - [ ] Solve generated Sudoku board
   - [ ] Display a Solved board
