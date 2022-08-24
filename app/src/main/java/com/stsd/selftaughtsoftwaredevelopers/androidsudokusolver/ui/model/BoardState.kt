@@ -1,10 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 
 class BoardState(var solved: Boolean? = null) {
 
@@ -14,10 +11,9 @@ class BoardState(var solved: Boolean? = null) {
     private val _initialBoard = MutableStateFlow(emptySudokuBoard)
     var initialBoard : SharedFlow<Array<Array<TileState>>> = _initialBoard.asSharedFlow()
 
-    private var previousPosition : Pair<Int, Int>? = null
+    private var previousPosition : MutableList<Pair<Int, Int>?> = mutableListOf()
 
     fun selectPosition(position: Pair<Int, Int>) {
-        previousPosition = _selectedPosition.value
         _selectedPosition.update { position }
     }
 
@@ -29,10 +25,37 @@ class BoardState(var solved: Boolean? = null) {
 
     fun changeValue(value: String) {
         _selectedPosition.value?.let { (x, y) ->
+            previousPosition.top(_selectedPosition.value)
             _initialBoard.updateCopy { it[x][y].text = value }
         }
     }
 
+    fun undoLast() {
+        _selectedPosition.value?.let { (x, y) ->
+            _initialBoard.updateCopy { it[x][y].text = EMPTY_TILE }
+            _selectedPosition.update { previousPosition.takeTopOrNull((_selectedPosition.value)) }
+        }
+    }
+    fun clearBoard() {
+        previousPosition.clear()
+        _initialBoard.updateCopy { it.map { it.map { it.text = EMPTY_TILE } } }
+        _selectedPosition.update { null }
+    }
+
+    private fun <T> MutableList<T>.takeTopOrNull(value: T) : T? {
+        return if(value == lastOrNull()) {
+            removeLastOrNull()
+            lastOrNull()
+        } else {
+            lastOrNull()
+        }.also { removeLastOrNull() }
+    }
+    private fun <T> MutableList<T>.top(value: T) {
+        if (this.contains(value)) {
+            this.remove(value)
+            this.add(value)
+        } else this.add(value)
+    }
     private fun <T> MutableStateFlow<T>.updateCopy(function: (T) -> Unit) {
         when(val array = this.value) {
             is Array<*> -> this.update {
@@ -42,21 +65,6 @@ class BoardState(var solved: Boolean? = null) {
     }
     private fun <T> Array<T>.copy(function: (Array<T>) -> Unit) = this
         .copyOf().apply { function(this@copy) }
-
-    fun undoLast() {
-
-        _selectedPosition.value?.let { (x, y) ->
-            _initialBoard.value[x][y].text = EMPTY_TILE
-            _selectedPosition.update { previousPosition }
-        }
-
-    }
-    fun clearBoard() {
-        previousPosition = null
-        _selectedPosition.update { null }
-        _initialBoard.update { emptySudokuBoard }
-    }
-
     companion object {
         val emptySudokuBoard = Array(9) { x ->
             Array(9) { y ->

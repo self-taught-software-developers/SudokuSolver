@@ -28,7 +28,7 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
     Scaffold(
         bottomBar = {
             DefaultBottomBar(
-                onUndoRecentChange = vm::unDoRecentChange,
+                onUndoRecentChange = vm::undoLast,
                 onClearBoard = vm::clearBoard,
                 onSolveBoard = vm::solveBoard
             ) { number ->

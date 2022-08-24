@@ -34,23 +34,8 @@ class SudokuViewModel @Inject constructor(
         newValue: String
     ) = _sudokuBoardStateAlt.value.changeValue(newValue)
 
-    fun unDoRecentChange() = viewModelScope.launch {
-
-//        _sudokuBoardStateAlt.update { state ->
-//
-//            val position = selectedPosition.value
-//
-//            return@update BoardState(
-//                board = state.board.copyOf().apply {
-//                    this[position.first][position.second].text = EMPTY_TILE
-//                }
-//            )
-//
-//        }
-
-    }
-
-    fun clearBoard() = _sudokuBoardStateAlt.update { BoardState() }
+    fun undoLast() = _sudokuBoardStateAlt.value.undoLast()
+    fun clearBoard() = _sudokuBoardStateAlt.value.clearBoard()
 
     fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
 
