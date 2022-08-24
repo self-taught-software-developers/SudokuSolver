@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.emptySudokuBoard
@@ -25,16 +25,18 @@ fun BoardTile(
     color: Color = Color.Unspecified,
     onClick: () -> Unit
 ) {
-
     Box(
         modifier = modifier
             .clickable { onClick() }
-            .drawBehind { drawRect(color) },
+            .drawWithCache {
+                onDrawBehind {
+                    drawRect(color)
+                }
+            },
         contentAlignment = Alignment.Center
     ) {
         Text(text = value)
     }
-
 }
 
 @Composable
@@ -42,7 +44,7 @@ fun SudokuBoard(
     modifier: Modifier = Modifier,
     board: Array<Array<TileState>>,
     borderColor: Color,
-    selectedPosition: Pair<Int, Int>? = null,
+    selectedPosition: Triple<Int, Int, Int>? = null,
     onPositionSelected: (Pair<Int, Int>) -> Unit
 ) {
 
@@ -64,7 +66,7 @@ fun SudokuBoard(
             PlaceTiles(
                 tileSize = tileSize,
                 boardOfTiles = board,
-                currentlySelectedTile = selectedPosition
+                selectedTilePosition = selectedPosition
             ) { onPositionSelected(Pair(it.first, it.second)) }
 
         }
@@ -76,7 +78,7 @@ fun SudokuBoard(
 fun SudokuBoardPreview() {
 
     AndroidSudokuSolverTheme {
-        val board by remember { mutableStateOf(emptySudokuBoard) }
+        val board by remember { mutableStateOf(emptySudokuBoard(Triple(9,9,3))) }
 
         SudokuBoard(
             modifier = Modifier,

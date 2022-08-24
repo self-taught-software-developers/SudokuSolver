@@ -39,18 +39,7 @@ class SudokuViewModel @Inject constructor(
 
     fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
 
-//        _sudokuBoardStateAlt.update { board ->
-//
-//            val solved = CompletableDeferred<BoardState>().apply {
-//                worker.solveBoard(board.convertFromUiBoard())
-//                    .also { deferred ->
-//                        complete(deferred)
-//                    }
-//            }.await()
-//
-//            return@update solved
-//
-//        }
+        worker.solveBoard(_sudokuBoardStateAlt.value)
 
     }
 

@@ -22,8 +22,9 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.Su
 fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
 
     val state by vm.sudokuBoardStateAlt.collectAsState()
-    val selectedPosition by state.selectedPosition.collectAsState(initial = null)
-    val board by state.initialBoard.collectAsState(BoardState.emptySudokuBoard)
+    val selected by state.selectedPosition.collectAsState(initial = null)
+    //TODO set a null state for the board.
+    val board by state.initialBoard.collectAsState(BoardState.emptySudokuBoard(state.dimensions))
 
     Scaffold(
         bottomBar = {
@@ -41,7 +42,7 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
             modifier = Modifier.padding(bounds),
             board = board,
             borderColor = state.solved.bordColor(),
-            selectedPosition = selectedPosition
+            selectedPosition = selected?.let { (x,y) -> Triple(x,y, state.dimensions.third) }
         ) { newPosition ->
             vm.updateSelectedPosition(newPosition)
         }

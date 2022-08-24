@@ -5,14 +5,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
-import androidx.core.graphics.PathUtils.flatten
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
@@ -73,7 +70,7 @@ fun Modifier.drawSudokuGrid(color: Color) : Modifier {
 fun ColumnScope.PlaceTiles(
     tileSize: Dp,
     boardOfTiles: Array<Array<TileState>>,
-    currentlySelectedTile: Pair<Int, Int>?,
+    selectedTilePosition: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) {
     this.apply {
@@ -86,22 +83,12 @@ fun ColumnScope.PlaceTiles(
                     BoardTile(
                         modifier = Modifier.size(tileSize),
                         value = tile.text,
-                        color = (Pair(rowIndex, tileIndex) == currentlySelectedTile)
-                            .tileColor()
+                        color = tile.tileColor(coordinates = selectedTilePosition)
                     ) { onTileSelected(Pair(rowIndex, tileIndex)) }
 
                 }
 
             }
         }
-    }
-}
-
-@Composable
-fun Boolean?.tileColor() : Color {
-    return if (this == true) {
-        CustomTheme.colors.primary.copy(alpha = 0.15F)
-    } else {
-        Color.Unspecified
     }
 }
