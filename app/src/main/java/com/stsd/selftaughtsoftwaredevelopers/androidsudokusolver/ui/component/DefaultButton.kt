@@ -52,7 +52,8 @@ fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
 fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
 
     FlowRow(
-        modifier = Modifier.fillMaxWidth(), mainAxisAlignment = MainAxisAlignment.Center
+        modifier = Modifier.fillMaxWidth(),
+        mainAxisAlignment = MainAxisAlignment.Center
     ) {
         for (i in 1..9) {
             ButtonWithNumber(num = i) {

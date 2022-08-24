@@ -3,7 +3,10 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -11,14 +14,16 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manag
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.bordColor
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 
 @Composable
 fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
 
-    val board by vm.sudokuBoardStateAlt.collectAsState()
-    val position by vm.selectedPosition.collectAsState(null)
+    val state by vm.sudokuBoardStateAlt.collectAsState()
+    val selectedPosition by state.selectedPosition.collectAsState(initial = null)
+    val board by state.initialBoard.collectAsState(BoardState.emptySudokuBoard)
 
     Scaffold(
         bottomBar = {
@@ -34,9 +39,9 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
 
         SudokuBoard(
             modifier = Modifier.padding(bounds),
-            board = board.board,
-            borderColor = board.solved.bordColor(),
-            selectedPosition = position
+            board = board,
+            borderColor = state.solved.bordColor(),
+            selectedPosition = selectedPosition
         ) { newPosition ->
             vm.updateSelectedPosition(newPosition)
         }

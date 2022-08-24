@@ -1,7 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager
 
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.convertToUiBoard
 import java.util.stream.IntStream.range
 import javax.inject.Inject
 
@@ -9,9 +8,9 @@ class SudokuSolverWorker @Inject constructor() {
 
     fun solveBoard(board: Array<Array<Int>>) : BoardState {
 
-        if(board.isBoardNotValid()) return BoardState(board.convertToUiBoard(), false)
+//        if(board.isBoardNotValid()) return BoardState(board.convertToUiBoard(), false)
 
-        return BoardState(board = findSolution(board).convertToUiBoard(), true)
+        return BoardState(true)
 
     }
 

@@ -95,7 +95,6 @@ fun ColumnScope.PlaceTiles(
             }
         }
     }
-
 }
 
 @Composable

@@ -23,45 +23,30 @@ class SudokuViewModel @Inject constructor(
     private val _sudokuBoardStateAlt = MutableStateFlow(BoardState())
     val sudokuBoardStateAlt : StateFlow<BoardState> = _sudokuBoardStateAlt.asStateFlow()
 
-    private val _selectedPosition = MutableStateFlow(Pair(0, 0))
-    val selectedPosition : StateFlow<Pair<Int, Int>> = _selectedPosition.asStateFlow()
-
     fun updateSelectedPosition(
         newPosition: Pair<Int, Int>
-    ) = _selectedPosition.update { newPosition }
+    ) = _sudokuBoardStateAlt.value.selectPosition(newPosition)
 
     /**
      * Call this function when a numbered button is clicked.
      */
-    fun enterNewValue(newValue: String) = viewModelScope.launch {
-
-        _sudokuBoardStateAlt.update { state ->
-
-            val position = selectedPosition.value
-
-            return@update BoardState(
-                board = state.board.copyOf().apply {
-                    this[position.first][position.second].text = newValue
-                }
-            )
-
-        }
-
-    }
+    fun enterNewValue(
+        newValue: String
+    ) = _sudokuBoardStateAlt.value.changeValue(newValue)
 
     fun unDoRecentChange() = viewModelScope.launch {
 
-        _sudokuBoardStateAlt.update { state ->
-
-            val position = selectedPosition.value
-
-            return@update BoardState(
-                board = state.board.copyOf().apply {
-                    this[position.first][position.second].text = EMPTY_TILE
-                }
-            )
-
-        }
+//        _sudokuBoardStateAlt.update { state ->
+//
+//            val position = selectedPosition.value
+//
+//            return@update BoardState(
+//                board = state.board.copyOf().apply {
+//                    this[position.first][position.second].text = EMPTY_TILE
+//                }
+//            )
+//
+//        }
 
     }
 
@@ -69,18 +54,18 @@ class SudokuViewModel @Inject constructor(
 
     fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
 
-        _sudokuBoardStateAlt.update { board ->
-
-            val solved = CompletableDeferred<BoardState>().apply {
-                worker.solveBoard(board.convertFromUiBoard())
-                    .also { deferred ->
-                        complete(deferred)
-                    }
-            }.await()
-
-            return@update solved
-
-        }
+//        _sudokuBoardStateAlt.update { board ->
+//
+//            val solved = CompletableDeferred<BoardState>().apply {
+//                worker.solveBoard(board.convertFromUiBoard())
+//                    .also { deferred ->
+//                        complete(deferred)
+//                    }
+//            }.await()
+//
+//            return@update solved
+//
+//        }
 
     }
 
