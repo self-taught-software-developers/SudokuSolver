@@ -1,8 +1,10 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
-import androidx.compose.runtime.getValue
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
 
 class BoardState(var solved: Boolean? = null) {
 
@@ -72,26 +74,3 @@ class BoardState(var solved: Boolean? = null) {
     }
 
 }
-
-//class ConversationUiState(
-//    val channelName: String,
-//    val channelMembers: Int,
-//    initialMessages: List<Message>
-//) {
-//    private val _messages: MutableList<Message> =
-//        mutableStateListOf(*initialMessages.toTypedArray())
-//    val messages: List<Message> = _messages
-//
-//    fun addMessage(msg: Message) {
-//        _messages.add(0, msg) // Add to the beginning of the list
-//    }
-//}
-//
-//@Immutable
-//data class Message(
-//    val author: String,
-//    val content: String,
-//    val timestamp: String,
-//    val image: Int? = null,
-//    val authorImage: Int = if (author == "me") R.drawable.ali else R.drawable.someone_else
-//)
