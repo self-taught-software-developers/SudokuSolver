@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -15,13 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.emptySudokuBoard
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.sudokuBoardFilled
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BoardTile(
     modifier: Modifier,
-    value: String,
+    value: Int,
     color: Color = Color.Unspecified,
     onClick: () -> Unit
 ) {
@@ -35,7 +38,30 @@ fun BoardTile(
             },
         contentAlignment = Alignment.Center
     ) {
-        Text(text = value)
+
+        AnimatedContent(
+            targetState = value,
+            transitionSpec = {
+                // Compare the incoming number with the previous number.
+                if (targetState > initialState) {
+                    // If the target number is larger, it slides up and fades in
+                    // while the initial (smaller) number slides up and fades out.
+                    slideInVertically { height -> height } + fadeIn() with
+                            slideOutVertically { height -> -height } + fadeOut()
+                } else {
+                    // If the target number is smaller, it slides down and fades in
+                    // while the initial number slides down and fades out.
+                    slideInVertically { height -> -height } + fadeIn() with
+                            slideOutVertically { height -> height } + fadeOut()
+                }.using(
+                    // Disable clipping since the faded slide-in/out should
+                    // be displayed out of bounds.
+                    SizeTransform(clip = false)
+                )
+            }
+        ) { targetCount ->
+            Text(text = toTileText(value))
+        }
     }
 }
 
@@ -115,7 +141,7 @@ fun BoardTilePreview() {
     AndroidSudokuSolverTheme {
         BoardTile(
             modifier = Modifier,
-            value = "1"
+            value = 1
         ) {
 
         }

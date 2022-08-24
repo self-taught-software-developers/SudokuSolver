@@ -82,7 +82,7 @@ fun ColumnScope.PlaceTiles(
 
                     BoardTile(
                         modifier = Modifier.size(tileSize),
-                        value = tile.text,
+                        value = tile.value(),
                         color = tile.tileColor(coordinates = selectedTilePosition)
                     ) { onTileSelected(Pair(rowIndex, tileIndex)) }
 
