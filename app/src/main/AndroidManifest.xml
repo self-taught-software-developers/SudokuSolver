@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver">
 
+    <uses-feature android:name="android.hardware.camera.any"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
     <application
         android:name=".framework.SudokuApplication"
         android:allowBackup="true"

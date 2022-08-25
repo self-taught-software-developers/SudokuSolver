@@ -60,7 +60,10 @@ fun BoardTile(
                 )
             }
         ) { targetCount ->
-            Text(text = toTileText(value))
+            Text(
+                text = toTileText(targetCount),
+
+            )
         }
     }
 }

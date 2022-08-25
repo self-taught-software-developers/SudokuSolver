@@ -3,6 +3,7 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen.SudokuScannerScreen
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen.SudokuScreen
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,7 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AndroidSudokuSolverTheme {
-                SudokuScreen()
+                SudokuScannerScreen()
             }
         }
     }

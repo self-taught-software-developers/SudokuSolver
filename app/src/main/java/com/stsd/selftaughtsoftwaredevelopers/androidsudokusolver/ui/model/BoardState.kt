@@ -1,24 +1,26 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 
 class BoardState(
-    var solved: Boolean? = null,
     var dimensions: Triple<Int, Int, Int> = Triple(9, 9, 3)
 ) {
 
+    private val _solved = MutableStateFlow<Boolean?>(null)
+    val solved : StateFlow<Boolean?> = _solved.asStateFlow()
+
     private val _selectedPosition = MutableStateFlow<Pair<Int,Int>?>(null)
-    var selectedPosition : SharedFlow<Pair<Int, Int>?> = _selectedPosition.asSharedFlow()
+    var selectedPosition : StateFlow<Pair<Int, Int>?> = _selectedPosition.asStateFlow()
 
     private val _initialBoard = MutableStateFlow(emptySudokuBoard(dimensions))
-    var initialBoard : SharedFlow<Array<Array<TileState>>> = _initialBoard.asSharedFlow()
+    var initialBoard : StateFlow<Array<Array<TileState>>> = _initialBoard.asStateFlow()
 
     private var previousPosition : MutableList<Pair<Int, Int>?> = mutableListOf()
 
+    fun updateSolutionState(value: Boolean? = null) {
+        _solved.update { value }
+    }
     fun selectPosition(position: Pair<Int, Int>) {
         _selectedPosition.update { position }
     }
@@ -31,13 +33,13 @@ class BoardState(
 
     fun undoLast() {
         _selectedPosition.value?.let { (x, y) ->
-            if (solved != null) solved = null
+            if (solved.value != null) updateSolutionState()
             _initialBoard.updateCopy { it[x][y].text = EMPTY_TILE }
             _selectedPosition.update { previousPosition.takeTopOrNull((_selectedPosition.value)) }
         }
     }
     fun clearBoard() {
-        if (solved != null) solved = null
+        if (solved.value != null) updateSolutionState()
         previousPosition.clear()
         _initialBoard.updateCopy { it.map { it.map { it.text = EMPTY_TILE } } }
         _selectedPosition.update { null }
@@ -51,7 +53,10 @@ class BoardState(
         fromUiBoard().apply {
             forEach { row ->
                 row.filter { it != 0 }.also { nonEmptyPositions ->
-                    if (nonEmptyPositions.distinct().size < nonEmptyPositions.size) { solved = false ; return false }
+                    if (nonEmptyPositions.distinct().size < nonEmptyPositions.size) {
+                        _solved.update { false }
+                        return false
+                    }
                 }
             }
 
@@ -64,7 +69,10 @@ class BoardState(
                 }
             }
 
-            if(bucket.any { it.distinct().size < it.size }) { solved = false ; return false }
+            if(bucket.any { it.distinct().size < it.size }) {
+                _solved.update { false }
+                return false
+            }
             bucket = (0..lastIndex).map { arrayListOf() }
 
             // to verify that our 3 by 3 grid doesn't have any repeating values we need ot view our 3 by 3 grid
@@ -91,7 +99,10 @@ class BoardState(
                 }
             }
 
-            if(bucket.any { it.distinct().size < it.size }) { solved = false ; return false }
+            if(bucket.any { it.distinct().size < it.size }) {
+                _solved.update { false }
+                return false
+            }
             return true
 
         }

@@ -9,6 +9,16 @@ import javax.inject.Inject
 
 class SudokuSolverWorker @Inject constructor() {
 
+    /**
+     * TODO change solution speed
+     * INSTANT_SPEED = 10L
+     * SUPER_SPEED = 50L
+     * DEFAULT_SPEED = 200L
+     * SLOW_SPEED = 800L
+     */
+
+    private val solveSpeedMillis = 200L
+
     suspend fun solveBoard(boardState: BoardState) {
 
         if (boardState.isValid().also { println(it) }) {
@@ -18,35 +28,30 @@ class SudokuSolverWorker @Inject constructor() {
     }
 
     suspend fun findSolution(board: BoardState) : Array<Array<Int>> {
-
+        delay(solveSpeedMillis)
         val position = findEmptyPosition(board.fromUiBoard())
 
         if (position.isEmpty()) {
             return board.fromUiBoard()
         } else {
-
             (1..9).forEach { candidate ->
 
                 if (validatePlacement(board.fromUiBoard(), candidate, position)) {
                     board.selectPosition(Pair(position[0],position[1]))
-                    delay(80)
                     board.changeValue(toTileText(candidate))
 
                     if (findEmptyPosition(findSolution(board)).isEmpty()) {
                         return board.apply {
-                            solved = true
+                            updateSolutionState(true)
                         }.fromUiBoard()
                     }
 
                     board.selectPosition(Pair(position[0],position[1]))
-                    delay(80)
                     board.changeValue(toTileText(0))
                 }
 
             }
-
             return board.fromUiBoard()
-
         }
 
     }
