@@ -28,7 +28,7 @@ fun SudokuScannerScreen(vm: SudokuViewModel = viewModel()) {
         val dims = calculateBoardDimensions()
         val tiles = dims.calculateTileDimensions()
 
-        Camera()
+        Camera(tiles = tiles)
 
 //        SudokuBoard(
 //            board = board,

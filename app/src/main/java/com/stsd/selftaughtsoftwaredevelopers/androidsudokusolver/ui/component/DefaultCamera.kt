@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +27,10 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Composable
-fun Camera(modifier: Modifier = Modifier) {
+fun Camera(
+    modifier: Modifier = Modifier,
+    tiles: List<Rect>
+) {
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -58,7 +62,7 @@ fun Camera(modifier: Modifier = Modifier) {
             .build().also {
                 it.setAnalyzer(
                     executor,
-                    SudokuBoardAnalyzer()
+                    SudokuBoardAnalyzer(tiles)
                 )
             }
 
@@ -76,7 +80,7 @@ fun Camera(modifier: Modifier = Modifier) {
     }
 
     AndroidView(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         factory = { previewView }
     )

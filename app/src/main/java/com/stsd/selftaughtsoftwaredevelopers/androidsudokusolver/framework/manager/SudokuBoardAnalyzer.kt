@@ -3,13 +3,16 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.mana
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.toComposeRect
 import androidx.core.graphics.toRectF
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
-class SudokuBoardAnalyzer : ImageAnalysis.Analyzer {
+class SudokuBoardAnalyzer(
+    private val listOfTiles: List<Rect>
+) : ImageAnalysis.Analyzer {
 
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.Builder().build())
 
@@ -28,15 +31,21 @@ class SudokuBoardAnalyzer : ImageAnalysis.Analyzer {
                         //TODO convert a boundingBox to an xy tile placement.
                         result.result
                             .textBlocks.flatMap { block ->
+                                println("${block.boundingBox}")
                                 block.lines.flatMap { line ->
                                     line.elements
                                 }
                             }.forEach { element ->
 
-//                                if (element.text == "6") {
-//                                    val elementFrame = element.boundingBox?.toComposeRect()
-//                                    println("${element.text}, $elementFrame")
-//                                }
+                                element.text.toIntOrNull()?.let { value ->
+                                    element.boundingBox?.toComposeRect()?.let { rect ->
+
+                                        if (listOfTiles.any { rect.contains(it.center) }) {
+                                            println("$value, $rect")
+                                        }
+                                    }
+
+                                }
 
                             }
 
