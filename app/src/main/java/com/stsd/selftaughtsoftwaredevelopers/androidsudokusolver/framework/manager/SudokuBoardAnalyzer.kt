@@ -3,6 +3,8 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.mana
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.compose.ui.graphics.toComposeRect
+import androidx.core.graphics.toRectF
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -24,14 +26,19 @@ class SudokuBoardAnalyzer : ImageAnalysis.Analyzer {
 
                         //TODO Based on the image's bounding box place a text on the screen.
                         //TODO convert a boundingBox to an xy tile placement.
-//                        result.result
-//                            .textBlocks.flatMap {
-//                                it.lines.flatMap { it.elements }
-//                            }.forEach { element ->
-//                                val elementText = element.text
-//                                val elementFrame = element.boundingBox
-//                                println("$elementText, $elementFrame")
-//                            }
+                        result.result
+                            .textBlocks.flatMap { block ->
+                                block.lines.flatMap { line ->
+                                    line.elements
+                                }
+                            }.forEach { element ->
+
+//                                if (element.text == "6") {
+//                                    val elementFrame = element.boundingBox?.toComposeRect()
+//                                    println("${element.text}, $elementFrame")
+//                                }
+
+                            }
 
                     }
 

@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -7,12 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 
 @Composable
 fun Boolean?.bordColor() : Color {
@@ -67,30 +71,80 @@ fun Modifier.drawSudokuGrid(color: Color) : Modifier {
 
 }
 
-fun Modifier.drawSudokuGridTiles(color: Color) : Modifier {
+fun Modifier.drawSudokuGridTiles(
+    color: Color,
+    dimensions: Int = 9
+) : Modifier {
     return this@drawSudokuGridTiles.drawWithCache {
         this@drawWithCache.onDrawBehind {
+            println("canvas $size")
             val (width, height) = this@onDrawBehind.size
-            val tileWidth = width / 9
-            val tileHeight = height / 9
+            val tileWidth = width / dimensions
+            val tileHeight = height / dimensions
 
-            repeat(9) { y ->
-                repeat(9) { x ->
+            repeat(dimensions) { y ->
+                repeat(dimensions) { x ->
                     val gridPlacements = Offset(tileWidth * x, tileHeight * y)
 
-                    println(gridPlacements)
-
+//                    println(gridPlacements)
+center
                     drawRect(
                         topLeft = gridPlacements,
                         color = color,
-                        style = Stroke(width = 1f),
-                        size = Size(tileWidth, tileHeight)
+                        style = Stroke(width = 20f),
+                        size = Size(tileWidth, tileWidth)
                     )
                 }
             }
         }
     }
 
+}
+
+@Composable
+fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
+
+    val density = LocalDensity.current
+    val padding = LocalPadding.current
+
+    val iWidth= with(density) { (maxWidth.toPx()) }
+    val iHeight = with(density) { (maxHeight.toPx())}
+
+    val width = with(density) { (maxWidth - (padding.medium * 2)).toPx() }
+    val height = with(density) { (maxHeight - (padding.medium * 2)).toPx() }
+
+    val scalingSize = minOf(width, height)
+
+    val startX = (iWidth - scalingSize)/2 //this gives us the offset position for our x.
+    val startY = (iHeight - scalingSize)/2  //this gives us the offset position for our y.
+
+    val start = Offset(x = startX, y = startY)
+
+    return Rect(start, Size(scalingSize,scalingSize))
+
+}
+
+fun Rect.calculateTileDimensions(cellCount: Int = 3) : ArrayList<Rect> {
+
+    val tiles = arrayListOf<Rect>()
+    val (x, y) = this.topLeft
+    val (width, height) = this.size.div(cellCount.toFloat())
+
+    (0 until cellCount).forEach { xp ->
+        (0 until cellCount).forEach { yp ->
+            tiles.add(
+                Rect(
+                    offset = Offset(
+                        x = (width * xp) + x,
+                        y = (height * yp) + y
+                    ),
+                    size = Size(width, height)
+                )
+            )
+        }
+    }
+
+    return tiles.also { it.forEach(::println) ; println(it.size) }
 }
 
 @Composable

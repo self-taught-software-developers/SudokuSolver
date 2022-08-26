@@ -80,7 +80,7 @@ fun SudokuBoard(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = padding.medium),
+            .padding(padding.medium),
         contentAlignment = Alignment.Center
     ) {
 
@@ -88,8 +88,11 @@ fun SudokuBoard(
 
         Column(
             modifier = Modifier
-                .defaultBorder(borderColor)
-                .drawSudokuGridTiles(borderColor)
+//                .defaultBorder(borderColor)
+                .drawSudokuGridTiles(
+                    color = borderColor,
+                    dimensions = 3
+                )
         ) {
 
             PlaceTiles(
