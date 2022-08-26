@@ -7,13 +7,20 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuBoardAnalyzer
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -47,7 +54,12 @@ fun Camera(modifier: Modifier = Modifier) {
             .also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
         val imageAnalyzer = ImageAnalysis.Builder()
-            .build()
+            .build().also {
+                it.setAnalyzer(
+                    executor,
+                    SudokuBoardAnalyzer()
+                )
+            }
 
         runCatching {
             cameraProvider.unbindAll()
@@ -62,13 +74,10 @@ fun Camera(modifier: Modifier = Modifier) {
 
     }
 
-    Box(modifier = modifier) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize(),
-            factory = { previewView }
-        )
-    }
-
-
+    AndroidView(
+        modifier = Modifier
+            .fillMaxSize(),
+        factory = { previewView }
+    )
 
 }

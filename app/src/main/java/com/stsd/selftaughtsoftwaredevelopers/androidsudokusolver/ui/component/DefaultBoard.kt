@@ -89,7 +89,7 @@ fun SudokuBoard(
         Column(
             modifier = Modifier
                 .defaultBorder(borderColor)
-                .drawSudokuGrid(borderColor)
+                .drawSudokuGridTop(borderColor)
         ) {
 
             PlaceTiles(
