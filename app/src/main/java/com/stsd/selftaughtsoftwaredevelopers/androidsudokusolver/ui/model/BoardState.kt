@@ -30,6 +30,15 @@ class BoardState(
             _initialBoard.updateCopy { it[x][y].text = value }
         }
     }
+    fun changeValue(
+        value: String,
+        position: Pair<Int, Int>
+    ) {
+
+        selectPosition(position)
+        changeValue(value)
+
+    }
 
     fun undoLast() {
         _selectedPosition.value?.let { (x, y) ->

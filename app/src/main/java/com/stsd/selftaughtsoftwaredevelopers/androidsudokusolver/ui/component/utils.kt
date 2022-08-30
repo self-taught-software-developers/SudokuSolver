@@ -77,7 +77,7 @@ fun Modifier.drawSudokuGridTiles(
 ) : Modifier {
     return this@drawSudokuGridTiles.drawWithCache {
         this@drawWithCache.onDrawBehind {
-            println("canvas $size")
+
             val (width, height) = this@onDrawBehind.size
             val tileWidth = width / dimensions
             val tileHeight = height / dimensions
@@ -86,8 +86,6 @@ fun Modifier.drawSudokuGridTiles(
                 repeat(dimensions) { x ->
                     val gridPlacements = Offset(tileWidth * x, tileHeight * y)
 
-//                    println(gridPlacements)
-center
                     drawRect(
                         topLeft = gridPlacements,
                         color = color,
@@ -101,17 +99,40 @@ center
 
 }
 
+
+
 @Composable
-fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
+fun BoxWithConstraintsScope.calculatePx() : Pair<Float,Float> {
 
     val density = LocalDensity.current
-    val padding = LocalPadding.current
 
     val iWidth= with(density) { (maxWidth.toPx()) }
     val iHeight = with(density) { (maxHeight.toPx())}
 
-    val width = with(density) { (maxWidth - (padding.medium * 2)).toPx() }
-    val height = with(density) { (maxHeight - (padding.medium * 2)).toPx() }
+    return Pair(iWidth, iHeight)
+}
+
+fun Pair<Float, Float>.toAspectRatio() = (second/first).toInt()
+fun Pair<Float, Float>.toInt() = Pair(this.first.toInt(), this.second.toInt())
+
+@Composable
+fun BoxWithConstraintsScope.subtractDimensions(extra : Dp) : Pair<Float,Float> {
+
+    val density = LocalDensity.current
+
+    val width = with(density) { (maxWidth - extra).toPx() }
+    val height = with(density) { (maxHeight - extra).toPx() }
+
+    return Pair(width, height)
+}
+
+@Composable
+fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
+
+    val padding = LocalPadding.current
+
+    val (iWidth, iHeight) = calculatePx()
+    val (width, height) = subtractDimensions((padding.medium * 2))
 
     val scalingSize = minOf(width, height)
 
@@ -124,22 +145,25 @@ fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
 
 }
 
-fun Rect.calculateTileDimensions(cellCount: Int = 3) : ArrayList<Rect> {
+data class Cell(val position : Pair<Int, Int>, val rect: Rect)
 
-    val tiles = arrayListOf<Rect>()
+fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<Cell> {
+
+    val tiles = arrayListOf<Cell>()
     val (x, y) = this.topLeft
     val (width, height) = this.size.div(cellCount.toFloat())
 
     (0 until cellCount).forEach { xp ->
         (0 until cellCount).forEach { yp ->
             tiles.add(
-                Rect(
-                    offset = Offset(
-                        x = (width * xp) + x,
-                        y = (height * yp) + y
-                    ),
-                    size = Size(width, height)
+                Cell(
+                    position = Pair(xp, yp),
+                    rect = Rect(
+                        offset = Offset(x = (width * xp) + x, y = (height * yp) + y),
+                        size = Size(width, height)
+                    )
                 )
+
             )
         }
     }

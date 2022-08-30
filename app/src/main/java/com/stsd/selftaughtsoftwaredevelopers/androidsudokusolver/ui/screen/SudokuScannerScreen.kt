@@ -9,9 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.Camera
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateBoardDimensions
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateTileDimensions
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 
 @Composable
@@ -26,36 +24,45 @@ fun SudokuScannerScreen(vm: SudokuViewModel = viewModel()) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
 
         val dims = calculateBoardDimensions()
-        val tiles = dims.calculateTileDimensions()
+        val cells = dims.calculateTileDimensions()
 
-        Camera(tiles = tiles)
 
-//        SudokuBoard(
-//            board = board,
-//            borderColor = solved.bordColor(),
-//            selectedPosition = selected?.let { (x,y) -> Triple(x,y, state.dimensions.third) }
-//        ) { newPosition ->
-//            vm.updateSelectedPosition(newPosition)
-//        }
-        Canvas(modifier = Modifier.fillMaxSize()) {
-
-            drawRect(
-                size = dims.size,
-                topLeft = dims.topLeft,
-                color = Color.Red,
-                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 12f)
+        Camera(
+            size = calculatePx(),
+            cellList = cells
+        ) {
+            vm.enterNewValue(
+                newValue = it.text,
+                position = it.position
             )
-
-            tiles.forEach {
-                drawRect(
-                    size = it.size,
-                    topLeft = it.topLeft,
-                    color = Color.White,
-                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 5f)
-                )
-            }
-
         }
+
+        SudokuBoard(
+            board = board,
+            borderColor = solved.bordColor(),
+            selectedPosition = selected?.let { (x,y) -> Triple(x,y, state.dimensions.third) }
+        ) { newPosition ->
+            vm.updateSelectedPosition(newPosition)
+        }
+//        Canvas(modifier = Modifier.fillMaxSize()) {
+//
+//            drawRect(
+//                size = dims.size,
+//                topLeft = dims.topLeft,
+//                color = Color.Red,
+//                style = androidx.compose.ui.graphics.drawscope.Stroke(width = 12f)
+//            )
+//
+//            cells.forEach {
+//                drawRect(
+//                    size = it.rect.size,
+//                    topLeft = it.rect.topLeft,
+//                    color = Color.White,
+//                    style = androidx.compose.ui.graphics.drawscope.Stroke(width = 5f)
+//                )
+//            }
+//
+//        }
     }
 
 }

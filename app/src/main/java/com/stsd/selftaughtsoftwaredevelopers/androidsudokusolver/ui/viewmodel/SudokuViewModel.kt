@@ -34,6 +34,11 @@ class SudokuViewModel @Inject constructor(
         newValue: String
     ) = _sudokuBoardStateAlt.value.changeValue(newValue)
 
+    fun enterNewValue(
+        newValue: String,
+        position: Pair<Int, Int>
+    ) = _sudokuBoardStateAlt.value.changeValue(newValue, position)
+
     fun undoLast() = _sudokuBoardStateAlt.value.undoLast()
     fun clearBoard() = _sudokuBoardStateAlt.value.clearBoard()
 

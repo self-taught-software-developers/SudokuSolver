@@ -3,18 +3,21 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.mana
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.toComposeRect
-import androidx.core.graphics.toRectF
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.Cell
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
+import javax.annotation.Untainted
 
 class SudokuBoardAnalyzer(
-    private val listOfTiles: List<Rect>
+    private val cellList: List<Cell>,
+    val onProcessed: (TileState) -> Unit
 ) : ImageAnalysis.Analyzer {
 
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.Builder().build())
+    private val processedElements = hashMapOf<Pair<Int,Int>,TileState>()
 
     @ExperimentalGetImage
     override fun analyze(imageProxy: ImageProxy) {
@@ -31,18 +34,32 @@ class SudokuBoardAnalyzer(
                         //TODO convert a boundingBox to an xy tile placement.
                         result.result
                             .textBlocks.flatMap { block ->
-                                println("${block.boundingBox}")
                                 block.lines.flatMap { line ->
                                     line.elements
                                 }
                             }.forEach { element ->
 
-                                element.text.toIntOrNull()?.let { value ->
+                                element.text.take(1).toIntOrNull()?.let { value ->
                                     element.boundingBox?.toComposeRect()?.let { rect ->
+                                        cellList
+                                            .firstOrNull { it.rect.contains(rect.topLeft) }
+                                            ?.let { cell ->
+                                                //TODO hash of items already added.
+                                                //TODO add it
+                                                println("$value, ${cell.position}, ${cell.rect}, $rect")
+                                                if (processedElements.contains(cell.position)) {
+                                                    //todo change the value if they are different.
+                                                } else {
 
-                                        if (listOfTiles.any { rect.contains(it.center) }) {
-                                            println("$value, $rect")
-                                        }
+                                                    processedElements[cell.position] = TileState(
+                                                        text = value.toString(),
+                                                        position = cell.position
+                                                    ).apply(onProcessed)
+
+                                                }
+
+                                            }
+
                                     }
 
                                 }
