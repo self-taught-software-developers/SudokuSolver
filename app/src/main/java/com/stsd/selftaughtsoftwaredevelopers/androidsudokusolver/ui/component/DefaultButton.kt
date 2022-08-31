@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,143 +12,87 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalSizing
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
 
 @Composable
-fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
-
-    val sizing = LocalSizing.current
-    val padding = LocalPadding.current
-
-    Surface(modifier = Modifier
-        .padding(padding.small)
-        .clip(shape = CustomTheme.shapes.small)
-        .clickable { onButtonClick(num.toString()) }
-        .size(sizing.xxx_large),
-
-        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)) {
-
-        Box(contentAlignment = Alignment.Center) {
-
-            Text(
-                text = num.toString(), textAlign = TextAlign.Center
-            )
-
-        }
-
-
-    }
-}
-
-
-@Composable
-fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
-
-    FlowRow(
-        modifier = Modifier.fillMaxWidth(),
-        mainAxisAlignment = MainAxisAlignment.Center
-    ) {
-        for (i in 1..9) {
-            ButtonWithNumber(num = i) {
-                onButtonClick(it)
-            }
-        }
-    }
-}
-
-@Composable
-fun IconButton(
-    modifier: Modifier = Modifier, imageVector: ImageVector, text: String, onClick: () -> Unit
+fun DefaultNumericButton(
+    modifier: Modifier = Modifier,
+    num: Int,
+    onClick: (String) -> Unit
 ) {
 
-    val sizing = LocalSizing.current
-    val padding = LocalPadding.current
-
-    IconButton(
-        onClick = { onClick() },
+    Box(
         modifier = modifier
-            .defaultMinSize(sizing.xxx_large)
             .padding(padding.small)
+            .clip(shape = CustomTheme.shapes.small)
+            .background(CustomTheme.colors.onSurface.copy(alpha = 0.06F))
+            .clickable { onClick(num.toString()) }
+            .size(CustomTheme.sizing.xx_large),
+        contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = imageVector, contentDescription = imageVector.name
-            )
-            Text(
-                text = text.uppercase(),
-                style = MaterialTheme.typography.caption.copy(fontSize = 10.sp),
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+
+        Text(
+            text = num.toString(),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme
+                .typography
+                .body1.copy(fontWeight = FontWeight.Black)
+        )
 
     }
 
 }
 
 @Composable
-fun IconButton(
+fun DefaultIconButton(
     modifier: Modifier = Modifier,
-    backgroundColor: Color,
     imageVector: ImageVector,
-    text: String,
     onClick: () -> Unit
 ) {
-
-    val sizing = LocalSizing.current
-    val padding = LocalPadding.current
-    Surface(
-        color = backgroundColor, shape = CustomTheme.shapes.small
+    Box(
+        modifier = modifier
+            .padding(padding.small)
+            .clip(shape = CustomTheme.shapes.small)
+            .clickable { onClick() }
+            .size(CustomTheme.sizing.xx_large),
+        contentAlignment = Alignment.Center
     ) {
-        IconButton(
-            onClick = { onClick() },
-            modifier = modifier
-                .defaultMinSize(sizing.xxx_large)
-                .padding(padding.small)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    imageVector = imageVector, contentDescription = imageVector.name
-                )
-                Text(
-                    text = text.uppercase(),
-                    style = MaterialTheme.typography.caption.copy(fontSize = 10.sp),
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
 
-        }
+        Icon(
+            imageVector = imageVector,
+            contentDescription = imageVector.name
+        )
+
     }
 
 }
 
 @Composable
-@Preview
-fun Preview() {
-    TwoRowsOfButtonsOffset {
-
-    }
-}
-
-@Preview
-@Composable
-fun IconButtonPreview() {
-    IconButton(
-        imageVector = Icons.Default.EmojiObjects, text = "IDEA"
+fun DefaultIconButton(
+    modifier: Modifier = Modifier,
+    imageVector: ImageVector,
+    backgroundColor: Color,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .padding(padding.small)
+            .clip(shape = CustomTheme.shapes.small)
+            .background(backgroundColor)
+            .clickable { onClick() }
+            .size(CustomTheme.sizing.xx_large),
+        contentAlignment = Alignment.Center
     ) {
 
+        Icon(
+            imageVector = imageVector,
+            contentDescription = imageVector.name
+        )
+
     }
+
 }

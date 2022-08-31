@@ -88,11 +88,7 @@ fun SudokuBoard(
 
         Column(
             modifier = Modifier
-//                .defaultBorder(borderColor)
-                .drawSudokuGridTiles(
-                    color = borderColor,
-                    dimensions = 3
-                )
+                .drawSudokuGrid()
         ) {
 
             PlaceTiles(

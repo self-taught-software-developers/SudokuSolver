@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.ScannerState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
@@ -22,6 +23,17 @@ class SudokuViewModel @Inject constructor(
 
     private val _sudokuBoardStateAlt = MutableStateFlow(BoardState())
     val sudokuBoardStateAlt : StateFlow<BoardState> = _sudokuBoardStateAlt.asStateFlow()
+
+    private val _scannerState = MutableStateFlow(ScannerState.OFF)
+    val scannerState : StateFlow<ScannerState> = _scannerState.asStateFlow()
+
+    fun toggleCameraState() {
+        _scannerState.value = when(_scannerState.value) {
+            ScannerState.OFF -> ScannerState.IDLE
+            ScannerState.IDLE -> ScannerState.OFF
+            ScannerState.SCANNING -> ScannerState.OFF
+        }
+    }
 
     fun updateSelectedPosition(
         newPosition: Pair<Int, Int>

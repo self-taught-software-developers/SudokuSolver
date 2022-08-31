@@ -65,7 +65,7 @@ fun AndroidSudokuSolverTheme(
 
     LaunchedEffect(colors) {
         systemUiController.setSystemBarsColor(
-            color = colors.background,
+            color = colors.primary,
             darkIcons = !darkTheme
         )
     }

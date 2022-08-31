@@ -10,7 +10,9 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -29,7 +31,22 @@ fun Boolean?.bordColor() : Color {
 
 }
 
-fun Modifier.drawSudokuGrid(color: Color) : Modifier {
+fun DrawScope.drawSudokuLine(
+    index: Int,
+    start: Offset,
+    end: Offset
+) {
+    drawLine(
+        start = start,
+        end = end,
+        color = Color.White,
+        strokeWidth = Stroke.DefaultMiter,
+        alpha = if(index % 3 != 0) 0.1f else 1f,
+        blendMode = BlendMode.Exclusion
+    )
+}
+
+fun Modifier.drawSudokuGrid() : Modifier {
     return this@drawSudokuGrid.drawWithCache {
         this@drawWithCache.onDrawBehind {
             val (width, height) = this@onDrawBehind.size
@@ -37,15 +54,14 @@ fun Modifier.drawSudokuGrid(color: Color) : Modifier {
 
             repeat(9) { index ->
 
-                val x = tileWidth * index
-
                 if (index != 0) {
-                    drawLine(
+
+                    val x = tileWidth * index
+
+                    drawSudokuLine(
+                        index = index,
                         start = Offset(x = x, y = 0f),
-                        end = Offset(x = x, y = height),
-                        color = color,
-                        strokeWidth = Stroke.DefaultMiter,
-                        alpha = if(index % 3 != 0) 0.1f else 1f
+                        end = Offset(x = x, y = height)
                     )
                 }
 
@@ -53,16 +69,16 @@ fun Modifier.drawSudokuGrid(color: Color) : Modifier {
 
             repeat(9) { index ->
 
-                val y = tileWidth * index
-
                 if (index != 0) {
-                    drawLine(
+
+                    val y = tileWidth * index
+
+                    drawSudokuLine(
+                        index = index,
                         start = Offset(x = 0f, y = y),
-                        end = Offset(x = width, y = y),
-                        color = color,
-                        strokeWidth = Stroke.DefaultMiter,
-                        alpha = if(index % 3 != 0) 0.1f else 1f
+                        end = Offset(x = width, y = y)
                     )
+
                 }
 
             }
