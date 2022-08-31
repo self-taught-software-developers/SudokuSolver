@@ -23,7 +23,7 @@ import kotlin.coroutines.suspendCoroutine
 fun Camera(
     modifier: Modifier = Modifier,
     size: Pair<Float,Float>,
-    cellList: List<Cell>,
+    tileList: List<TileState>,
     onProcessed: (TileState) -> Unit
 ) {
 
@@ -61,7 +61,7 @@ fun Camera(
                 it.setAnalyzer(
                     executor,
                     SudokuBoardAnalyzer(
-                        cellList = cellList,
+                        tileList = tileList,
                         onProcessed = onProcessed
                     )
                 )

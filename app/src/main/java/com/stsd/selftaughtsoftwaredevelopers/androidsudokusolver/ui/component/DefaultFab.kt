@@ -12,11 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
 @Composable
 fun DefaultFab(
-    fabItems: List<FabItem>
+    fabItems: List<IconItem>
 ) {
 
     Row(
@@ -36,10 +37,4 @@ fun DefaultFab(
         }
     }
 
-
 }
-
-data class FabItem(
-    val icon: ImageVector,
-    val onClick: () -> Unit
-)

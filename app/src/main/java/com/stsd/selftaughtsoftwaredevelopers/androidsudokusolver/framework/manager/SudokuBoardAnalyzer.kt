@@ -7,12 +7,10 @@ import androidx.compose.ui.graphics.toComposeRect
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.Cell
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
-import javax.annotation.Untainted
 
 class SudokuBoardAnalyzer(
-    private val cellList: List<Cell>,
+    private val tileList: List<TileState>,
     val onProcessed: (TileState) -> Unit
 ) : ImageAnalysis.Analyzer {
 
@@ -41,19 +39,20 @@ class SudokuBoardAnalyzer(
 
                                 element.text.take(1).toIntOrNull()?.let { value ->
                                     element.boundingBox?.toComposeRect()?.let { rect ->
-                                        cellList
-                                            .firstOrNull { it.rect.contains(rect.topLeft) }
-                                            ?.let { cell ->
+                                        tileList
+                                            .firstOrNull { tile ->
+                                                tile.rect?.contains(rect.topLeft) == true
+                                            }?.let { tile ->
                                                 //TODO hash of items already added.
                                                 //TODO add it
-                                                println("$value, ${cell.position}, ${cell.rect}, $rect")
-                                                if (processedElements.contains(cell.position)) {
+                                                println("$value, ${tile.position}, ${tile.rect}, $rect")
+                                                if (processedElements.contains(tile.position)) {
                                                     //todo change the value if they are different.
                                                 } else {
 
-                                                    processedElements[cell.position] = TileState(
+                                                    processedElements[tile.position] = TileState(
                                                         text = value.toString(),
-                                                        position = cell.position
+                                                        position = tile.position
                                                     ).apply(onProcessed)
 
                                                 }

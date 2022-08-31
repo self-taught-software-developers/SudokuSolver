@@ -34,19 +34,22 @@ fun Boolean?.bordColor() : Color {
 fun DrawScope.drawSudokuLine(
     index: Int,
     start: Offset,
-    end: Offset
+    end: Offset,
+    color: Color
 ) {
     drawLine(
         start = start,
         end = end,
-        color = Color.White,
+        color = color,
         strokeWidth = Stroke.DefaultMiter,
         alpha = if(index % 3 != 0) 0.1f else 1f,
         blendMode = BlendMode.Exclusion
     )
 }
 
-fun Modifier.drawSudokuGrid() : Modifier {
+fun Modifier.drawSudokuGrid(
+    color: Color
+) : Modifier {
     return this@drawSudokuGrid.drawWithCache {
         this@drawWithCache.onDrawBehind {
             val (width, height) = this@onDrawBehind.size
@@ -61,7 +64,8 @@ fun Modifier.drawSudokuGrid() : Modifier {
                     drawSudokuLine(
                         index = index,
                         start = Offset(x = x, y = 0f),
-                        end = Offset(x = x, y = height)
+                        end = Offset(x = x, y = height),
+                        color = color
                     )
                 }
 
@@ -76,7 +80,8 @@ fun Modifier.drawSudokuGrid() : Modifier {
                     drawSudokuLine(
                         index = index,
                         start = Offset(x = 0f, y = y),
-                        end = Offset(x = width, y = y)
+                        end = Offset(x = width, y = y),
+                        color = color
                     )
 
                 }
@@ -114,8 +119,6 @@ fun Modifier.drawSudokuGridTiles(
     }
 
 }
-
-
 
 @Composable
 fun BoxWithConstraintsScope.calculatePx() : Pair<Float,Float> {
@@ -161,18 +164,17 @@ fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
 
 }
 
-data class Cell(val position : Pair<Int, Int>, val rect: Rect)
 
-fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<Cell> {
+fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 
-    val tiles = arrayListOf<Cell>()
+    val tiles = arrayListOf<TileState>()
     val (x, y) = this.topLeft
     val (width, height) = this.size.div(cellCount.toFloat())
 
     (0 until cellCount).forEach { xp ->
         (0 until cellCount).forEach { yp ->
             tiles.add(
-                Cell(
+                TileState(
                     position = Pair(xp, yp),
                     rect = Rect(
                         offset = Offset(x = (width * xp) + x, y = (height * yp) + y),
@@ -188,28 +190,25 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<Cell> {
 }
 
 @Composable
-fun ColumnScope.PlaceTiles(
-    tileSize: Dp,
+fun ColumnScope.placeTiles(
     boardOfTiles: Array<Array<TileState>>,
     selectedTilePosition: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
-) {
-    this.apply {
-        boardOfTiles.forEachIndexed { rowIndex, rowOfTiles ->
+) = this.apply {
+    boardOfTiles.forEachIndexed { rowIndex, rowOfTiles ->
 
-            Row {
+        Row {
 
-                rowOfTiles.forEachIndexed { tileIndex, tile ->
+            rowOfTiles.forEachIndexed { tileIndex, tile ->
 
-                    BoardTile(
-                        modifier = Modifier.size(tileSize),
-                        value = tile.value(),
-                        color = tile.tileColor(coordinates = selectedTilePosition)
-                    ) { onTileSelected(Pair(rowIndex, tileIndex)) }
-
-                }
+//                BoardTile(
+////                    modifier = Modifier.size(64),
+//                    value = tile.value(),
+//                    color = tile.tileColor(coordinates = selectedTilePosition)
+//                ) { onTileSelected(Pair(rowIndex, tileIndex)) }
 
             }
+
         }
     }
 }

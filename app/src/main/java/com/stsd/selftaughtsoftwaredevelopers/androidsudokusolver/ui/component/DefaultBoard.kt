@@ -84,15 +84,14 @@ fun SudokuBoard(
         contentAlignment = Alignment.Center
     ) {
 
-        val tileSize =  (minOf(maxWidth, maxHeight) / 9)
+
 
         Column(
             modifier = Modifier
-                .drawSudokuGrid()
+                .drawSudokuGrid(borderColor)
         ) {
 
-            PlaceTiles(
-                tileSize = tileSize,
+            placeTiles(
                 boardOfTiles = board,
                 selectedTilePosition = selectedPosition
             ) { onPositionSelected(Pair(it.first, it.second)) }
@@ -105,17 +104,7 @@ fun SudokuBoard(
 @Composable
 fun SudokuBoardPreview() {
 
-    AndroidSudokuSolverTheme {
-        val board by remember { mutableStateOf(emptySudokuBoard(Triple(9,9,3))) }
 
-        SudokuBoard(
-            modifier = Modifier,
-            board = board,
-            borderColor = null.bordColor()
-        ) {
-
-        }
-    }
 
 }
 

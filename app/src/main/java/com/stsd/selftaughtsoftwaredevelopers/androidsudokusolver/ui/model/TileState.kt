@@ -1,12 +1,14 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
 data class TileState(
     var text: String = EMPTY_TILE,
-    var position: Pair<Int, Int>
+    var position: Pair<Int, Int>,
+    var rect: Rect? = null
 ) {
 
     private val sameSubgrid = { coordinates : Triple<Int, Int, Int> ->

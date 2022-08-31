@@ -15,6 +15,7 @@ data class Sizing(
     val large: Dp = 24.dp,
     val x_large: Dp = 36.dp,
     val xx_large: Dp = 48.dp,
+    val normal_bar: Dp = 56.dp,
     val xxx_large: Dp = 60.dp
 )
 

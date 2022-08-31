@@ -4,7 +4,8 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileSt
 import kotlinx.coroutines.flow.*
 
 class BoardState(
-    var dimensions: Triple<Int, Int, Int> = Triple(9, 9, 3)
+    var solutionSpeed: TimeState = TimeState.DEFAULT_SPEED,
+    var dimensions: GridState = GridState.GRID_3X3
 ) {
 
     private val _solved = MutableStateFlow<Boolean?>(null)
@@ -13,7 +14,7 @@ class BoardState(
     private val _selectedPosition = MutableStateFlow<Pair<Int,Int>?>(null)
     var selectedPosition : StateFlow<Pair<Int, Int>?> = _selectedPosition.asStateFlow()
 
-    private val _initialBoard = MutableStateFlow(emptySudokuBoard(dimensions))
+    private val _initialBoard = MutableStateFlow(emptySudokuBoard(dimensions.multiplier))
     var initialBoard : StateFlow<Array<Array<TileState>>> = _initialBoard.asStateFlow()
 
     private var previousPosition : MutableList<Pair<Int, Int>?> = mutableListOf()
@@ -148,10 +149,11 @@ class BoardState(
         .copyOf().apply { function(this@copy) }
 
     companion object {
-        val emptySudokuBoard = { dimensions: Triple<Int,Int, Int>->
-            val (gx,gy,gq) = dimensions
-            Array(gx) { x ->
-                Array(gy) { y ->
+        val emptySudokuBoard = { multiplier: Int ->
+            val shape = multiplier * multiplier
+
+            Array(shape) { x ->
+                Array(shape) { y ->
                     TileState(position = Pair(x, y))
                 }
             }

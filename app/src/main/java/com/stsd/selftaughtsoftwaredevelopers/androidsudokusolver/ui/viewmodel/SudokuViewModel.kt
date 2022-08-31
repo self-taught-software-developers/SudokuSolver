@@ -2,24 +2,35 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.StoragePreferences
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.ScannerState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SudokuViewModel @Inject constructor(
+    private val storagePreferences: StoragePreferences,
     private val worker: SudokuSolverWorker
 ) : ViewModel() {
+
+    val solutionSpeed = storagePreferences.solutionSpeed
+    val gridDimension = storagePreferences.gridDimensions
+
+    fun updateSolutionSpeed(value: TimeState) = viewModelScope.launch {
+        storagePreferences.updateSolutionSpeed(value)
+    }
+
+    fun updateGridDimension(value: GridState) = viewModelScope.launch {
+        storagePreferences.updateGridDimensions(value)
+    }
 
     private val _sudokuBoardStateAlt = MutableStateFlow(BoardState())
     val sudokuBoardStateAlt : StateFlow<BoardState> = _sudokuBoardStateAlt.asStateFlow()
