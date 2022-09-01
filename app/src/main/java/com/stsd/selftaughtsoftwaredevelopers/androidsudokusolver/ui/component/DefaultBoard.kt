@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.emptySudokuBoard
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.sudokuBoardFilled
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
@@ -23,7 +25,7 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Custom
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BoardTile(
-    modifier: Modifier,
+    modifier: Modifier= Modifier,
     value: Int,
     color: Color = Color.Unspecified,
     onClick: () -> Unit
@@ -72,6 +74,7 @@ fun BoardTile(
 fun SudokuBoard(
     modifier: Modifier = Modifier,
     board: Array<Array<TileState>>,
+    tileSize: Dp,
     borderColor: Color,
     selectedPosition: Triple<Int, Int, Int>? = null,
     onPositionSelected: (Pair<Int, Int>) -> Unit
@@ -84,14 +87,14 @@ fun SudokuBoard(
         contentAlignment = Alignment.Center
     ) {
 
-
-
         Column(
             modifier = Modifier
+                .defaultBorder(borderColor)
                 .drawSudokuGrid(borderColor)
         ) {
 
             placeTiles(
+                modifier = Modifier.size(tileSize),
                 boardOfTiles = board,
                 selectedTilePosition = selectedPosition
             ) { onPositionSelected(Pair(it.first, it.second)) }
@@ -117,6 +120,7 @@ fun FillSudokuBoardPreview() {
 
         SudokuBoard(
             modifier = Modifier,
+            tileSize = 64.dp,
             board = board,
             borderColor = null.bordColor()
         ) {

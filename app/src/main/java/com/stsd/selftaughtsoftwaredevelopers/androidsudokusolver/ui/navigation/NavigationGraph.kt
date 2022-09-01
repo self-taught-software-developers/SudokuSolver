@@ -20,6 +20,7 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeSt
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation.NavigationRoutes.SCANNER_DESTINATION
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation.NavigationRoutes.SOLVER_DESTINATION
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen.SudokuScannerScreen
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen.SudokuSolverScreen
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 
 @Composable
@@ -41,11 +42,8 @@ fun SudokuSolverApp(
 
     val cameraState by vm.scannerState.collectAsState()
 
-    val solved by state.solved.collectAsState()
-    val board by state.initialBoard.collectAsState()
-    val selected by state.selectedPosition.collectAsState()
-
     val showMoreItems = remember { mutableStateOf(listOf<IconItem>()) }
+
 
     Scaffold(
         topBar = {
@@ -101,20 +99,14 @@ fun SudokuSolverApp(
 
             composable(SOLVER_DESTINATION) {
 
-//                SudokuSolverScreen(
-//                    cameraState = cameraState,
-//                    board = board,
-//                    dimens = state.dimensions.third,
-//                    updateSelectionPosition = vm::updateSelectedPosition
-//                )
-
-                MoreOptionsBar(
-                    iconList = showMoreItems
+                SudokuSolverScreen(
+                    cameraState = cameraState,
+                    state = state,
+                    updateSelectionPosition = vm::updateSelectedPosition
                 )
-            }
 
-            composable(SCANNER_DESTINATION) {
-                SudokuScannerScreen()
+                MoreOptionsBar(iconList = showMoreItems)
+
             }
 
         }

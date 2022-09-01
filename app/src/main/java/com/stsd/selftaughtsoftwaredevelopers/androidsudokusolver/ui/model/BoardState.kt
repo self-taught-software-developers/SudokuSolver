@@ -8,6 +8,8 @@ class BoardState(
     var dimensions: GridState = GridState.GRID_3X3
 ) {
 
+    val area = { dimensions.multiplier * dimensions.multiplier }
+
     private val _solved = MutableStateFlow<Boolean?>(null)
     val solved : StateFlow<Boolean?> = _solved.asStateFlow()
 

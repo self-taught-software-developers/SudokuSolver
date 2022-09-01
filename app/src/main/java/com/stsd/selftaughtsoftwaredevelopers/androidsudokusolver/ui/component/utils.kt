@@ -16,9 +16,13 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
+import kotlin.math.pow
 
 @Composable
 fun Boolean?.bordColor() : Color {
@@ -30,6 +34,8 @@ fun Boolean?.bordColor() : Color {
     }
 
 }
+
+fun GridState.vector() : Int = this.multiplier.toFloat().pow(2).toInt()
 
 fun DrawScope.drawSudokuLine(
     index: Int,
@@ -146,17 +152,26 @@ fun BoxWithConstraintsScope.subtractDimensions(extra : Dp) : Pair<Float,Float> {
 }
 
 @Composable
-fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
+fun BoxWithConstraintsScope.tileSize() : Dp {
 
-    val padding = LocalPadding.current
+    val density = LocalDensity.current
+//    val (iWidth, iHeight) = calculatePx()
+//    val (width, height) = subtractDimensions((padding.medium * 2))
+
+    return minOf(maxWidth, maxHeight)
+
+}
+
+@Composable
+fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
 
     val (iWidth, iHeight) = calculatePx()
     val (width, height) = subtractDimensions((padding.medium * 2))
 
     val scalingSize = minOf(width, height)
 
-    val startX = (iWidth - scalingSize)/2 //this gives us the offset position for our x.
-    val startY = (iHeight - scalingSize)/2  //this gives us the offset position for our y.
+    val startX = (iWidth - scalingSize) / 2 //this gives us the offset position for our x.
+    val startY = (iHeight - scalingSize) / 2  //this gives us the offset position for our y.
 
     val start = Offset(x = startX, y = startY)
 
@@ -164,6 +179,32 @@ fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
 
 }
 
+@Composable
+fun BoxWithConstraintsScope.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
+    val tiles = arrayListOf<TileState>()
+
+    calculateBoardDimensions().apply {
+        val (x, y) = this.topLeft
+        val (width, height) = this.size.div(cellCount.toFloat())
+
+        (0 until cellCount).forEach { xp ->
+            (0 until cellCount).forEach { yp ->
+                tiles.add(
+                    TileState(
+                        position = Pair(xp, yp),
+                        rect = Rect(
+                            offset = Offset(x = (width * xp) + x, y = (height * yp) + y),
+                            size = Size(width, height)
+                        )
+                    )
+
+                )
+            }
+        }
+    }
+
+    return tiles.also { it.forEach(::println) ; println(it.size) }
+}
 
 fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 
@@ -191,6 +232,7 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 
 @Composable
 fun ColumnScope.placeTiles(
+    modifier: Modifier = Modifier,
     boardOfTiles: Array<Array<TileState>>,
     selectedTilePosition: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
@@ -201,11 +243,11 @@ fun ColumnScope.placeTiles(
 
             rowOfTiles.forEachIndexed { tileIndex, tile ->
 
-//                BoardTile(
-////                    modifier = Modifier.size(64),
-//                    value = tile.value(),
-//                    color = tile.tileColor(coordinates = selectedTilePosition)
-//                ) { onTileSelected(Pair(rowIndex, tileIndex)) }
+                BoardTile(
+                    modifier = modifier,
+                    value = tile.value(),
+                    color = tile.tileColor(coordinates = selectedTilePosition)
+                ) { onTileSelected(Pair(rowIndex, tileIndex)) }
 
             }
 
