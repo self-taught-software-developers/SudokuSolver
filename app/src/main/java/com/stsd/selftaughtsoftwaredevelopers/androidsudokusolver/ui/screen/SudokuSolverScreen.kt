@@ -25,8 +25,8 @@ fun SudokuSolverScreen(
     val selected by state.selectedPosition.collectAsState()
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
-
-        println(state.dimensions.vector())
+        val vector = state.dimensions.vector()
+        val tiles = calculateTileDimensions(cellCount = vector)
 
         /*
             Dimensions (2x2 / 3x3 / 4x4)
@@ -52,8 +52,8 @@ fun SudokuSolverScreen(
 
         SudokuBoard(
             modifier = modifier,
-            board = board,
-            tileSize = tileSize(),
+            vector = vector,
+            board = tiles,
             borderColor = solved.bordColor(),
             selectedPosition = selected?.let { (x,y) -> Triple(x,y, state.dimensions.multiplier) }
         ) { position ->

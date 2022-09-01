@@ -3,6 +3,9 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
 data class TileState(
@@ -35,6 +38,19 @@ data class TileState(
                 else -> Color.Unspecified
             }
         } ?: Color.Unspecified
+
+    }
+
+    @Composable
+    fun tileSize() : Dp {
+
+        val density = LocalDensity.current
+
+        with(density) {
+            return rect?.let { it ->
+                minOf(it.width, it.height).toDp()
+            } ?: 64.dp
+        }
 
     }
 

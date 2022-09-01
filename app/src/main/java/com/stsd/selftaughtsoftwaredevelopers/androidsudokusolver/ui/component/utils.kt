@@ -16,13 +16,12 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 @Composable
 fun Boolean?.bordColor() : Color {
@@ -38,6 +37,7 @@ fun Boolean?.bordColor() : Color {
 fun GridState.vector() : Int = this.multiplier.toFloat().pow(2).toInt()
 
 fun DrawScope.drawSudokuLine(
+    vector: Int,
     index: Int,
     start: Offset,
     end: Offset,
@@ -48,26 +48,28 @@ fun DrawScope.drawSudokuLine(
         end = end,
         color = color,
         strokeWidth = Stroke.DefaultMiter,
-        alpha = if(index % 3 != 0) 0.1f else 1f,
+        alpha = if(index % sqrt(vector.toFloat()).toInt() != 0) 0.1f else 1f,
         blendMode = BlendMode.Exclusion
     )
 }
 
 fun Modifier.drawSudokuGrid(
-    color: Color
+    color: Color,
+    vector: Int
 ) : Modifier {
     return this@drawSudokuGrid.drawWithCache {
         this@drawWithCache.onDrawBehind {
             val (width, height) = this@onDrawBehind.size
-            val tileWidth = width / 9
+            val tileWidth = width / vector
 
-            repeat(9) { index ->
+            repeat(vector) { index ->
 
                 if (index != 0) {
 
                     val x = tileWidth * index
 
                     drawSudokuLine(
+                        vector = vector,
                         index = index,
                         start = Offset(x = x, y = 0f),
                         end = Offset(x = x, y = height),
@@ -77,13 +79,14 @@ fun Modifier.drawSudokuGrid(
 
             }
 
-            repeat(9) { index ->
+            repeat(vector) { index ->
 
                 if (index != 0) {
 
                     val y = tileWidth * index
 
                     drawSudokuLine(
+                        vector = vector,
                         index = index,
                         start = Offset(x = 0f, y = y),
                         end = Offset(x = width, y = y),
@@ -180,7 +183,7 @@ fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
 }
 
 @Composable
-fun BoxWithConstraintsScope.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
+fun BoxWithConstraintsScope.calculateTileDimensions(cellCount: Int) : ArrayList<TileState> {
     val tiles = arrayListOf<TileState>()
 
     calculateBoardDimensions().apply {
@@ -203,8 +206,10 @@ fun BoxWithConstraintsScope.calculateTileDimensions(cellCount: Int = 9) : ArrayL
         }
     }
 
-    return tiles.also { it.forEach(::println) ; println(it.size) }
+    return tiles
 }
+
+fun ArrayList<TileState>.toBoardLayout(vector: Int) = this.chunked(vector)
 
 fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 
@@ -233,18 +238,22 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 @Composable
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
-    boardOfTiles: Array<Array<TileState>>,
+    vector: Int,
+    tiles: ArrayList<TileState>,
     selectedTilePosition: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) = this.apply {
-    boardOfTiles.forEachIndexed { rowIndex, rowOfTiles ->
+
+    tiles.toBoardLayout(vector).forEachIndexed { rowIndex, rowOfTiles ->
 
         Row {
 
             rowOfTiles.forEachIndexed { tileIndex, tile ->
 
+
+
                 BoardTile(
-                    modifier = modifier,
+                    modifier = modifier.size(tile.tileSize()),
                     value = tile.value(),
                     color = tile.tileColor(coordinates = selectedTilePosition)
                 ) { onTileSelected(Pair(rowIndex, tileIndex)) }

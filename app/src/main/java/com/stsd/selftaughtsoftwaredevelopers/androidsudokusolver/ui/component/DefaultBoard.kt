@@ -5,18 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.emptySudokuBoard
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState.Companion.sudokuBoardFilled
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
@@ -73,8 +67,8 @@ fun BoardTile(
 @Composable
 fun SudokuBoard(
     modifier: Modifier = Modifier,
-    board: Array<Array<TileState>>,
-    tileSize: Dp,
+    vector: Int,
+    board: ArrayList<TileState>,
     borderColor: Color,
     selectedPosition: Triple<Int, Int, Int>? = null,
     onPositionSelected: (Pair<Int, Int>) -> Unit
@@ -89,13 +83,13 @@ fun SudokuBoard(
 
         Column(
             modifier = Modifier
-                .defaultBorder(borderColor)
-                .drawSudokuGrid(borderColor)
+//                .defaultBorder(borderColor)
+                .drawSudokuGrid(borderColor, vector = vector)
         ) {
 
             placeTiles(
-                modifier = Modifier.size(tileSize),
-                boardOfTiles = board,
+                vector = vector,
+                tiles = board,
                 selectedTilePosition = selectedPosition
             ) { onPositionSelected(Pair(it.first, it.second)) }
 
@@ -111,23 +105,23 @@ fun SudokuBoardPreview() {
 
 }
 
-@Preview
-@Composable
-fun FillSudokuBoardPreview() {
-
-    AndroidSudokuSolverTheme {
-        val board by remember { mutableStateOf(sudokuBoardFilled) }
-
-        SudokuBoard(
-            modifier = Modifier,
-            tileSize = 64.dp,
-            board = board,
-            borderColor = null.bordColor()
-        ) {
-
-        }
-    }
-}
+//@Preview
+//@Composable
+//fun FillSudokuBoardPreview() {
+//
+//    AndroidSudokuSolverTheme {
+//        val board by remember { mutableStateOf(sudokuBoardFilled) }
+//
+//        SudokuBoard(
+//            modifier = Modifier,
+//            tileSize = 64.dp,
+//            board = board,
+//            borderColor = null.bordColor()
+//        ) {
+//
+//        }
+//    }
+//}
 
 @Preview
 @Composable
