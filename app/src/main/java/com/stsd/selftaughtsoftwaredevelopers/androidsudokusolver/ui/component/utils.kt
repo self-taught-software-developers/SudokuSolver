@@ -18,11 +18,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
-import kotlin.math.pow
 import kotlin.math.sqrt
 
 @Composable
@@ -36,20 +34,34 @@ fun Boolean?.bordColor() : Color {
 
 }
 
-fun DrawScope.drawSudokuLine(
+fun DrawScope.drawSudokuLines(
     vector: Int,
     index: Int,
-    start: Offset,
-    end: Offset,
+    size: Size,
     color: Color
 ) {
+
+    val (width, height) = size
+    val tileSize = minOf(width, height) / vector
+    val point = tileSize * index
+
+    val alpha = if(index % sqrt(vector.toFloat()).toInt() != 0) 0.1f else 1f
+    val stroke = Stroke.DefaultMiter
+
     drawLine(
-        start = start,
-        end = end,
+        alpha = alpha,
         color = color,
-        strokeWidth = Stroke.DefaultMiter,
-        alpha = if(index % sqrt(vector.toFloat()).toInt() != 0) 0.1f else 1f,
-        blendMode = BlendMode.Exclusion
+        strokeWidth = stroke,
+        start = Offset(x = point, y = 0f),
+        end = Offset(x = point, y = height),
+    )
+
+    drawLine(
+        alpha = alpha,
+        color = color,
+        strokeWidth = stroke,
+        start = Offset(x = 0f, y = point),
+        end = Offset(x = width, y = point),
     )
 }
 
@@ -59,43 +71,19 @@ fun Modifier.drawSudokuGrid(
 ) : Modifier {
     return this@drawSudokuGrid.drawWithCache {
         this@drawWithCache.onDrawBehind {
-            val (width, height) = this@onDrawBehind.size
-            val tileWidth = width / vector
 
             repeat(vector) { index ->
 
                 if (index != 0) {
-
-                    val x = tileWidth * index
-
-                    drawSudokuLine(
+                    drawSudokuLines(
                         vector = vector,
+                        size = this@onDrawBehind.size,
+                        color = color,
                         index = index,
-                        start = Offset(x = x, y = 0f),
-                        end = Offset(x = x, y = height),
-                        color = color
                     )
                 }
-
             }
 
-            repeat(vector) { index ->
-
-                if (index != 0) {
-
-                    val y = tileWidth * index
-
-                    drawSudokuLine(
-                        vector = vector,
-                        index = index,
-                        start = Offset(x = 0f, y = y),
-                        end = Offset(x = width, y = y),
-                        color = color
-                    )
-
-                }
-
-            }
         }
     }
 
@@ -103,17 +91,17 @@ fun Modifier.drawSudokuGrid(
 
 fun Modifier.drawSudokuGridTiles(
     color: Color,
-    dimensions: Int = 9
+    vector: Int
 ) : Modifier {
     return this@drawSudokuGridTiles.drawWithCache {
         this@drawWithCache.onDrawBehind {
 
             val (width, height) = this@onDrawBehind.size
-            val tileWidth = width / dimensions
-            val tileHeight = height / dimensions
+            val tileWidth = width / vector
+            val tileHeight = height / vector
 
-            repeat(dimensions) { y ->
-                repeat(dimensions) { x ->
+            repeat(vector) { y ->
+                repeat(vector) { x ->
                     val gridPlacements = Offset(tileWidth * x, tileHeight * y)
 
                     drawRect(
@@ -221,7 +209,6 @@ fun BoxWithConstraintsScope.calculateTileDimensions(cellCount: Int) : ArrayList<
     return tiles
 }
 
-fun ArrayList<TileState>.toBoardLayout(vector: Int) = this.chunked(vector)
 
 fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 
@@ -250,24 +237,25 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 @Composable
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
-    selectedTilePosition: Triple<Int, Int, Int>?,
+    board: List<List<TileState>>,
+//    selectedTilePosition: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) = this.apply {
 
-//    .forEachIndexed { rowIndex, rowOfTiles ->
-//
-//        Row {
-//
-//            rowOfTiles.forEachIndexed { tileIndex, tile ->
-//
-//                BoardTile(
-//                    modifier = modifier.size(tile.tileSize()),
-//                    value = tile.value(),
-//                    color = tile.tileColor(coordinates = selectedTilePosition)
-//                ) { onTileSelected(Pair(rowIndex, tileIndex)) }
-//
-//            }
-//
-//        }
-//    }
+    board.forEachIndexed { x, rowOfTiles ->
+
+        Row {
+
+            rowOfTiles.forEachIndexed { y, tile ->
+
+                BoardTile(
+                    modifier = modifier.size(tile.tileSize()),
+                    value = tile.value(),
+                    color = tile.tileColor(coordinates = null)
+                ) { onTileSelected(Pair(x, y)) }
+
+            }
+
+        }
+    }
 }

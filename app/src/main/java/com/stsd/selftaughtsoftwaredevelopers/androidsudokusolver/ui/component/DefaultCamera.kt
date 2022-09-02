@@ -30,7 +30,6 @@ fun Camera(
 
     size?.let {
 
-        println(size)
         val context = LocalContext.current
         val lifecycleOwner = LocalLifecycleOwner.current
 

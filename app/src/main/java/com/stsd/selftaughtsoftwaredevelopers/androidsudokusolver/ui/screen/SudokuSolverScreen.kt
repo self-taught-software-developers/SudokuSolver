@@ -78,16 +78,13 @@ fun SudokuSolverScreen(
             contentAlignment = Alignment.Center
         ) {
 
-            board.calculateTileDimensions(scope = this)
-
             SudokuBoard(
-                state = board,
+                state = board.calculateTileDimensions(scope = this),
                 cameraEnabled = isCameraOn,
                 enabled = enabled
             ) { enabled = it }
 
         }
-
 
     }
 

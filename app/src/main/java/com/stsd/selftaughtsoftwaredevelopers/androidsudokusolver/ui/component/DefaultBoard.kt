@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -53,10 +55,7 @@ fun BoardTile(
                 )
             }
         ) { targetCount ->
-            Text(
-                text = toTileText(targetCount),
-
-            )
+            Text(text = toTileText(targetCount))
         }
     }
 }
@@ -70,10 +69,6 @@ fun SudokuBoard(
     onDisabled: (Boolean) -> Unit
 ) {
 
-    BoxWithConstraints(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
 
 //        /*
 //            Dimensions (2x2 / 3x3 / 4x4)
@@ -86,36 +81,35 @@ fun SudokuBoard(
 //         */
 
 
-        if (cameraEnabled) {
-            Camera(
-                size = state.resolution,
-                tiles = state.tiles
-            ) {
+    if (cameraEnabled) {
+        Camera(
+            modifier = modifier,
+            size = state.resolution,
+            tiles = state.tiles
+        ) {
 //                    vm.enterNewValue(
 //                        newValue = it.text,
 //                        position = it.position
 //                    )
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .defaultBorder(Color.Black)
-                .drawSudokuGrid(
-                    color = Color.Black,
-                    vector = state.vector
-                )
-        ) {
-
-//            placeTiles(
-//                vector = vector,
-//                tiles = tiles,
-//                selectedTilePosition = selectedPosition
-//            ) { onPositionSelected(Pair(it.first, it.second)) }
-
         }
     }
+
+    Column(
+        modifier = modifier
+            .defaultBorder(Color.Black)
+            .drawSudokuGrid(
+                color = Color.Black,
+                vector = state.vector
+            )
+    ) {
+        placeTiles(
+            board = state.board,
+//            selectedTilePosition = selectedPosition
+        ) { }
+
+    }
 }
+
 
 @Preview
 @Composable
