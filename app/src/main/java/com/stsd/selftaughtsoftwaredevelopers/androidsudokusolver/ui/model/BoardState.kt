@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 class BoardState(
     var dimensions: GridState
@@ -29,27 +30,35 @@ class BoardState(
 
     @Composable
     fun calculateTileDimensions(scope : BoxWithConstraintsScope) : BoardState {
+
         scope.apply {
             resolution = calculatePx()
             calculateBoardDimensions().apply {
-                val (x, y) = this.topLeft
-                val (width, height) = this.size.div(vector.toFloat())
 
-                (0 until vector).forEach { xp ->
-                    (0 until vector).forEach { yp ->
-                        tiles.add(
-                            TileState(
-                                position = Pair(xp, yp),
-                                rect = Rect(
-                                    offset = Offset(x = (width * xp) + x, y = (height * yp) + y),
-                                    size = Size(width, height)
+                if (tiles.isEmpty() || sqrt(tiles.size.toFloat()).toInt() != vector) {
+                    val (x, y) = this.topLeft
+                    val (width, height) = this.size.div(vector.toFloat())
+
+                    (0 until vector).forEach { xp ->
+                        (0 until vector).forEach { yp ->
+                            tiles.add(
+                                TileState(
+                                    position = Pair(xp, yp),
+                                    rect = Rect(
+                                        offset = Offset(
+                                            x = (width * xp) + x,
+                                            y = (height * yp) + y
+                                        ),
+                                        size = Size(width, height)
+                                    )
                                 )
                             )
-                        )
+                        }
                     }
+
+                    board.addAll(toBoardLayout())
                 }
 
-                board.addAll(toBoardLayout())
             }
         }.also { return this@BoardState }
 

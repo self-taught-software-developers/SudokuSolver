@@ -10,7 +10,6 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -155,60 +154,22 @@ fun BoxWithConstraintsScope.subtractDimensions(extra : Dp) : Pair<Float,Float> {
 }
 
 @Composable
-fun BoxWithConstraintsScope.tileSize() : Dp {
-
-    val density = LocalDensity.current
-//    val (iWidth, iHeight) = calculatePx()
-//    val (width, height) = subtractDimensions((padding.medium * 2))
-
-    return minOf(maxWidth, maxHeight)
-
-}
-
-@Composable
 fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
 
-    val (iWidth, iHeight) = calculatePx()
+    val (widthPxl, heightPxl) = calculatePx()
     val (width, height) = subtractDimensions((padding.medium * 2))
 
-    val scalingSize = minOf(width, height)
+    val scaling = minOf(width, height)
 
-    val startX = (iWidth - scalingSize) / 2 //this gives us the offset position for our x.
-    val startY = (iHeight - scalingSize) / 2  //this gives us the offset position for our y.
+    val x = (widthPxl - scaling).div(2)
+    val y = (heightPxl - scaling).div(2)
 
-    val start = Offset(x = startX, y = startY)
+    val start = Offset(x = x, y = y)
+    val size = Size(scaling,scaling)
 
-    return Rect(start, Size(scalingSize,scalingSize))
+    return Rect(offset = start, size = size)
 
 }
-
-@Composable
-fun BoxWithConstraintsScope.calculateTileDimensions(cellCount: Int) : ArrayList<TileState> {
-    val tiles = arrayListOf<TileState>()
-
-    calculateBoardDimensions().apply {
-        val (x, y) = this.topLeft
-        val (width, height) = this.size.div(cellCount.toFloat())
-
-        (0 until cellCount).forEach { xp ->
-            (0 until cellCount).forEach { yp ->
-                tiles.add(
-                    TileState(
-                        position = Pair(xp, yp),
-                        rect = Rect(
-                            offset = Offset(x = (width * xp) + x, y = (height * yp) + y),
-                            size = Size(width, height)
-                        )
-                    )
-
-                )
-            }
-        }
-    }
-
-    return tiles
-}
-
 
 fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 
