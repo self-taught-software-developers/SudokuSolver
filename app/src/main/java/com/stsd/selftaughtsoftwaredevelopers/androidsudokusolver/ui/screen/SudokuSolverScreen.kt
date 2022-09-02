@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.rounded.*
@@ -24,7 +25,7 @@ fun SudokuSolverScreen(
     var showMoreItems by remember { mutableStateOf<List<IconItem>?>(null) }
 
     //TODO INVESTIGATE WHETHER OR NOT THIS IS GOOD PRACTICE.
-    val speed by solutionSpeedState.collectAsState(TimeState.DEFAULT_SPEED)
+    val timeState by solutionSpeedState.collectAsState(TimeState.DEFAULT_SPEED)
 
     //TODO WHILE SOLVING DISABLE
     Scaffold(
@@ -32,7 +33,7 @@ fun SudokuSolverScreen(
         topBar = {
             DefaultTopBar(
                 enabled = enabled,
-                timeState = TimeState.DEFAULT_SPEED,
+                timeState = timeState,
                 isCameraOn = isCameraOn,
                 toggleCamera = { isCameraOn = !isCameraOn }
             ) {
@@ -63,42 +64,14 @@ fun SudokuSolverScreen(
     ) { bounds ->
 
         MoreOptionsBar(iconList = showMoreItems) { showMoreItems = null }
-
+        SudokuBoard(
+            modifier = Modifier.padding(bounds),
+        )
 
         //TODO PLACE THE CAMERA AND SUDOKU GRID HERE
 
     }
 
-//    val solved by state.solved.collectAsState()
-//    val board by state.initialBoard.collectAsState()
-//    val selected by state.selectedPosition.collectAsState()
-//
-//    BoxWithConstraints(Modifier.fillMaxSize()) {
-//        val vector = state.dimensions.vector()
-//        val tiles = calculateTileDimensions(cellCount = vector)
-//
-//        /*
-//            Dimensions (2x2 / 3x3 / 4x4)
-//            This will allow us to draw the grid with dynamic dimensions.
-//            Vectors -> The dimensions to the 2nd power will give us the number of rows and columns
-//            Tiles -> Then the 2nd power to get the number of tiles
-//            Row -> Then chunked(grid.power) can be used to split tiles in a board like way.
-//            listOfTileStates
-//            This will be used to identify in which tile an analyzed number falls within.
-//         */
-//
-////        if (cameraState != ScannerState.OFF) {
-////            Camera(
-////                size = calculatePx(),
-////                tileList = calculateTileDimensions(state.area())
-////            ) {
-//////                    vm.enterNewValue(
-//////                        newValue = it.text,
-//////                        position = it.position
-//////                    )
-////            }
-////        }
-//
 //        SudokuBoard(
 //            modifier = modifier,
 //            vector = vector,

@@ -81,6 +81,31 @@ fun SudokuBoard(
         contentAlignment = Alignment.Center
     ) {
 
+        //        val vector = state.dimensions.vector()
+//        val tiles = calculateTileDimensions(cellCount = vector)
+//
+//        /*
+//            Dimensions (2x2 / 3x3 / 4x4)
+//            This will allow us to draw the grid with dynamic dimensions.
+//            Vectors -> The dimensions to the 2nd power will give us the number of rows and columns
+//            Tiles -> Then the 2nd power to get the number of tiles
+//            Row -> Then chunked(grid.power) can be used to split tiles in a board like way.
+//            listOfTileStates
+//            This will be used to identify in which tile an analyzed number falls within.
+//         */
+
+        ////        if (cameraState != ScannerState.OFF) {
+////            Camera(
+////                size = calculatePx(),
+////                tileList = calculateTileDimensions(state.area())
+////            ) {
+//////                    vm.enterNewValue(
+//////                        newValue = it.text,
+//////                        position = it.position
+//////                    )
+////            }
+////        }
+
         Column(
             modifier = Modifier
                 .defaultBorder(borderColor)
