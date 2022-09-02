@@ -1,48 +1,44 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiObjects
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.shapes
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.sizing
 
 @Composable
 fun DefaultNumericButton(
     modifier: Modifier = Modifier,
-    num: Int,
+    enabled: Boolean,
+    numericValue: Int,
     onClick: (String) -> Unit
 ) {
 
-    Box(
+    TextButton(
         modifier = modifier
             .padding(padding.small)
-            .clip(shape = CustomTheme.shapes.small)
-            .background(CustomTheme.colors.onSurface.copy(alpha = 0.06F))
-            .clickable { onClick(num.toString()) }
-            .size(CustomTheme.sizing.xx_large),
-        contentAlignment = Alignment.Center
+            .clip(shape = shapes.small)
+            .size(sizing.xx_large),
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(Color.Black.copy(alpha = 0.05F)),
+        onClick = { onClick(numericValue.toString()) }
     ) {
-
         Text(
-            text = num.toString(),
+            text = numericValue.toString(),
             textAlign = TextAlign.Center,
             style = MaterialTheme
                 .typography
                 .body1.copy(fontWeight = FontWeight.Black)
         )
-
     }
 
 }
@@ -50,23 +46,20 @@ fun DefaultNumericButton(
 @Composable
 fun DefaultIconButton(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     imageVector: ImageVector,
     onClick: () -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .padding(padding.small)
-            .clip(shape = CustomTheme.shapes.small)
-            .clickable { onClick() }
-            .size(CustomTheme.sizing.xx_large),
-        contentAlignment = Alignment.Center
-    ) {
 
+    IconButton(
+        modifier = modifier,
+        enabled = enabled,
+        onClick = { onClick() }
+    ) {
         Icon(
             imageVector = imageVector,
             contentDescription = imageVector.name
         )
-
     }
 
 }
@@ -74,25 +67,25 @@ fun DefaultIconButton(
 @Composable
 fun DefaultIconButton(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     imageVector: ImageVector,
     backgroundColor: Color,
     onClick: () -> Unit
 ) {
-    Box(
+
+    IconButton(
         modifier = modifier
             .padding(padding.small)
             .clip(shape = CustomTheme.shapes.small)
             .background(backgroundColor)
-            .clickable { onClick() }
             .size(CustomTheme.sizing.xx_large),
-        contentAlignment = Alignment.Center
+        enabled = enabled,
+        onClick = { onClick() }
     ) {
-
         Icon(
             imageVector = imageVector,
             contentDescription = imageVector.name
         )
-
     }
 
 }

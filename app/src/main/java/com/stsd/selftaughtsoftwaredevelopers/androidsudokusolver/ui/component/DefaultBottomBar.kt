@@ -15,12 +15,14 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Custom
 
 @Composable
 fun DefaultBottomBar(
-    onSolveBoard: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onClickSolve: () -> Unit,
     onEnterValue: (String) -> Unit
 ) {
 
     FlowRow(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(CustomTheme.colors.primary)
             .padding(top = CustomTheme.padding.small),
@@ -28,15 +30,17 @@ fun DefaultBottomBar(
     ) {
         (1..9).forEach { number ->
             DefaultNumericButton(
-                num = number,
+                enabled = enabled,
+                numericValue = number,
                 onClick = onEnterValue
             )
         }
 
         DefaultIconButton(
+            enabled = enabled,
             imageVector = Icons.Default.SelectAll,
             backgroundColor = CustomTheme.colors.secondary
-        ) { onSolveBoard() }
+        ) { onClickSolve() }
     }
 
 }
@@ -46,7 +50,7 @@ fun DefaultBottomBar(
 fun DefaultBottomBarPreview() {
     AndroidSudokuSolverTheme {
         DefaultBottomBar(
-            onSolveBoard = { }
+            onClickSolve = { }
         ) { }
     }
 }

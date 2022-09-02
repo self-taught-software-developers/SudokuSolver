@@ -3,6 +3,8 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Surface
+import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.NoPhotography
 import androidx.compose.material.icons.outlined.PhotoCamera
@@ -11,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.animation.enterIn
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.animation.exitOut
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
@@ -23,25 +26,27 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Custom
 
 @Composable
 fun DefaultTopBar(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    color: Color = colors.primary,
     timeState: TimeState,
-    gridState: GridState,
-    cameraState: ScannerState,
-    toggleSolutionSpeed: () -> Unit,
-    toggleGridDimens: () -> Unit,
-    toggleCamera: () -> Unit
+    isCameraOn: Boolean,
+    toggleCamera: () -> Unit,
+    toggleSolutionSpeed: () -> Unit
 ) {
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .requiredHeight(sizing.normal_bar)
-            .background(colors.primary)
+            .background(color)
             .padding(horizontal = padding.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
         DefaultIconButton(
+            enabled = enabled,
             imageVector = when (timeState) {
                 TimeState.INSTANT_SPEED -> rounded.Timer3
                 TimeState.SUPER_SPEED -> rounded.Timer10
@@ -51,34 +56,28 @@ fun DefaultTopBar(
         ) { toggleSolutionSpeed() }
 
         DefaultIconButton(
-            imageVector = when (gridState) {
-                GridState.GRID_2X2 -> Grid2x2
-                GridState.GRID_3X3 -> rounded.Grid3x3
-                GridState.GRID_4X4 -> rounded.Grid4x4
-            }
-        ) { toggleGridDimens() }
-
-        DefaultIconButton(
-            imageVector = when (cameraState) {
-                ScannerState.SCANNING -> Icons.Outlined.PhotoCamera
-                ScannerState.IDLE -> Icons.Outlined.PhotoCamera
-                ScannerState.OFF -> Icons.Outlined.NoPhotography
+            enabled = enabled,
+            imageVector = if (isCameraOn) {
+                rounded.PhotoCamera
+            } else {
+                rounded.NoPhotography
             }
         ) { toggleCamera() }
 
     }
-    
+
 }
 
 @Composable
 fun MoreOptionsBar(
     modifier: Modifier = Modifier,
-    iconList: MutableState<List<IconItem>>
+    iconList: List<IconItem>?,
+    dismissMoreOptionsBar: () -> Unit
 ) {
 
     AnimatedVisibility(
         modifier = modifier,
-        visible = iconList.value.isNotEmpty(),
+        visible = !iconList.isNullOrEmpty(),
         enter = enterIn(),
         exit = exitOut()
     ) {
@@ -93,11 +92,11 @@ fun MoreOptionsBar(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            iconList.value.forEach { item ->
+            iconList?.forEach { item ->
 
                 DefaultIconButton(imageVector = item.icon) {
                     item.onClick()
-                    iconList.value = listOf()
+                    dismissMoreOptionsBar()
                 }
 
             }
