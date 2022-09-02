@@ -1,13 +1,18 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
@@ -24,10 +29,11 @@ fun SudokuSolverScreen(
     var isCameraOn by rememberSaveable { mutableStateOf(false) }
     var showMoreItems by remember { mutableStateOf<List<IconItem>?>(null) }
 
+    val board by remember { mutableStateOf(BoardState(dimensions = GridState.GRID_3X3)) }
+
     //TODO INVESTIGATE WHETHER OR NOT THIS IS GOOD PRACTICE.
     val timeState by solutionSpeedState.collectAsState(TimeState.DEFAULT_SPEED)
 
-    //TODO WHILE SOLVING DISABLE
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -64,25 +70,26 @@ fun SudokuSolverScreen(
     ) { bounds ->
 
         MoreOptionsBar(iconList = showMoreItems) { showMoreItems = null }
-        SudokuBoard(
-            modifier = Modifier.padding(bounds),
-        )
 
-        //TODO PLACE THE CAMERA AND SUDOKU GRID HERE
+        BoxWithConstraints(
+            modifier = Modifier
+                .padding(bounds)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+
+            board.calculateTileDimensions(scope = this)
+
+            SudokuBoard(
+                state = board,
+                cameraEnabled = isCameraOn,
+                enabled = enabled
+            ) { enabled = it }
+
+        }
+
 
     }
-
-//        SudokuBoard(
-//            modifier = modifier,
-//            vector = vector,
-//            board = tiles,
-//            borderColor = solved.bordColor(),
-//            selectedPosition = selected?.let { (x,y) -> Triple(x,y, state.dimensions.multiplier) }
-//        ) { position ->
-//            updateSelectionPosition(position)
-//        }
-//
-//    }
 
 }
 

@@ -14,8 +14,10 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
@@ -33,8 +35,6 @@ fun Boolean?.bordColor() : Color {
     }
 
 }
-
-fun GridState.vector() : Int = this.multiplier.toFloat().pow(2).toInt()
 
 fun DrawScope.drawSudokuLine(
     vector: Int,
@@ -134,8 +134,20 @@ fun BoxWithConstraintsScope.calculatePx() : Pair<Float,Float> {
 
     val density = LocalDensity.current
 
-    val iWidth= with(density) { (maxWidth.toPx()) }
+    val iWidth = with(density) { (maxWidth.toPx()) }
     val iHeight = with(density) { (maxHeight.toPx())}
+
+    return Pair(iWidth, iHeight)
+}
+
+@Composable
+fun calculatePx() : Pair<Float,Float> {
+
+    val config = LocalConfiguration.current
+    val density = LocalDensity.current
+
+    val iWidth = with(density) { (config.screenWidthDp.dp.toPx()) }
+    val iHeight = with(density) { (config.screenHeightDp.dp.toPx() )}
 
     return Pair(iWidth, iHeight)
 }
@@ -238,28 +250,24 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 @Composable
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
-    vector: Int,
-    tiles: ArrayList<TileState>,
     selectedTilePosition: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) = this.apply {
 
-    tiles.toBoardLayout(vector).forEachIndexed { rowIndex, rowOfTiles ->
-
-        Row {
-
-            rowOfTiles.forEachIndexed { tileIndex, tile ->
-
-
-
-                BoardTile(
-                    modifier = modifier.size(tile.tileSize()),
-                    value = tile.value(),
-                    color = tile.tileColor(coordinates = selectedTilePosition)
-                ) { onTileSelected(Pair(rowIndex, tileIndex)) }
-
-            }
-
-        }
-    }
+//    .forEachIndexed { rowIndex, rowOfTiles ->
+//
+//        Row {
+//
+//            rowOfTiles.forEachIndexed { tileIndex, tile ->
+//
+//                BoardTile(
+//                    modifier = modifier.size(tile.tileSize()),
+//                    value = tile.value(),
+//                    color = tile.tileColor(coordinates = selectedTilePosition)
+//                ) { onTileSelected(Pair(rowIndex, tileIndex)) }
+//
+//            }
+//
+//        }
+//    }
 }

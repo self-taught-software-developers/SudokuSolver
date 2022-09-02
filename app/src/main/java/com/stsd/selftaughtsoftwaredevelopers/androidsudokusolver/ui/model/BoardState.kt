@@ -1,12 +1,51 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateBoardDimensions
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculatePx
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import kotlinx.coroutines.flow.*
+import kotlin.math.pow
 
 class BoardState(
     var solutionSpeed: TimeState = TimeState.DEFAULT_SPEED,
-    var dimensions: GridState = GridState.GRID_3X3
+    var dimensions: GridState
 ) {
+
+    val tiles = mutableStateListOf<TileState>()
+    var resolution: Pair<Float, Float>? = null
+
+    val vector = dimensions.multiplier.toFloat().pow(2).toInt()
+
+    @Composable
+    fun calculateTileDimensions(scope : BoxWithConstraintsScope) = scope.apply {
+        resolution = calculatePx()
+        calculateBoardDimensions().apply {
+            val (x, y) = this.topLeft
+            val (width, height) = this.size.div(vector.toFloat())
+
+            (0 until vector).forEach { xp ->
+                (0 until vector).forEach { yp ->
+                    tiles.add(
+                        TileState(
+                            position = Pair(xp, yp),
+                            rect = Rect(
+                                offset = Offset(x = (width * xp) + x, y = (height * yp) + y),
+                                size = Size(width, height)
+                            )
+                        )
+
+                    )
+                }
+            }
+        }
+
+    }
 
     val area = { dimensions.multiplier * dimensions.multiplier }
 

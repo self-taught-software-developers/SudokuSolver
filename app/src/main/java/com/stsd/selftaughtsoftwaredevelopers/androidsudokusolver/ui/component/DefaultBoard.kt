@@ -10,11 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -67,23 +64,17 @@ fun BoardTile(
 @Composable
 fun SudokuBoard(
     modifier: Modifier = Modifier,
-    vector: Int,
-    board: ArrayList<TileState>,
-    borderColor: Color,
-    selectedPosition: Triple<Int, Int, Int>? = null,
-    onPositionSelected: (Pair<Int, Int>) -> Unit
+    state: BoardState,
+    cameraEnabled: Boolean = false,
+    enabled: Boolean,
+    onDisabled: (Boolean) -> Unit
 ) {
 
     BoxWithConstraints(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(padding.medium),
+        modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
 
-        //        val vector = state.dimensions.vector()
-//        val tiles = calculateTileDimensions(cellCount = vector)
-//
 //        /*
 //            Dimensions (2x2 / 3x3 / 4x4)
 //            This will allow us to draw the grid with dynamic dimensions.
@@ -94,29 +85,33 @@ fun SudokuBoard(
 //            This will be used to identify in which tile an analyzed number falls within.
 //         */
 
-        ////        if (cameraState != ScannerState.OFF) {
-////            Camera(
-////                size = calculatePx(),
-////                tileList = calculateTileDimensions(state.area())
-////            ) {
-//////                    vm.enterNewValue(
-//////                        newValue = it.text,
-//////                        position = it.position
-//////                    )
-////            }
-////        }
+
+        if (cameraEnabled) {
+            Camera(
+                size = state.resolution,
+                tiles = state.tiles
+            ) {
+//                    vm.enterNewValue(
+//                        newValue = it.text,
+//                        position = it.position
+//                    )
+            }
+        }
 
         Column(
             modifier = Modifier
-                .defaultBorder(borderColor)
-                .drawSudokuGrid(borderColor, vector = vector)
+                .defaultBorder(Color.Black)
+                .drawSudokuGrid(
+                    color = Color.Black,
+                    vector = state.vector
+                )
         ) {
 
-            placeTiles(
-                vector = vector,
-                tiles = board,
-                selectedTilePosition = selectedPosition
-            ) { onPositionSelected(Pair(it.first, it.second)) }
+//            placeTiles(
+//                vector = vector,
+//                tiles = tiles,
+//                selectedTilePosition = selectedPosition
+//            ) { onPositionSelected(Pair(it.first, it.second)) }
 
         }
     }
@@ -126,39 +121,8 @@ fun SudokuBoard(
 @Composable
 fun SudokuBoardPreview() {
 
-
-
-}
-
-//@Preview
-//@Composable
-//fun FillSudokuBoardPreview() {
+//    SudokuBoard(enabled = true) {
 //
-//    AndroidSudokuSolverTheme {
-//        val board by remember { mutableStateOf(sudokuBoardFilled) }
-//
-//        SudokuBoard(
-//            modifier = Modifier,
-//            tileSize = 64.dp,
-//            board = board,
-//            borderColor = null.bordColor()
-//        ) {
-//
-//        }
 //    }
-//}
-
-@Preview
-@Composable
-fun BoardTilePreview() {
-
-    AndroidSudokuSolverTheme {
-        BoardTile(
-            modifier = Modifier,
-            value = 1
-        ) {
-
-        }
-    }
 
 }

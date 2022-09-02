@@ -10,6 +10,7 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -22,67 +23,72 @@ import kotlin.coroutines.suspendCoroutine
 @Composable
 fun Camera(
     modifier: Modifier = Modifier,
-    size: Pair<Float,Float>,
-    tileList: List<TileState>,
+    size: Pair<Float,Float>?,
+    tiles: List<TileState>,
     onProcessed: (TileState) -> Unit
 ) {
 
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+    size?.let {
 
-    val cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
-    val previewView = remember { PreviewView(context) }
+        println(size)
+        val context = LocalContext.current
+        val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(cameraSelector) {
+        val cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
+        val previewView = remember { PreviewView(context) }
 
-        val executor = ContextCompat.getMainExecutor(context)
+        LaunchedEffect(cameraSelector) {
 
-        val cameraProvider = suspendCoroutine<ProcessCameraProvider> { con ->
-            ProcessCameraProvider.getInstance(context).also { future ->
-                future.addListener({
-                    con.resume(future.get())
-                }, executor)
+            val executor = ContextCompat.getMainExecutor(context)
+
+            val cameraProvider = suspendCoroutine<ProcessCameraProvider> { con ->
+                ProcessCameraProvider.getInstance(context).also { future ->
+                    future.addListener({
+                        con.resume(future.get())
+                    }, executor)
+                }
             }
-        }
 
-        val imageCapture = ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-            .build()
+            val imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .build()
 
-        val cameraPreview = Preview.Builder()
-            .build()
-            .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+            val cameraPreview = Preview.Builder()
+                .build()
+                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
-        val (width, height) = size.toInt()
+            val (width, height) = size.toInt()
 
-        val imageAnalyzer = ImageAnalysis.Builder()
-            .setTargetResolution(Size(width, height))
-            .build().also {
-                it.setAnalyzer(
-                    executor,
-                    SudokuBoardAnalyzer(
-                        tileList = tileList,
-                        onProcessed = onProcessed
+            val imageAnalyzer = ImageAnalysis.Builder()
+                .setTargetResolution(Size(width, height))
+                .build().also {
+                    it.setAnalyzer(
+                        executor,
+                        SudokuBoardAnalyzer(
+                            tileList = tiles,
+                            onProcessed = onProcessed
+                        )
                     )
+                }
+
+            runCatching {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    lifecycleOwner,
+                    cameraSelector,
+                    cameraPreview,
+                    imageCapture,
+                    imageAnalyzer
                 )
             }
 
-        runCatching {
-            cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(
-                lifecycleOwner,
-                cameraSelector,
-                cameraPreview,
-                imageCapture,
-                imageAnalyzer
-            )
         }
 
-    }
+        AndroidView(
+            modifier = modifier.fillMaxSize(),
+            factory = { previewView }
+        )
 
-    AndroidView(
-        modifier = modifier.fillMaxSize(),
-        factory = { previewView }
-    )
+    }
 
 }
