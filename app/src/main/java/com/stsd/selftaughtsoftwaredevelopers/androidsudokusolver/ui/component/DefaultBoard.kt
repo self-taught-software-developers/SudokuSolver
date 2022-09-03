@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -69,6 +71,7 @@ fun SudokuBoard(
     onDisabled: (Boolean) -> Unit
 ) {
 
+    val scope = rememberCoroutineScope()
 
 //        /*
 //            Dimensions (2x2 / 3x3 / 4x4)
@@ -102,10 +105,17 @@ fun SudokuBoard(
                 vector = state.vector
             )
     ) {
+
+        val selected by state.selectedPosition.collectAsState()
+
         placeTiles(
             board = state.board,
-//            selectedTilePosition = selectedPosition
-        ) { }
+            selectedTile = selected?.let { Triple(it.first, it.second, state.dimensions.multiplier) }
+        ) { selection ->
+            scope.launch {
+                state.updateSelected(selection)
+            }
+        }
 
     }
 }

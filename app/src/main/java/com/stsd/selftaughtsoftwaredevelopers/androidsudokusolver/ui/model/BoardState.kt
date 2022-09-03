@@ -11,25 +11,20 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.ca
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class BoardState(
-    var dimensions: GridState
-) {
+class BoardState(var dimensions: GridState) {
 
-    val vector = dimensions.multiplier.toFloat().pow(2).toInt()
-
-    private val _initialBoard = MutableStateFlow<List<List<TileState>>?>(null)
-    var initialBoard : StateFlow<List<List<TileState>>?> = _initialBoard.asStateFlow()
+    var resolution: Pair<Float, Float>? = null
+    var vector = dimensions.multiplier.toFloat().pow(2).toInt()
 
     val tiles = mutableListOf<TileState>()
-    var resolution: Pair<Float, Float>? = null
-
     val board = mutableStateListOf<List<TileState>>()
 
     @Composable
-    fun calculateTileDimensions(scope : BoxWithConstraintsScope) : BoardState {
+    fun calculateTileDimensions(scope : BoxWithConstraintsScope): BoardState {
 
         scope.apply {
             resolution = calculatePx()
@@ -64,9 +59,7 @@ class BoardState(
 
     }
 
-    private fun toBoardLayout() : List<List<TileState>> {
-        return tiles.chunked(vector)
-    }
+    private fun toBoardLayout(): List<List<TileState>> = tiles.chunked(vector)
 
     private val _solved = MutableStateFlow<Boolean?>(null)
     val solved : StateFlow<Boolean?> = _solved.asStateFlow()
@@ -82,9 +75,9 @@ class BoardState(
 //    fun updateSolutionState(value: Boolean? = null) {
 //        _solved.update { value }
 //    }
-//    fun selectPosition(position: Pair<Int, Int>) {
-//        _selectedPosition.update { position }
-//    }
+    fun updateSelected(position: Pair<Int, Int>) {
+        _selectedPosition.update { position }
+    }
 //    fun changeValue(value: String) {
 //        _selectedPosition.value?.let { (x, y) ->
 //            previousPosition.top(_selectedPosition.value)

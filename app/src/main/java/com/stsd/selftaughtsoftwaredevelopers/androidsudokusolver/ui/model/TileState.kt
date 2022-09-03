@@ -15,6 +15,7 @@ data class TileState(
 ) {
 
     private val sameSubgrid = { coordinates : Triple<Int, Int, Int> ->
+
         val (sx,sy,ss) = coordinates
 
         val tileSubGrid = position.let { (x,y) -> Pair(x/ss,y/ss) }
