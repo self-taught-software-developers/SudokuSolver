@@ -21,7 +21,9 @@ fun SudokuSolverApp(navController: NavHostController = rememberNavController()) 
         composable(SOLVER_DESTINATION) {
             val vm: SudokuViewModel = hiltViewModel()
 
-            SudokuSolverScreen(solutionSpeedState = vm.solutionSpeed)
+            SudokuSolverScreen(solutionSpeedState = vm.solutionSpeed) { speed ->
+                vm.updateSolutionSpeed(speed)
+            }
 
         }
 

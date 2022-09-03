@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
     solutionSpeedState: Flow<TimeState>,
+    updateSolutionSpeed: (TimeState) -> Unit
 ) {
 
     var enabled by rememberSaveable { mutableStateOf(true) }
@@ -44,10 +45,10 @@ fun SudokuSolverScreen(
                 toggleCamera = { isCameraOn = !isCameraOn }
             ) {
                 showMoreItems = showMoreItems?.let { null } ?: listOf(
-                    IconItem(rounded.Timer3) { /*TODO modify how quickly a solution is generated*/ },
-                    IconItem(rounded.Timer10) { /*TODO modify how quickly a solution is generated*/ },
-                    IconItem(rounded.Timer) { /*TODO modify how quickly a solution is generated*/ },
-                    IconItem(rounded.Snooze) { /*TODO modify how quickly a solution is generated*/ }
+                    IconItem(rounded.Timer3) { updateSolutionSpeed(TimeState.INSTANT_SPEED) },
+                    IconItem(rounded.Timer10) { updateSolutionSpeed(TimeState.SUPER_SPEED) },
+                    IconItem(rounded.Timer) { updateSolutionSpeed(TimeState.DEFAULT_SPEED) },
+                    IconItem(rounded.Snooze) { updateSolutionSpeed(TimeState.SLOW_SPEED) }
                 )
             }
         },
@@ -93,5 +94,7 @@ fun SudokuSolverScreen(
 @DarkPreview
 @Composable
 fun SudokuSolverScreenPreview() {
-    SudokuSolverScreen(solutionSpeedState = flowOf(TimeState.DEFAULT_SPEED))
+    SudokuSolverScreen(solutionSpeedState = flowOf(TimeState.DEFAULT_SPEED)) {
+
+    }
 }
