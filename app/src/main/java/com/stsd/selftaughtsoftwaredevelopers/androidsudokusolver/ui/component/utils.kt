@@ -198,7 +198,7 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 @Composable
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
-    board: List<List<TileState>>,
+    board: List<Array<TileState>>,
     selectedTile: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) = this.apply {

@@ -57,16 +57,16 @@ fun SudokuSolverScreen(
             DefaultFab(
                 enabled = enabled,
                 items = listOf(
-                    IconItem(rounded.Undo) { /*TODO clear the recently placed value on the sudoku board*/ },
-                    IconItem(rounded.ClearAll) { /*TODO clear all values on the sudoku board*/ }
+                    IconItem(rounded.Undo) { board.undoLast() },
+                    IconItem(rounded.ClearAll) { board.clearBoard() }
                 )
             )
         },
         bottomBar = {
              DefaultBottomBar(
                  enabled = enabled,
-                 onClickSolve = { /*TODO solve the sudoku board onClick*/ }
-            ) { /*TODO onClick put value as selected tile value*/ }
+                 onClickSolve = {  }
+            ) { board.changeValue(it) }
         },
     ) { bounds ->
 

@@ -8,6 +8,11 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateBoardDimensions
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculatePx
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.copy
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.takeTopOrNull
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.top
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +26,7 @@ class BoardState(var dimensions: GridState) {
     var vector = dimensions.multiplier.toFloat().pow(2).toInt()
 
     val tiles = mutableListOf<TileState>()
-    val board = mutableStateListOf<List<TileState>>()
+    var board = mutableStateListOf<Array<TileState>>()
 
     @Composable
     fun calculateTileDimensions(scope : BoxWithConstraintsScope): BoardState {
@@ -59,7 +64,7 @@ class BoardState(var dimensions: GridState) {
 
     }
 
-    private fun toBoardLayout(): List<List<TileState>> = tiles.chunked(vector)
+    private fun toBoardLayout(): List<Array<TileState>> = tiles.chunked(vector)
 
     private val _solved = MutableStateFlow<Boolean?>(null)
     val solved : StateFlow<Boolean?> = _solved.asStateFlow()
@@ -70,7 +75,7 @@ class BoardState(var dimensions: GridState) {
 
 
 
-    private var previousPosition : MutableList<Pair<Int, Int>?> = mutableListOf()
+    private var backStack : MutableList<Pair<Int, Int>?> = mutableListOf()
 
 //    fun updateSolutionState(value: Boolean? = null) {
 //        _solved.update { value }
@@ -78,12 +83,21 @@ class BoardState(var dimensions: GridState) {
     fun updateSelected(position: Pair<Int, Int>) {
         _selectedPosition.update { position }
     }
-//    fun changeValue(value: String) {
-//        _selectedPosition.value?.let { (x, y) ->
-//            previousPosition.top(_selectedPosition.value)
-//            _initialBoard.updateCopy { it[x][y].text = value }
-//        }
-//    }
+    fun changeValue(value: String) {
+        _selectedPosition.value?.let { (x, y) ->
+
+            board[x] = board[x].copy { it[y].text = value }
+
+            if (value.isEmpty()) {
+                _selectedPosition.update {
+                    backStack.takeTopOrNull((_selectedPosition.value))
+                }
+            } else {
+                backStack.top(_selectedPosition.value)
+            }
+
+        }
+    }
 //    fun changeValue(
 //        value: String,
 //        position: Pair<Int, Int>
@@ -93,20 +107,18 @@ class BoardState(var dimensions: GridState) {
 //        changeValue(value)
 //
 //    }
-//
-//    fun undoLast() {
-//        _selectedPosition.value?.let { (x, y) ->
-//            if (solved.value != null) updateSolutionState()
-//            _initialBoard.updateCopy { it[x][y].text = EMPTY_TILE }
-//            _selectedPosition.update { previousPosition.takeTopOrNull((_selectedPosition.value)) }
-//        }
-//    }
-//    fun clearBoard() {
+    fun undoLast() = changeValue(EMPTY_TILE)
+    fun clearBoard() {
 //        if (solved.value != null) updateSolutionState()
-//        previousPosition.clear()
-//        _initialBoard.updateCopy { it.map { it.map { it.text = EMPTY_TILE } } }
-//        _selectedPosition.update { null }
-//    }
+
+        (0 until vector).forEach { point ->
+            board[point] = board[point].copy { x ->
+                x.map { it.text = EMPTY_TILE }
+            }
+        }
+
+        _selectedPosition.update { null }.also { backStack.clear() }
+    }
 //
 //    fun isValid() : Boolean {
 //        //TODO solve isn't changing in th ui when the board is invalid when we click solve
@@ -176,49 +188,6 @@ class BoardState(var dimensions: GridState) {
 //        return _initialBoard.value.map { row ->
 //            row.map { it.value() }.toTypedArray()
 //        }.toTypedArray()
-//    }
-//    private fun <T> MutableList<T>.takeTopOrNull(value: T) : T? {
-//        return if(value == lastOrNull()) {
-//            removeLastOrNull()
-//            lastOrNull()
-//        } else {
-//            lastOrNull()
-//        }.also { removeLastOrNull() }
-//    }
-//    private fun <T> MutableList<T>.top(value: T) {
-//        if (this.contains(value)) {
-//            this.remove(value)
-//            this.add(value)
-//        } else this.add(value)
-//    }
-//    private fun <T> MutableStateFlow<T>.updateCopy(function: (T) -> Unit) {
-//        when(val array = this.value) {
-//            is Array<*> -> this.update {
-//                array.copy { function(array as T) } as T
-//            }
-//        }
-//    }
-//    private fun <T> Array<T>.copy(function: (Array<T>) -> Unit) = this
-//        .copyOf().apply { function(this@copy) }
-//
-//    companion object {
-//        val emptySudokuBoard = { multiplier: Int ->
-//            val shape = multiplier * multiplier
-//
-//            Array(shape) { x ->
-//                Array(shape) { y ->
-//                    TileState(position = Pair(x, y))
-//                }
-//            }
-//        }
-//        val sudokuBoardFilled = Array(9) { x ->
-//            Array(9) { y ->
-//                TileState(
-//                    text = x.toString(),
-//                    position = Pair(x,y)
-//                )
-//            }
-//        }
 //    }
 
 }
