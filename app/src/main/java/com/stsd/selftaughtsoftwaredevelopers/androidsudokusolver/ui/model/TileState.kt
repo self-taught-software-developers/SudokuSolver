@@ -7,11 +7,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.colors
 
 data class TileState(
     var text: String = EMPTY_TILE,
     var position: Pair<Int, Int>,
-    var rect: Rect? = null
+    var rect: Rect? = null,
+    var isValid: Boolean = true
 ) {
 
     private val sameSubgrid = { coordinates : Triple<Int, Int, Int> ->
@@ -32,15 +34,18 @@ data class TileState(
 
         return coordinates?.let { (x,y,_) ->
             return when {
-                isSelected(Pair(x,y)) -> { CustomTheme.colors.primary.copy(alpha = 0.5F) }
+                !isValid -> { colors.error.copy(alpha = 0.5F) }
+                isSelected(Pair(x,y)) -> { colors.primary.copy(alpha = 0.5F) }
                 sameRow(x) || sameColumn(y) || sameSubgrid(coordinates) -> {
-                    CustomTheme.colors.primary.copy(alpha = 0.15F)
+                    colors.primary.copy(alpha = 0.15F)
                 }
                 else -> Color.Unspecified
             }
         } ?: Color.Unspecified
 
     }
+
+
 
     @Composable
     fun tileSize() : Dp {

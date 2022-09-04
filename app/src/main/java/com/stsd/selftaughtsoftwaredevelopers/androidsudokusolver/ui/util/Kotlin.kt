@@ -1,5 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util
 
+import java.util.*
+
 fun <T> MutableList<T>.takeTopOrNull(value: T) : T? {
     return if(value == lastOrNull()) {
         removeLastOrNull()
@@ -32,6 +34,13 @@ inline fun <reified T> Iterable<T>.chunked(size: Int): List<Array<T>> {
     }
 }
 
+inline fun <reified T> Array<T>.copy(
+    function: (Array<T>) -> Unit,
+) = this.apply(function).clone()
 
-inline fun <reified T> Array<T>.copy(function: (Array<T>) -> Unit) = this
-    .apply(function).clone()
+
+fun <T> List<T>.plane(validator: (T) -> Unit) : Boolean {
+//        println(distinctBy { validator(it) }.count())
+//        println(size)
+        return size == distinctBy { validator(it) }.count()
+}

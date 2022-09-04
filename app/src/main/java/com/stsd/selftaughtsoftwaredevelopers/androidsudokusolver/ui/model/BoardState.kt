@@ -9,14 +9,13 @@ import androidx.compose.ui.geometry.Size
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateBoardDimensions
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculatePx
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.copy
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.takeTopOrNull
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.top
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.UUID
+import java.util.UUID.randomUUID
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -84,9 +83,12 @@ class BoardState(var dimensions: GridState) {
         _selectedPosition.update { position }
     }
     fun changeValue(value: String) {
+
         _selectedPosition.value?.let { (x, y) ->
 
-            board[x] = board[x].copy { it[y].text = value }
+            board[x] = board[x].copy {
+                it[y].text = value
+            }.also { it[y].isValid = isPlacementValid().also { println(it) } }
 
             if (value.isEmpty()) {
                 _selectedPosition.update {
@@ -119,7 +121,28 @@ class BoardState(var dimensions: GridState) {
 
         _selectedPosition.update { null }.also { backStack.clear() }
     }
-//
+
+    private fun isPlacementValid(position: Pair<Int, Int>? = _selectedPosition.value) : Boolean {
+
+        return position?.let { (x,y) ->
+
+            val area = dimensions.multiplier
+
+            //todo validation is happening when any text value is placed
+            board[x].filter { it.text.isNotEmpty() }.plane { it.text } &&
+            board.map { it[y] }.filter { it.text.isNotEmpty() }.plane { it.text } &&
+            board.flatMap {
+                it.filter { tile ->
+                    tile.position.let { (tx, ty) ->
+                        Pair(x/area, y/area) == Pair(tx/area, ty/area)
+                    }
+                }
+            }.filter { it.text.isNotEmpty() }.plane { it.text.also { println(it) } }
+
+        } ?: true
+
+    }
+
 //    fun isValid() : Boolean {
 //        //TODO solve isn't changing in th ui when the board is invalid when we click solve
 //        // first verify if a row is valid. that's done by filtering all empty positions and calling a distinct on the board.
