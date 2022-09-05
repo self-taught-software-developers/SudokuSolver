@@ -1,8 +1,10 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
+import android.service.quicksettings.Tile
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -14,8 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.util.UUID
-import java.util.UUID.randomUUID
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -86,9 +86,23 @@ class BoardState(var dimensions: GridState) {
 
         _selectedPosition.value?.let { (x, y) ->
 
-            board[x] = board[x].copy {
-                it[y].text = value
-            }.also { it[y].isValid = isPlacementValid().also { println(it) } }
+            board[x] = isPlacementValid(
+                value = value,
+                position = Pair(x,y),
+                board = board.toTypedArray().clone()
+            ).clone()
+
+
+//            board[x] = board[x].copy {
+//                it[y].text = value
+////                it[y].isValid = isPlacementValid()
+//            }
+
+//            board = board.validatedCopy {
+//                this.placeAndValidate { this[x][y].text = value }
+//            }
+//
+//            isPlacementValid()
 
             if (value.isEmpty()) {
                 _selectedPosition.update {
@@ -122,30 +136,57 @@ class BoardState(var dimensions: GridState) {
         _selectedPosition.update { null }.also { backStack.clear() }
     }
 
-    private fun isPlacementValid(position: Pair<Int, Int>? = _selectedPosition.value) : Boolean {
+    private fun isPlacementValid(
+        value: String,
+        position: Pair<Int, Int>,
+        board: Array<Array<TileState>>
+    ) : Array<TileState> {
 
-        return position?.let { (x,y) ->
+        position.let { (x,y) ->
 
-            val area = dimensions.multiplier
+//            val area = sqrt(board.size.toDouble()).toInt()
+            board.apply {
+                this[x][y].text = value
+                this[x].filter { it.text.isNotEmpty() }.valid()
 
-            board[x].filter { it.text.isNotEmpty() }.plane { it.text } &&
-            board.map { it[y] }.filter { it.text.isNotEmpty() }.plane { it.text } &&
-            board.flatMap {
-                it.filter { tile ->
-                    tile.position.let { (tx, ty) ->
-                        Pair(x/area, y/area) == Pair(tx/area, ty/area)
-                    }
-                }
-            }.filter { it.text.isNotEmpty() }.plane { it.text }
+//                this.map { it[y] }.filter { it.text.isNotEmpty() }
+//                this.flatMap {
+//                    it.filter { tile ->
+//                        tile.position.let { (tx, ty) ->
+//                            Pair(x/area, y/area) == Pair(tx/area, ty/area)
+//                        }
+//                    }
+//                }.filter { it.text.isNotEmpty() }
 
-        } ?: true
+                return this[x]
+            }
+
+//            board.apply {
+
+//            }
+
+//            board[x].filter { it.text.isNotEmpty() }.plane { it.text } &&
+//            board.map { it[y] }.filter { it.text.isNotEmpty() }.plane { it.text } &&
+//            board.flatMap {
+//                it.filter { tile ->
+//                    tile.position.let { (tx, ty) ->
+//                        Pair(x/area, y/area) == Pair(tx/area, ty/area)
+//                    }
+//                }
+//            }.filter { it.text.isNotEmpty() }.plane { it.text }
+
+        }
 
     }
 
-//    fun fromUiBoard() : Array<Array<Int>> {
-//        return _initialBoard.value.map { row ->
-//            row.map { it.value() }.toTypedArray()
-//        }.toTypedArray()
-//    }
+    private fun List<TileState>.valid() {
+
+        val occurrenceCount = this.groupingBy { it.text }.eachCount()
+
+        this.forEach {
+            it.isValid = !occurrenceCount[it.text].greaterThanOne()
+        }
+
+    }
 
 }

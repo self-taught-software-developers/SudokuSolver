@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import java.util.*
 
 fun <T> MutableList<T>.takeTopOrNull(value: T) : T? {
@@ -38,7 +39,13 @@ inline fun <reified T> Array<T>.copy(
     function: (Array<T>) -> Unit,
 ) = this.apply(function).clone()
 
-
 fun <T> List<T>.plane(validator: (T) -> Any) : Boolean {
-        return size == distinctBy { validator(it) }.count()
+//    this.groupingBy(validator).eachCount() == 1
+    return size == distinctBy { validator(it) }.count()
+}
+
+fun Int?.greaterThanOne() : Boolean {
+    return this?.let {
+        it > 1
+    } ?: false
 }
