@@ -39,8 +39,6 @@ inline fun <reified T> Array<T>.copy(
 ) = this.apply(function).clone()
 
 
-fun <T> List<T>.plane(validator: (T) -> Unit) : Boolean {
-//        println(distinctBy { validator(it) }.count())
-//        println(size)
+fun <T> List<T>.plane(validator: (T) -> Any) : Boolean {
         return size == distinctBy { validator(it) }.count()
 }

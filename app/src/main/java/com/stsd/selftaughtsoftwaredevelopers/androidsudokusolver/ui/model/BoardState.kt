@@ -128,7 +128,6 @@ class BoardState(var dimensions: GridState) {
 
             val area = dimensions.multiplier
 
-            //todo validation is happening when any text value is placed
             board[x].filter { it.text.isNotEmpty() }.plane { it.text } &&
             board.map { it[y] }.filter { it.text.isNotEmpty() }.plane { it.text } &&
             board.flatMap {
@@ -137,76 +136,12 @@ class BoardState(var dimensions: GridState) {
                         Pair(x/area, y/area) == Pair(tx/area, ty/area)
                     }
                 }
-            }.filter { it.text.isNotEmpty() }.plane { it.text.also { println(it) } }
+            }.filter { it.text.isNotEmpty() }.plane { it.text }
 
         } ?: true
 
     }
 
-//    fun isValid() : Boolean {
-//        //TODO solve isn't changing in th ui when the board is invalid when we click solve
-//        // first verify if a row is valid. that's done by filtering all empty positions and calling a distinct on the board.
-//        // if the filtered board is not the same size as the distinct board then we know we have repeating values in our row.
-//
-//        fromUiBoard().apply {
-//            forEach { row ->
-//                row.filter { it != 0 }.also { nonEmptyPositions ->
-//                    if (nonEmptyPositions.distinct().size < nonEmptyPositions.size) {
-//                        _solved.update { false }
-//                        return false
-//                    }
-//                }
-//            }
-//
-//            // to verify the column we need to  create a bucket per column and compare the items in that column to see if they contain any distinct values.
-//            var bucket = (0..lastIndex).map { arrayListOf<Int>() }
-//
-//            forEach { row ->
-//                row.forEachIndexed { index, value ->
-//                    if (value != 0) bucket[index].add(value)
-//                }
-//            }
-//
-//            if(bucket.any { it.distinct().size < it.size }) {
-//                _solved.update { false }
-//                return false
-//            }
-//            bucket = (0..lastIndex).map { arrayListOf() }
-//
-//            // to verify that our 3 by 3 grid doesn't have any repeating values we need ot view our 3 by 3 grid
-//            forEachIndexed { index, row ->
-//
-//                val x = index / 3
-//
-//                row.forEachIndexed { columnIndex, value ->
-//                    if (value != 0) {
-//                        val y = columnIndex / 3
-//
-//                        when (listOf(x, y)) {
-//                            listOf(0, 0) -> bucket[0].add(value)
-//                            listOf(0, 1) -> bucket[1].add(value)
-//                            listOf(0, 2) -> bucket[2].add(value)
-//                            listOf(1, 0) -> bucket[3].add(value)
-//                            listOf(1, 1) -> bucket[4].add(value)
-//                            listOf(1, 2) -> bucket[5].add(value)
-//                            listOf(2, 0) -> bucket[6].add(value)
-//                            listOf(2, 1) -> bucket[7].add(value)
-//                            listOf(2, 2) -> bucket[8].add(value)
-//                        }
-//                    }
-//                }
-//            }
-//
-//            if(bucket.any { it.distinct().size < it.size }) {
-//                _solved.update { false }
-//                return false
-//            }
-//            return true
-//
-//        }
-//
-//    }
-//
 //    fun fromUiBoard() : Array<Array<Int>> {
 //        return _initialBoard.value.map { row ->
 //            row.map { it.value() }.toTypedArray()
