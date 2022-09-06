@@ -20,6 +20,12 @@ import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import java.util.stream.IntStream
 import kotlin.math.sqrt
 
 @Composable
@@ -86,6 +92,41 @@ fun Modifier.drawSudokuGrid(
         }
     }
 
+}
+
+fun findEmptyPosition(board: Array<Array<Int>>): List<Int> {
+
+    for (row in board) {
+        for (column in row) {
+            if (column == 0) return listOf(board.indexOf(row), row.indexOf(column))
+        }
+    }
+    return emptyList()
+}
+
+fun validatePlacement(
+    board: Array<Array<Int>>,
+    number: Int,
+    position: List<Int>
+): Boolean {
+    // validate row
+    if (board[position[0]].contains(number)) return false
+
+    // validate column
+    for (i in board) {
+        if (i[position[1]] == number) return false
+    }
+
+    val x = position[1] / 3
+    val y = position[0] / 3
+
+    for (row in IntStream.range(y * 3, (y * 3) + 3)){
+        for (column in IntStream.range(x * 3, (x * 3) + 3)){
+            if (board[row][column] == number && listOf(row,column) != position) return false
+        }
+    }
+
+    return true
 }
 
 fun Modifier.drawSudokuGridTiles(
@@ -192,7 +233,7 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
         }
     }
 
-    return tiles.also { it.forEach(::println) ; println(it.size) }
+    return tiles
 }
 
 @Composable

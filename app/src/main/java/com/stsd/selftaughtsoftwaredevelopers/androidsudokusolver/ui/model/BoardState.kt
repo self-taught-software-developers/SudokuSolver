@@ -10,12 +10,16 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateBoardDimensions
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculatePx
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.stream.IntStream.range
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -79,41 +83,113 @@ class BoardState(var dimensions: GridState) {
 //    fun updateSolutionState(value: Boolean? = null) {
 //        _solved.update { value }
 //    }
-    fun updateSelected(position: Pair<Int, Int>) {
-        _selectedPosition.update { position }
-    }
+    fun updateSelected(position: Pair<Int, Int>?) = _selectedPosition.update { position }
     fun changeValue(value: String) {
 
-        _selectedPosition.value?.let { (x, y) ->
+        selectedPosition.value?.let { position ->
 
-            board[x] = isPlacementValid(
+            board[position.first] = isPlacementValid(
                 value = value,
-                position = Pair(x,y),
+                position = position,
                 board = board.toTypedArray().clone()
             ).clone()
 
-
-//            board[x] = board[x].copy {
-//                it[y].text = value
-////                it[y].isValid = isPlacementValid()
-//            }
-
-//            board = board.validatedCopy {
-//                this.placeAndValidate { this[x][y].text = value }
-//            }
-//
-//            isPlacementValid()
-
             if (value.isEmpty()) {
-                _selectedPosition.update {
-                    backStack.takeTopOrNull((_selectedPosition.value))
-                }
+                updateSelected(backStack.takeTopOrNull(position))
             } else {
-                backStack.top(_selectedPosition.value)
+                backStack.top(position)
             }
 
         }
+
     }
+
+    private fun changeValue(value: String, position: Pair<Int, Int>) {
+
+        if (value.isEmpty()) {
+            updateSelected(backStack.takeTopOrNull(position))
+        } else {
+            backStack.top(position)
+            updateSelected(position)
+        }
+
+        board[position.first] = isPlacementValid(
+            value = value,
+            position = position,
+            board = board.toTypedArray().clone()
+        ).clone()
+
+    }
+
+    private fun fromUiBoard() : Array<Array<Int>> {
+        return board.map { row ->
+            row.map { it.value() }.toTypedArray()
+        }.toTypedArray()
+    }
+
+    suspend fun solveTheBoard(solveSpeedMillis: Long, cancellation: () -> Unit) {
+        println("solveTheBoard : $solveSpeedMillis")
+        val board = fromUiBoard()
+        setBoard(findSolutionInstantly(board))
+    }
+
+    private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
+
+        val position = findEmptyPosition(board)
+
+        if (position.isEmpty()) {
+            return board
+        } else {
+            (1..9).forEach { candidate ->
+                if (validatePlacement(board, candidate, position)) {
+                    board[position[0]][position[1]] = candidate
+
+                    if (findEmptyPosition(findSolutionInstantly(board)).isEmpty()) return board
+
+                    board[position[0]][position[1]] = 0
+                }
+
+            }
+
+            return board
+        }
+
+
+    }
+
+
+
+//    private suspend fun findSolution(cancellation: () -> Unit) : Array<Array<Int>> {
+//
+//        val snapshotSudokuBoard: Array<Array<Int>> = fromUiBoard()
+//        val position = findEmptyPosition(snapshotSudokuBoard)
+//
+//        delay(1_00)
+//        if (position.isEmpty()) {
+//            println("position.isEmpty()")
+//            return snapshotSudokuBoard
+//        } else {
+//            (1..9).forEach { candidate ->
+//
+//                if (validatePlacement(snapshotSudokuBoard, candidate, position)) {
+//                    updateSelected(Pair(position[0],position[1]))
+//                    changeValue(toTileText(candidate))
+//
+//                    if (findEmptyPosition(findSolution { cancellation() }).isEmpty()) {
+//                        println("findEmptyPosition: position.isEmpty()")
+//                        cancellation()
+//                        return snapshotSudokuBoard
+//                    }
+//
+//                    updateSelected(Pair(position[0],position[1]))
+//                    changeValue(toTileText(0))
+//                }
+//
+//            }
+//           return snapshotSudokuBoard
+//        }
+//
+//    }
 //    fun changeValue(
 //        value: String,
 //        position: Pair<Int, Int>
@@ -124,16 +200,35 @@ class BoardState(var dimensions: GridState) {
 //
 //    }
     fun undoLast() = changeValue(EMPTY_TILE)
-    fun clearBoard() {
-//        if (solved.value != null) updateSolutionState()
+    suspend fun clearBoard() {
 
-        (0 until vector).forEach { point ->
-            board[point] = board[point].copy { x ->
-                x.map { it.text = EMPTY_TILE }
+        backStack.forEach {
+            delay(500)
+            undoLast()
+        }
+
+//        (0 until vector).forEach { point ->
+//            board[point] = board[point].copy { x ->
+//                x.map { it.text = EMPTY_TILE }
+//            }
+//        }
+//        updateSelected(null).also { backStack.clear() }
+    }
+
+
+
+    private suspend fun setBoard(board: Array<Array<Int>>) {
+
+        board.forEachIndexed { x, ints ->
+            ints.forEachIndexed { y, i ->
+                delay(1_0)
+                changeValue(
+                    value = toTileText(i),
+                    position = Pair(x,y)
+                )
             }
         }
 
-        _selectedPosition.update { null }.also { backStack.clear() }
     }
 
     private fun isPlacementValid(
@@ -144,47 +239,47 @@ class BoardState(var dimensions: GridState) {
 
         position.let { (x,y) ->
 
-//            val area = sqrt(board.size.toDouble()).toInt()
+            val excluded = mutableSetOf<Pair<Int,Int>>()
+
             board.apply {
                 this[x][y].text = value
-                this[x].filter { it.text.isNotEmpty() }.valid()
+                this[x].filter {
+                    it.text.isNotEmpty()
+                }.valid(excluded)
 
-//                this.map { it[y] }.filter { it.text.isNotEmpty() }
-//                this.flatMap {
-//                    it.filter { tile ->
-//                        tile.position.let { (tx, ty) ->
-//                            Pair(x/area, y/area) == Pair(tx/area, ty/area)
-//                        }
-//                    }
-//                }.filter { it.text.isNotEmpty() }
+                this.map { it[y] }.filter {
+                    it.text.isNotEmpty()
+                }.valid(excluded)
+
+                val area = sqrt(board.size.toDouble()).toInt()
+
+                this.flatMap {
+                    it.filter { tile ->
+                        tile.position.let { (tx, ty) ->
+                            Pair(x/area, y/area) == Pair(tx/area, ty/area)
+                        }
+                    }
+                }.filter { it.text.isNotEmpty() }.valid(excluded)
 
                 return this[x]
             }
-
-//            board.apply {
-
-//            }
-
-//            board[x].filter { it.text.isNotEmpty() }.plane { it.text } &&
-//            board.map { it[y] }.filter { it.text.isNotEmpty() }.plane { it.text } &&
-//            board.flatMap {
-//                it.filter { tile ->
-//                    tile.position.let { (tx, ty) ->
-//                        Pair(x/area, y/area) == Pair(tx/area, ty/area)
-//                    }
-//                }
-//            }.filter { it.text.isNotEmpty() }.plane { it.text }
 
         }
 
     }
 
-    private fun List<TileState>.valid() {
+    private fun List<TileState>.valid(
+        excluded: MutableSet<Pair<Int,Int>>
+    ) {
 
         val occurrenceCount = this.groupingBy { it.text }.eachCount()
 
-        this.forEach {
-            it.isValid = !occurrenceCount[it.text].greaterThanOne()
+        this.filter { !excluded.contains(it.position) }.forEach {
+            it.isValid = !occurrenceCount[it.text].greaterThanOne().also { isInvalid ->
+                if (isInvalid) {
+                    excluded.add(it.position)
+                }
+            }
         }
 
     }

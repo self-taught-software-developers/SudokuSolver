@@ -16,8 +16,11 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridSt
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 @Composable
 fun SudokuSolverScreen(
@@ -34,6 +37,7 @@ fun SudokuSolverScreen(
 
     //TODO INVESTIGATE WHETHER OR NOT THIS IS GOOD PRACTICE.
     val timeState by solutionSpeedState.collectAsState(TimeState.DEFAULT_SPEED)
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
@@ -58,14 +62,14 @@ fun SudokuSolverScreen(
                 enabled = enabled,
                 items = listOf(
                     IconItem(rounded.Undo) { board.undoLast() },
-                    IconItem(rounded.ClearAll) { board.clearBoard() }
+                    IconItem(rounded.ClearAll) { scope.launch { board.clearBoard() } }
                 )
             )
         },
         bottomBar = {
              DefaultBottomBar(
                  enabled = enabled,
-                 onClickSolve = {  }
+                 onClickSolve = { scope.launch { board.solveTheBoard(1_00L) { scope.cancel() } } }
             ) { board.changeValue(it) }
         },
     ) { bounds ->

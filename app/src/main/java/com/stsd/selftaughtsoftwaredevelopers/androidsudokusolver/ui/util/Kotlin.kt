@@ -1,8 +1,5 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import java.util.*
-
 fun <T> MutableList<T>.takeTopOrNull(value: T) : T? {
     return if(value == lastOrNull()) {
         removeLastOrNull()
@@ -18,17 +15,6 @@ fun <T> MutableList<T>.top(value: T) {
     } else this.add(value)
 }
 
-//fun <T> MutableStateFlow<T>.updateCopy(function: (T) -> Unit) {
-//    when(val array = this.value) {
-//        is Array<*> -> this.update {
-//            array.copy { function(array as T) } as T
-//        }
-//    }
-//}
-//
-//fun <T> Array<T>.copy(function: (Array<T>) -> Unit) = this
-//    .copyOf().apply { function(this@copy) }
-
 inline fun <reified T> Iterable<T>.chunked(size: Int): List<Array<T>> {
     return windowed(size, size, partialWindows = true).map {
         it.toTypedArray()
@@ -38,11 +24,6 @@ inline fun <reified T> Iterable<T>.chunked(size: Int): List<Array<T>> {
 inline fun <reified T> Array<T>.copy(
     function: (Array<T>) -> Unit,
 ) = this.apply(function).clone()
-
-fun <T> List<T>.plane(validator: (T) -> Any) : Boolean {
-//    this.groupingBy(validator).eachCount() == 1
-    return size == distinctBy { validator(it) }.count()
-}
 
 fun Int?.greaterThanOne() : Boolean {
     return this?.let {
