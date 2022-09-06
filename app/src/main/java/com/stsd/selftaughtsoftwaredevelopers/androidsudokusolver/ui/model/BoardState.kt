@@ -1,10 +1,8 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
-import android.service.quicksettings.Tile
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -14,16 +12,19 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.fi
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.*
-import kotlinx.coroutines.awaitCancellation
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.takeTopOrNull
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.top
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.suspendCancellableCoroutine
-import java.util.stream.IntStream.range
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class BoardState(var dimensions: GridState) {
+class BoardState(var dimensions: GridState, var timeState: TimeState) {
 
     var resolution: Pair<Float, Float>? = null
     var vector = dimensions.multiplier.toFloat().pow(2).toInt()
@@ -127,11 +128,7 @@ class BoardState(var dimensions: GridState) {
         }.toTypedArray()
     }
 
-    suspend fun solveTheBoard(solveSpeedMillis: Long, cancellation: () -> Unit) {
-        println("solveTheBoard : $solveSpeedMillis")
-        val board = fromUiBoard()
-        setBoard(findSolutionInstantly(board))
-    }
+    suspend fun solveTheBoard() = setBoard(findSolutionInstantly(fromUiBoard()))
 
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 
@@ -157,75 +154,25 @@ class BoardState(var dimensions: GridState) {
 
     }
 
-
-
-//    private suspend fun findSolution(cancellation: () -> Unit) : Array<Array<Int>> {
-//
-//        val snapshotSudokuBoard: Array<Array<Int>> = fromUiBoard()
-//        val position = findEmptyPosition(snapshotSudokuBoard)
-//
-//        delay(1_00)
-//        if (position.isEmpty()) {
-//            println("position.isEmpty()")
-//            return snapshotSudokuBoard
-//        } else {
-//            (1..9).forEach { candidate ->
-//
-//                if (validatePlacement(snapshotSudokuBoard, candidate, position)) {
-//                    updateSelected(Pair(position[0],position[1]))
-//                    changeValue(toTileText(candidate))
-//
-//                    if (findEmptyPosition(findSolution { cancellation() }).isEmpty()) {
-//                        println("findEmptyPosition: position.isEmpty()")
-//                        cancellation()
-//                        return snapshotSudokuBoard
-//                    }
-//
-//                    updateSelected(Pair(position[0],position[1]))
-//                    changeValue(toTileText(0))
-//                }
-//
-//            }
-//           return snapshotSudokuBoard
-//        }
-//
-//    }
-//    fun changeValue(
-//        value: String,
-//        position: Pair<Int, Int>
-//    ) {
-//
-//        selectPosition(position)
-//        changeValue(value)
-//
-//    }
     fun undoLast() = changeValue(EMPTY_TILE)
     suspend fun clearBoard() {
 
-        backStack.forEach {
-            delay(500)
-            undoLast()
+        backStack.reversed().onEach { _ ->
+            delay(timeState.time).also { undoLast() }
         }
 
-//        (0 until vector).forEach { point ->
-//            board[point] = board[point].copy { x ->
-//                x.map { it.text = EMPTY_TILE }
-//            }
-//        }
-//        updateSelected(null).also { backStack.clear() }
     }
-
-
 
     private suspend fun setBoard(board: Array<Array<Int>>) {
 
         board.forEachIndexed { x, ints ->
             ints.forEachIndexed { y, i ->
-                delay(1_0)
-                changeValue(
-                    value = toTileText(i),
-                    position = Pair(x,y)
-                )
+                delay(timeState.time).also {
+                    changeValue(
+                        value = toTileText(i),
+                        position = Pair(x,y)
+                    )
+                }
             }
         }
 

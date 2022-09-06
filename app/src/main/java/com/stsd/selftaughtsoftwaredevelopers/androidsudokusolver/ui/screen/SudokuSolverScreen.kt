@@ -33,10 +33,9 @@ fun SudokuSolverScreen(
     var isCameraOn by rememberSaveable { mutableStateOf(false) }
     var showMoreItems by remember { mutableStateOf<List<IconItem>?>(null) }
 
-    val board by remember { mutableStateOf(BoardState(dimensions = GridState.GRID_3X3)) }
-
-    //TODO INVESTIGATE WHETHER OR NOT THIS IS GOOD PRACTICE.
     val timeState by solutionSpeedState.collectAsState(TimeState.DEFAULT_SPEED)
+    val board by remember { mutableStateOf(BoardState(dimensions = GridState.GRID_3X3, timeState = timeState)) }
+
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -69,7 +68,7 @@ fun SudokuSolverScreen(
         bottomBar = {
              DefaultBottomBar(
                  enabled = enabled,
-                 onClickSolve = { scope.launch { board.solveTheBoard(1_00L) { scope.cancel() } } }
+                 onClickSolve = { scope.launch { board.solveTheBoard() } }
             ) { board.changeValue(it) }
         },
     ) { bounds ->
