@@ -3,14 +3,10 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.StoragePreferences
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.ScannerState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject

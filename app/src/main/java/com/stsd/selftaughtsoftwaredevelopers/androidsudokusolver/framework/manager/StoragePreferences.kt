@@ -27,7 +27,6 @@ class StoragePreferences @Inject constructor(
             prefs[solutionKey] = value.name
         }
     }
-
     private val gridKey = stringPreferencesKey("GRID_DIMENSIONS_PREF_KEY")
     val gridDimensions : Flow<GridState> = dataStore.data.map { pref ->
         when(pref[gridKey]) {
@@ -41,7 +40,5 @@ class StoragePreferences @Inject constructor(
             prefs[gridKey] = value.name
         }
     }
-
-
 
 }
