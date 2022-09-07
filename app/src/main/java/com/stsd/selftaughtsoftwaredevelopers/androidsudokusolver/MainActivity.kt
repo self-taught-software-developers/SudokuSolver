@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
     private var screenOff: State<TimeState?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().setKeepOnScreenCondition { true }
+        installSplashScreen().setKeepOnScreenCondition { screenOff?.value == null }
         super.onCreate(savedInstanceState)
 
         setContent {

@@ -72,11 +72,11 @@ fun SudokuSolverScreen(
             )
         },
         bottomBar = {
-//             DefaultBottomBar(
-//                 enabled = enabled,
-//                 onClickSolve = board::solveTheBoard,
-//                 onEnterValue = board::changeValue
-//            )
+             DefaultBottomBar(
+                 enabled = enabled,
+                 onClickSolve = { scope.launch { board.solveTheBoard() } },
+                 onEnterValue = { board.changeValue(it) }
+            )
         },
     ) { bounds ->
 
