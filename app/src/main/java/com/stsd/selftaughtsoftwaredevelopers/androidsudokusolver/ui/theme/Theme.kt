@@ -2,7 +2,6 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -59,15 +58,11 @@ fun AndroidSudokuSolverTheme(
     content: @Composable () -> Unit
 ) {
 
+    val systemUiController = rememberSystemUiController()
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
 
-    val systemUiController = rememberSystemUiController()
-
-    LaunchedEffect(colors) {
-        systemUiController.setSystemBarsColor(
-            color = colors.primary,
-            darkIcons = !darkTheme
-        )
+    LaunchedEffect(colors, systemUiController) {
+        systemUiController.setSystemBarsColor(color = colors.primary)
     }
 
     CompositionLocalProvider(

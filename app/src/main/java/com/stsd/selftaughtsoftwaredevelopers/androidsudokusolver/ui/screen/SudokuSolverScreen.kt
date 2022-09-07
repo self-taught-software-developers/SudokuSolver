@@ -19,31 +19,37 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPre
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 @Composable
 fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
-    solutionSpeedState: Flow<TimeState>,
+    solutionSpeedState: TimeState?,
     updateSolutionSpeed: (TimeState) -> Unit
 ) {
 
     var enabled by rememberSaveable { mutableStateOf(true) }
     var isCameraOn by rememberSaveable { mutableStateOf(false) }
     var showMoreItems by remember { mutableStateOf<List<IconItem>?>(null) }
-
-    val timeState by solutionSpeedState.collectAsState(TimeState.DEFAULT_SPEED)
-    val board by remember { mutableStateOf(BoardState(dimensions = GridState.GRID_3X3, timeState = timeState)) }
-
     val scope = rememberCoroutineScope()
+
+    val board by remember(solutionSpeedState) {
+        derivedStateOf {
+            BoardState(
+                dimensions = GridState.GRID_3X3,
+                timeState = solutionSpeedState ?: TimeState.DEFAULT_SPEED
+            )
+        }
+    }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             DefaultTopBar(
                 enabled = enabled,
-                timeState = timeState,
+                timeState = board.timeState,
                 isCameraOn = isCameraOn,
                 toggleCamera = { isCameraOn = !isCameraOn }
             ) {
@@ -66,10 +72,11 @@ fun SudokuSolverScreen(
             )
         },
         bottomBar = {
-             DefaultBottomBar(
-                 enabled = enabled,
-                 onClickSolve = { scope.launch { board.solveTheBoard() } }
-            ) { board.changeValue(it) }
+//             DefaultBottomBar(
+//                 enabled = enabled,
+//                 onClickSolve = board::solveTheBoard,
+//                 onEnterValue = board::changeValue
+//            )
         },
     ) { bounds ->
 
@@ -97,7 +104,7 @@ fun SudokuSolverScreen(
 @DarkPreview
 @Composable
 fun SudokuSolverScreenPreview() {
-    SudokuSolverScreen(solutionSpeedState = flowOf(TimeState.DEFAULT_SPEED)) {
+    SudokuSolverScreen(solutionSpeedState = TimeState.DEFAULT_SPEED) {
 
     }
 }

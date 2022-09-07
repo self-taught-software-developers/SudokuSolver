@@ -6,12 +6,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation.NavigationRoutes.SOLVER_DESTINATION
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen.SudokuSolverScreen
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
+import java.sql.Time
 
 @Composable
-fun SudokuSolverApp(navController: NavHostController = rememberNavController()) {
+fun SudokuSolverApp(
+    navController: NavHostController = rememberNavController(),
+    solutionSpeed: TimeState?,
+    updatePlacementSpeed: (TimeState) -> Unit
+) {
 
     NavHost(
         navController = navController,
@@ -19,10 +25,10 @@ fun SudokuSolverApp(navController: NavHostController = rememberNavController()) 
     ) {
 
         composable(SOLVER_DESTINATION) {
-            val vm: SudokuViewModel = hiltViewModel()
+//            val vm: SudokuViewModel = hiltViewModel()
 
-            SudokuSolverScreen(solutionSpeedState = vm.solutionSpeed) { speed ->
-                vm.updateSolutionSpeed(speed)
+            SudokuSolverScreen(solutionSpeedState = solutionSpeed) { speed ->
+                updatePlacementSpeed(speed)
             }
 
         }

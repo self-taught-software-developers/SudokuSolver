@@ -17,8 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SudokuViewModel @Inject constructor(
-    private val storagePreferences: StoragePreferences,
-    private val worker: SudokuSolverWorker
+    private val storagePreferences: StoragePreferences
 ) : ViewModel() {
 
     val solutionSpeed = storagePreferences.solutionSpeed
@@ -32,7 +31,6 @@ class SudokuViewModel @Inject constructor(
         storagePreferences.updateGridDimensions(value)
     }
 
-
     private val _scannerState = MutableStateFlow(ScannerState.OFF)
     val scannerState : StateFlow<ScannerState> = _scannerState.asStateFlow()
 
@@ -43,30 +41,5 @@ class SudokuViewModel @Inject constructor(
             ScannerState.SCANNING -> ScannerState.OFF
         }
     }
-
-//    fun updateSelectedPosition(
-//        newPosition: Pair<Int, Int>
-//    ) = _sudokuBoardStateAlt.value.selectPosition(newPosition)
-//
-//    /**
-//     * Call this function when a numbered button is clicked.
-//     */
-//    fun enterNewValue(
-//        newValue: String
-//    ) = _sudokuBoardStateAlt.value.changeValue(newValue)
-//
-//    fun enterNewValue(
-//        newValue: String,
-//        position: Pair<Int, Int>
-//    ) = _sudokuBoardStateAlt.value.changeValue(newValue, position)
-//
-//    fun undoLast() = _sudokuBoardStateAlt.value.undoLast()
-//    fun clearBoard() = _sudokuBoardStateAlt.value.clearBoard()
-//
-//    fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
-//
-//        worker.solveBoard(_sudokuBoardStateAlt.value)
-//
-//    }
 
 }

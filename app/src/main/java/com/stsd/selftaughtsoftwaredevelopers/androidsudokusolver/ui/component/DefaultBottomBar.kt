@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.flowlayout.FlowRow
@@ -39,8 +42,9 @@ fun DefaultBottomBar(
         DefaultIconButton(
             enabled = enabled,
             imageVector = Icons.Default.SelectAll,
-            backgroundColor = CustomTheme.colors.secondary
-        ) { onClickSolve() }
+            backgroundColor = CustomTheme.colors.secondary,
+            onClick = onClickSolve
+        )
     }
 
 }

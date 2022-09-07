@@ -76,9 +76,9 @@ fun DefaultIconButton(
     IconButton(
         modifier = modifier
             .padding(padding.small)
-            .clip(shape = CustomTheme.shapes.small)
+            .clip(shape = shapes.small)
             .background(backgroundColor)
-            .size(CustomTheme.sizing.xx_large),
+            .size(sizing.xx_large),
         enabled = enabled,
         onClick = { onClick() }
     ) {
