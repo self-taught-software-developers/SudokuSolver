@@ -8,11 +8,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation.SudokuSolverApp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -21,7 +24,9 @@ class MainActivity : ComponentActivity() {
     private var screenOff: State<TimeState?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().setKeepOnScreenCondition { screenOff?.value == null }
+        installSplashScreen().apply {
+            setKeepOnScreenCondition { screenOff?.value == null }
+        }
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -34,6 +39,7 @@ class MainActivity : ComponentActivity() {
                     updatePlacementSpeed = vm::updateSolutionSpeed
                 )
             }
+
         }
 
     }

@@ -3,10 +3,14 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,7 +33,7 @@ fun DefaultNumericButton(
             .clip(shape = shapes.small)
             .size(sizing.xx_large),
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(Color.Black.copy(alpha = 0.05F)),
+        colors = buttonColors(Black.copy(alpha = 0.05F)),
         onClick = { onClick(numericValue.toString()) }
     ) {
         Text(
@@ -77,7 +81,7 @@ fun DefaultIconButton(
         modifier = modifier
             .padding(padding.small)
             .clip(shape = shapes.small)
-            .background(backgroundColor)
+            .drawBehind { drawRect(color = backgroundColor) }
             .size(sizing.xx_large),
         enabled = enabled,
         onClick = { onClick() }

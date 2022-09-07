@@ -4,10 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -72,7 +69,6 @@ fun SudokuBoard(
 ) {
 
     val scope = rememberCoroutineScope()
-
 //        /*
 //            Dimensions (2x2 / 3x3 / 4x4)
 //            This will allow us to draw the grid with dynamic dimensions.

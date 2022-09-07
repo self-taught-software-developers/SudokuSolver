@@ -3,6 +3,7 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -16,15 +17,28 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.takeTopOrNull
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.top
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.sql.Time
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class BoardState(var dimensions: GridState, var timeState: TimeState) {
+class BoardState(var dimensions: GridState) {
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    private var timeState: TimeState = TimeState.DEFAULT_SPEED
+    fun updatePlacementSpeed(speed: TimeState?) : TimeState {
+        return speed?.let {
+            it.also { timeState = it }
+        } ?: timeState
+    }
 
     var resolution: Pair<Float, Float>? = null
     var vector = dimensions.multiplier.toFloat().pow(2).toInt()
@@ -33,7 +47,7 @@ class BoardState(var dimensions: GridState, var timeState: TimeState) {
     var board = mutableStateListOf<Array<TileState>>()
 
     @Composable
-    fun calculateTileDimensions(scope : BoxWithConstraintsScope): BoardState {
+    fun calculateTileDimensions(scope : BoxWithConstraintsScope) : BoardState {
 
         scope.apply {
             resolution = calculatePx()
@@ -63,8 +77,8 @@ class BoardState(var dimensions: GridState, var timeState: TimeState) {
                     board.addAll(toBoardLayout())
                 }
 
-            }
-        }.also { return this@BoardState }
+            }.also { return this@BoardState }
+        }
 
     }
 
@@ -128,7 +142,7 @@ class BoardState(var dimensions: GridState, var timeState: TimeState) {
         }.toTypedArray()
     }
 
-    suspend fun solveTheBoard() = setBoard(findSolutionInstantly(fromUiBoard()))
+    fun solveTheBoard() = coroutineScope.launch { setBoard(findSolutionInstantly(fromUiBoard())) }
 
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 
@@ -155,10 +169,13 @@ class BoardState(var dimensions: GridState, var timeState: TimeState) {
     }
 
     fun undoLast() = changeValue(EMPTY_TILE)
-    suspend fun clearBoard() {
 
-        backStack.reversed().onEach { _ ->
-            delay(timeState.time).also { undoLast() }
+    fun clearBoard() {
+
+        coroutineScope.launch {
+            backStack.reversed().onEach { _ ->
+                delay(timeState.time).also { undoLast() }
+            }
         }
 
     }

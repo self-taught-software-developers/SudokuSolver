@@ -3,22 +3,14 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Surface
-import androidx.compose.material.contentColorFor
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.NoPhotography
-import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.animation.enterIn
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.animation.exitOut
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.ScannerState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.colors
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
@@ -75,9 +67,16 @@ fun MoreOptionsBar(
     dismissMoreOptionsBar: () -> Unit
 ) {
 
+    val listOfItems by remember(iconList) { mutableStateOf(iconList) }
+    val isVisible by remember(iconList) {
+        derivedStateOf {
+            !iconList.isNullOrEmpty()
+        }
+    }
+
     AnimatedVisibility(
         modifier = modifier,
-        visible = !iconList.isNullOrEmpty(),
+        visible = isVisible,
         enter = enterIn(),
         exit = exitOut()
     ) {
@@ -92,7 +91,7 @@ fun MoreOptionsBar(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            iconList?.forEach { item ->
+            listOfItems?.forEach { item ->
 
                 DefaultIconButton(imageVector = item.icon) {
                     item.onClick()

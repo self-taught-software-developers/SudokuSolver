@@ -17,6 +17,9 @@ class SudokuViewModel @Inject constructor(
 ) : ViewModel() {
 
     val solutionSpeed = storagePreferences.solutionSpeed
+
+
+
     val gridDimension = storagePreferences.gridDimensions
 
     fun updateSolutionSpeed(value: TimeState) = viewModelScope.launch {
