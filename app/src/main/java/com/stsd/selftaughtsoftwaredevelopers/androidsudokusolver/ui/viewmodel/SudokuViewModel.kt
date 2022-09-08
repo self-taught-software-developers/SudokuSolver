@@ -25,8 +25,10 @@ class SudokuViewModel @Inject constructor(
 
         viewModelScope.launch {
             storagePreferences.solutionSpeed.collectLatest { speed ->
-                boardState.update {
-                    it.copy(placementSpeed = speed)
+                boardState.update { state ->
+                    state.copy(placementSpeed = speed).also {
+                        println(it.tiles)
+                    }
                 }
             }
         }
@@ -40,7 +42,6 @@ class SudokuViewModel @Inject constructor(
     fun updatePlacementSpeed(value: TimeState) = viewModelScope.launch {
         storagePreferences.updateSolutionSpeed(value)
     }
-
 
 //
 //    val gridDimension = storagePreferences.gridDimensions

@@ -7,11 +7,13 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -21,14 +23,13 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Composable
-fun Camera(
+fun BoxWithConstraintsScope.Camera(
     modifier: Modifier = Modifier,
-    size: Pair<Float,Float>?,
     tiles: List<TileState>,
     onProcessed: (TileState) -> Unit
 ) {
 
-    size?.let {
+    calculateLocalPx(LocalDensity.current).let {
 
         val context = LocalContext.current
         val lifecycleOwner = LocalLifecycleOwner.current
@@ -56,7 +57,7 @@ fun Camera(
                 .build()
                 .also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
-            val (width, height) = size.toInt()
+            val (width, height) = it.toIntPair()
 
             val imageAnalyzer = ImageAnalysis.Builder()
                 .setTargetResolution(Size(width, height))

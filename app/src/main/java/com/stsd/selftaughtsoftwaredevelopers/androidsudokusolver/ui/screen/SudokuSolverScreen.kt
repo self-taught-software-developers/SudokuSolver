@@ -11,11 +11,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState.*
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
 
 @Composable
@@ -60,11 +62,33 @@ fun SudokuSolverScreen(
         },
     ) { bounds ->
 
+
         BoxWithConstraints(
             modifier = Modifier
                 .padding(bounds)
                 .fillMaxSize()
         ) {
+
+            val padding = LocalPadding.current
+            val density = LocalDensity.current
+
+            LaunchedEffect(boardState.dimensions) {
+                boardState.calculateLocalTileDimensions(
+                    constraintsScope = this@BoxWithConstraints,
+                    density = density,
+                    padding = padding.medium
+                )
+            }
+
+            SudokuBoard(
+                modifier = Modifier.align(Alignment.Center),
+                board = boardState.board,
+                tiles = boardState.tiles,
+                position = boardState.position,
+                cameraEnabled = isCameraOn,
+                enabled = enabled,
+            ) { enabled = it }
+
             MoreOptionsBar(
                 modifier = Modifier.align(Alignment.TopCenter),
                 iconList = moreItems
@@ -72,13 +96,6 @@ fun SudokuSolverScreen(
                 updateSolutionSpeed(it)
                 moreItems.clear()
             }
-            SudokuBoard(
-                modifier = Modifier.align(Alignment.Center),
-                state = boardState.calculateTileDimensions(this),
-                cameraEnabled = isCameraOn,
-                enabled = enabled
-            ) { enabled = it }
-
 
         }
 

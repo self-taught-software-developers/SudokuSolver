@@ -2,17 +2,18 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -60,15 +61,25 @@ fun BoardTile(
 }
 
 @Composable
-fun SudokuBoard(
+fun BoxWithConstraintsScope.SudokuBoard(
     modifier: Modifier = Modifier,
-    state: BoardState,
     cameraEnabled: Boolean = false,
+    board: List<Array<TileState>>,
+    tiles: List<TileState>,
+    position: Pair<Int, Int>?,
     enabled: Boolean,
-    onDisabled: (Boolean) -> Unit
+    onDisabled: (Boolean) -> Unit,
 ) {
 
-    val scope = rememberCoroutineScope()
+//    LaunchedEffect(this) {
+//        println("SudokuBoard: recomposition")
+//        state.calculateTileDimensions(
+//            constraintsScope = this@SudokuBoard,
+//            padding = padding.medium,
+//            density = density,
+//        )
+//    }
+
 //        /*
 //            Dimensions (2x2 / 3x3 / 4x4)
 //            This will allow us to draw the grid with dynamic dimensions.
@@ -79,12 +90,10 @@ fun SudokuBoard(
 //            This will be used to identify in which tile an analyzed number falls within.
 //         */
 
-
     if (cameraEnabled) {
         Camera(
             modifier = modifier,
-            size = state.resolution,
-            tiles = state.tiles
+            tiles = tiles
         ) {
 //                    vm.enterNewValue(
 //                        newValue = it.text,
@@ -98,19 +107,23 @@ fun SudokuBoard(
             .defaultBorder(Color.Black)
             .drawSudokuGrid(
                 color = Color.Black,
-                vector = state.vector
+                vector = tiles.vector()
             )
     ) {
 
-        val selected by state.selectedPosition.collectAsState()
+//        val selected by state.selectedPosition.collectAsState()
 
         placeTiles(
-            board = state.board,
-            selectedTile = selected?.let { Triple(it.first, it.second, state.dimensions.multiplier) }
-        ) { selection ->
-            scope.launch {
-                state.updateSelected(selection)
+            board = board,
+            selectedTile = position?.let { Triple(
+                it.first,
+                it.second,
+                tiles.vector()
+            )
             }
+        ) { selection ->
+//            state.updateSelected(selection)
+
         }
 
     }

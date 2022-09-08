@@ -15,8 +15,10 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.google.android.datatransport.runtime.scheduling.jobscheduling.SchedulerConfig.Flag
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
@@ -25,7 +27,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.lang.Double.min
 import java.util.stream.IntStream
+import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 
 @Composable
@@ -168,6 +172,12 @@ fun BoxWithConstraintsScope.calculatePx() : Pair<Float,Float> {
     return Pair(iWidth, iHeight)
 }
 
+fun BoxWithConstraintsScope.calculateLocalPx(density: Density, extra: Dp? = null) : Triple<Float, Float, Float?> {
+    with(density) {
+        return Triple(maxWidth.toPx(), maxHeight.toPx(), extra?.toPx())
+    }
+}
+
 @Composable
 fun calculatePx() : Pair<Float,Float> {
 
@@ -181,7 +191,8 @@ fun calculatePx() : Pair<Float,Float> {
 }
 
 fun Pair<Float, Float>.toAspectRatio() = (second/first).toInt()
-fun Pair<Float, Float>.toInt() = Pair(this.first.toInt(), this.second.toInt())
+fun Pair<Float, Float>.toIntPair() = Pair(this.first.toInt(), this.second.toInt())
+fun Triple<Float, Float, *>.toIntPair() = Pair(this.first.toInt(), this.second.toInt())
 
 @Composable
 fun BoxWithConstraintsScope.subtractDimensions(extra : Dp) : Pair<Float,Float> {
@@ -192,6 +203,14 @@ fun BoxWithConstraintsScope.subtractDimensions(extra : Dp) : Pair<Float,Float> {
     val height = with(density) { (maxHeight - extra).toPx() }
 
     return Pair(width, height)
+}
+
+fun Triple<Float, Float, Float?>.subtractLocalDimensions() : Pair<Float,Float> {
+
+    return this.third?.let { extra ->
+        Pair(first - extra, second - extra)
+    } ?: Pair(first, second)
+
 }
 
 @Composable
@@ -211,6 +230,30 @@ fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
     return Rect(offset = start, size = size)
 
 }
+
+fun <T> List<T>.vector() = sqrt(this.size.toDouble()).toInt()
+
+fun BoxWithConstraintsScope.calculateLocalBoardDimensions(
+    density: Density,
+    padding: Dp
+) : Rect {
+
+    val calculatedPx = calculateLocalPx(density, (padding * 2))
+    val (sub_width, sub_height) = calculatedPx.subtractLocalDimensions()
+
+    val scaling = minOf(sub_width, sub_height)
+
+    val x = (calculatedPx.first - scaling).div(2)
+    val y = (calculatedPx.second - scaling).div(2)
+
+    val start = Offset(x = x, y = y)
+    val size = Size(scaling, scaling)
+
+    return Rect(offset = start, size = size)
+
+}
+
+
 
 fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 

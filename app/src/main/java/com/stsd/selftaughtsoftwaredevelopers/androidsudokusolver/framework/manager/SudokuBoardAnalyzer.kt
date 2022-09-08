@@ -45,7 +45,7 @@ class SudokuBoardAnalyzer(
                                             }?.let { tile ->
                                                 //TODO hash of items already added.
                                                 //TODO add it
-                                                println("$value, ${tile.position}, ${tile.rect}, $rect")
+//                                                println("$value, ${tile.position}, ${tile.rect}, $rect")
                                                 if (processedElements.contains(tile.position)) {
                                                     //todo change the value if they are different.
                                                 } else {

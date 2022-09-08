@@ -3,14 +3,14 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateBoardDimensions
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculatePx
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
+import androidx.core.graphics.PathUtils.flatten
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
@@ -22,37 +22,27 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.sql.Time
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
-    val placementSpeed: TimeState = TimeState.NONE,
+
     val state: BoardActivityState,
-    val scope: CoroutineScope
+    val placementSpeed: TimeState = TimeState.NONE,
+    val scope: CoroutineScope,
+    val tiles: MutableList<TileState> = mutableListOf(),
+    val board: SnapshotStateList<Array<TileState>> = mutableStateListOf(),
+    val position: Pair<Int, Int>? = null
 ) {
 
     fun isLoading() = state == BoardActivityState.LOADING
-
-    private var timeState: TimeState = TimeState.DEFAULT_SPEED
-    fun updatePlacementSpeed(speed: TimeState?) : TimeState {
-        return speed?.let {
-            it.also { timeState = it }
-        } ?: timeState
-    }
-
-    var resolution: Pair<Float, Float>? = null
     var vector = dimensions.multiplier.toFloat().pow(2).toInt()
-
-    val tiles = mutableListOf<TileState>()
-    var board = mutableStateListOf<Array<TileState>>()
 
     @Composable
     fun calculateTileDimensions(scope : BoxWithConstraintsScope) : BoardState {
-
         scope.apply {
-            resolution = calculatePx()
+//            resolution = calculatePx()
             calculateBoardDimensions().apply {
 
                 if (tiles.isEmpty() || sqrt(tiles.size.toFloat()).toInt() != vector) {
@@ -84,22 +74,52 @@ data class BoardState(
 
     }
 
-    private fun toBoardLayout(): List<Array<TileState>> = tiles.chunked(vector)
+    fun calculateLocalTileDimensions(
+        constraintsScope: BoxWithConstraintsScope,
+        padding: Dp,
+        density: Density,
+    )  {
 
-    private val _solved = MutableStateFlow<Boolean?>(null)
-    val solved : StateFlow<Boolean?> = _solved.asStateFlow()
+        println("calculated")
+        constraintsScope.apply {
+            calculateLocalBoardDimensions(
+                density = density,
+                padding = padding
+            ).let { rect ->
+
+                if (tiles.isEmpty() || sqrt(tiles.size.toFloat()).toInt() != vector) {
+                    val (x, y) = rect.topLeft
+                    val (width, height) = rect.size.div(vector.toFloat())
+
+                    (0 until vector).forEach { xp ->
+                        (0 until vector).forEach { yp ->
+                            tiles.add(
+                                TileState(
+                                    position = Pair(xp, yp),
+                                    rect = Rect(
+                                        offset = Offset(
+                                            x = (width * xp) + x,
+                                            y = (height * yp) + y
+                                        ),
+                                        size = Size(width, height)
+                                    )
+                                )
+                            )
+                        }
+                    }
+                    board.addAll(toBoardLayout())
+                }
+            }
+        }
+    }
+
+    private fun toBoardLayout(): List<Array<TileState>> = tiles.chunked(vector)
 
     private val _selectedPosition = MutableStateFlow<Pair<Int,Int>?>(null)
     var selectedPosition : StateFlow<Pair<Int, Int>?> = _selectedPosition.asStateFlow()
 
-
-
-
     private var backStack : MutableList<Pair<Int, Int>?> = mutableListOf()
 
-//    fun updateSolutionState(value: Boolean? = null) {
-//        _solved.update { value }
-//    }
     fun updateSelected(position: Pair<Int, Int>?) = _selectedPosition.update { position }
     fun changeValue(value: String) {
 
@@ -120,7 +140,6 @@ data class BoardState(
         }
 
     }
-
     private fun changeValue(value: String, position: Pair<Int, Int>) {
 
         if (value.isEmpty()) {
@@ -144,8 +163,29 @@ data class BoardState(
         }.toTypedArray()
     }
 
+    fun undoLast() = scope.launch { changeValue(EMPTY_TILE) }
+    fun clearBoard() = scope.launch {
+        backStack.reversed().onEach { _ ->
+            delay(placementSpeed.time).also { undoLast() }
+        }
+    }
+
     fun solveTheBoard() = scope.launch { setBoard(findSolutionInstantly(fromUiBoard())) }
 
+    private suspend fun setBoard(board: Array<Array<Int>>) {
+
+        board.forEachIndexed { x, ints ->
+            ints.forEachIndexed { y, i ->
+                delay(placementSpeed.time).also {
+                    changeValue(
+                        value = toTileText(i),
+                        position = Pair(x,y)
+                    )
+                }
+            }
+        }
+
+    }
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 
         val position = findEmptyPosition(board)
@@ -167,35 +207,6 @@ data class BoardState(
             return board
         }
 
-
-    }
-
-    fun undoLast() = changeValue(EMPTY_TILE)
-
-    fun clearBoard() {
-
-        scope.launch {
-            backStack.reversed().onEach { _ ->
-                delay(timeState.time).also { undoLast() }
-            }
-        }
-
-    }
-
-
-
-    private suspend fun setBoard(board: Array<Array<Int>>) {
-
-        board.forEachIndexed { x, ints ->
-            ints.forEachIndexed { y, i ->
-                delay(timeState.time).also {
-                    changeValue(
-                        value = toTileText(i),
-                        position = Pair(x,y)
-                    )
-                }
-            }
-        }
 
     }
 
