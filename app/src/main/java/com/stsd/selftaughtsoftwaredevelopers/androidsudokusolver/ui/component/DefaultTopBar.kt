@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.animation.enterIn
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.animation.exitOut
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.colors
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
@@ -21,7 +20,7 @@ fun DefaultTopBar(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     color: Color = colors.primary,
-    timeState: TimeState,
+    placementSpeed: TimeState,
     isCameraOn: Boolean,
     toggleCamera: () -> Unit,
     toggleSolutionSpeed: () -> Unit
@@ -39,7 +38,7 @@ fun DefaultTopBar(
 
         DefaultIconButton(
             enabled = enabled,
-            imageVector = when (timeState) {
+            imageVector = when (placementSpeed) {
                 TimeState.INSTANT_SPEED -> rounded.Timer3
                 TimeState.SUPER_SPEED -> rounded.Timer10
                 TimeState.SLOW_SPEED -> rounded.Snooze
@@ -63,16 +62,11 @@ fun DefaultTopBar(
 @Composable
 fun MoreOptionsBar(
     modifier: Modifier = Modifier,
-    iconList: List<IconItem>?,
-    dismissMoreOptionsBar: () -> Unit
+    iconList: List<TimeState>,
+    dismissMoreOptionsBar: (TimeState) -> Unit
 ) {
 
-    val listOfItems by remember(iconList) { mutableStateOf(iconList) }
-    val isVisible by remember(iconList) {
-        derivedStateOf {
-            !iconList.isNullOrEmpty()
-        }
-    }
+    val isVisible by remember(iconList) { derivedStateOf { iconList.isNotEmpty() } }
 
     AnimatedVisibility(
         modifier = modifier,
@@ -91,11 +85,10 @@ fun MoreOptionsBar(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            listOfItems?.forEach { item ->
+            iconList.forEach { item ->
 
                 DefaultIconButton(imageVector = item.icon) {
-                    item.onClick()
-                    dismissMoreOptionsBar()
+                    dismissMoreOptionsBar(item)
                 }
 
             }

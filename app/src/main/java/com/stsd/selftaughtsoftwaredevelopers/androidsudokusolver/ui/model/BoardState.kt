@@ -17,21 +17,23 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.takeTopOrNull
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.top
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.sql.Time
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class BoardState(var dimensions: GridState) {
+data class BoardState(
+    val dimensions: GridState = GridState.GRID_3X3,
+    val placementSpeed: TimeState = TimeState.NONE,
+    val state: BoardActivityState,
+    val scope: CoroutineScope
+) {
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    fun isLoading() = state == BoardActivityState.LOADING
 
     private var timeState: TimeState = TimeState.DEFAULT_SPEED
     fun updatePlacementSpeed(speed: TimeState?) : TimeState {
@@ -142,7 +144,7 @@ class BoardState(var dimensions: GridState) {
         }.toTypedArray()
     }
 
-    fun solveTheBoard() = coroutineScope.launch { setBoard(findSolutionInstantly(fromUiBoard())) }
+    fun solveTheBoard() = scope.launch { setBoard(findSolutionInstantly(fromUiBoard())) }
 
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 
@@ -172,7 +174,7 @@ class BoardState(var dimensions: GridState) {
 
     fun clearBoard() {
 
-        coroutineScope.launch {
+        scope.launch {
             backStack.reversed().onEach { _ ->
                 delay(timeState.time).also { undoLast() }
             }

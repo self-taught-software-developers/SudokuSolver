@@ -4,40 +4,49 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.State
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation.SudokuSolverApp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val vm by viewModels<SudokuViewModel>()
-    private var screenOff: State<TimeState?>? = null
+    private var isLoading: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply {
-            setKeepOnScreenCondition { screenOff?.value == null }
+            setKeepOnScreenCondition { isLoading }
         }
         super.onCreate(savedInstanceState)
 
         setContent {
 
-            screenOff = vm.solutionSpeed.collectAsState(null)
+            val boardState by vm.uiBoardState.collectAsState()
 
-            AndroidSudokuSolverTheme {
-                SudokuSolverApp(
-                    solutionSpeed = screenOff?.value,
-                    updatePlacementSpeed = vm::updateSolutionSpeed
-                )
+            LaunchedEffect(boardState) {
+                if (boardState.isLoading()) {
+                    vm.boardIsLoaded()
+                } else {
+                    if (isLoading) {
+                        delay(200L)
+                        isLoading = boardState.isLoading()
+                    }
+                }
+            }
+
+            if(!boardState.isLoading()) {
+                AndroidSudokuSolverTheme {
+                    SudokuSolverApp(
+                        boardState = boardState
+                    ) { vm.updatePlacementSpeed(it) }
+                }
             }
 
         }

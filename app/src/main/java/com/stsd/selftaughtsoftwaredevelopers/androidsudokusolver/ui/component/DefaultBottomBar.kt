@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.flowlayout.FlowRow
@@ -31,10 +28,10 @@ fun DefaultBottomBar(
             .padding(top = CustomTheme.padding.small),
         mainAxisAlignment = MainAxisAlignment.Center
     ) {
-        (1..9).forEach { number ->
+        repeat(9) {
             DefaultNumericButton(
                 enabled = enabled,
-                numericValue = number,
+                numericValue = (it + 1),
                 onClick = onEnterValue
             )
         }

@@ -13,26 +13,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.GridState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
-import kotlinx.coroutines.launch
 
 @Composable
 fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
-    solutionSpeedState: TimeState?,
+    boardState: BoardState,
     updateSolutionSpeed: (TimeState) -> Unit
 ) {
 
     var enabled by rememberSaveable { mutableStateOf(true) }
     var isCameraOn by rememberSaveable { mutableStateOf(false) }
-    var showMoreItems by remember { mutableStateOf<List<IconItem>?>(null) }
+    val moreItems = remember { mutableStateListOf<TimeState>() }
     val scaffoldState = rememberScaffoldState()
-
-    val board by remember { mutableStateOf(BoardState(dimensions = GridState.GRID_3X3)) }
-    val speed by remember(solutionSpeedState) { derivedStateOf { board.updatePlacementSpeed(solutionSpeedState) } }
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -40,51 +36,49 @@ fun SudokuSolverScreen(
         topBar = {
             DefaultTopBar(
                 enabled = enabled,
-                timeState = speed,
                 isCameraOn = isCameraOn,
-                toggleCamera = { isCameraOn = !isCameraOn }
-            ) {
-                showMoreItems = showMoreItems?.let { null } ?: listOf(
-                    IconItem(rounded.Timer3) { updateSolutionSpeed(TimeState.INSTANT_SPEED) },
-                    IconItem(rounded.Timer10) { updateSolutionSpeed(TimeState.SUPER_SPEED) },
-                    IconItem(rounded.Timer) { updateSolutionSpeed(TimeState.DEFAULT_SPEED) },
-                    IconItem(rounded.Snooze) { updateSolutionSpeed(TimeState.SLOW_SPEED) }
-                )
-            }
+                toggleCamera = { isCameraOn = !isCameraOn },
+                placementSpeed = boardState.placementSpeed,
+            ) { moreItems.addAll(listOf(INSTANT_SPEED, SUPER_SPEED, DEFAULT_SPEED, SLOW_SPEED)) }
         },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             DefaultFab(
                 enabled = enabled,
                 items = listOf(
-                    IconItem(rounded.Undo) { board.undoLast() },
-                    IconItem(rounded.ClearAll) { board.clearBoard() }
+                    IconItem(rounded.Undo) { boardState.undoLast() },
+                    IconItem(rounded.ClearAll) { boardState.clearBoard() }
                 )
             )
         },
         bottomBar = {
              DefaultBottomBar(
                  enabled = enabled,
-                 onClickSolve = { board.solveTheBoard() },
-                 onEnterValue = { board.changeValue(it) }
+                 onClickSolve = { boardState.solveTheBoard() },
+                 onEnterValue = { boardState.changeValue(it) }
             )
         },
     ) { bounds ->
 
-        MoreOptionsBar(iconList = showMoreItems) { showMoreItems = null }
-
         BoxWithConstraints(
             modifier = Modifier
                 .padding(bounds)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
         ) {
-
+            MoreOptionsBar(
+                modifier = Modifier.align(Alignment.TopCenter),
+                iconList = moreItems
+            ) {
+                updateSolutionSpeed(it)
+                moreItems.clear()
+            }
             SudokuBoard(
-                state = board.calculateTileDimensions(this),
+                modifier = Modifier.align(Alignment.Center),
+                state = boardState.calculateTileDimensions(this),
                 cameraEnabled = isCameraOn,
                 enabled = enabled
             ) { enabled = it }
+
 
         }
 
@@ -95,7 +89,7 @@ fun SudokuSolverScreen(
 @DarkPreview
 @Composable
 fun SudokuSolverScreenPreview() {
-    SudokuSolverScreen(solutionSpeedState = TimeState.DEFAULT_SPEED) {
-
-    }
+//    SudokuSolverScreen(boardState = TimeState.DEFAULT_SPEED) {
+//
+//    }
 }
