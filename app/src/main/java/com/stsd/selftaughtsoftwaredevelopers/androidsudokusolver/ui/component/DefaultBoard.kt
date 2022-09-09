@@ -67,6 +67,7 @@ fun BoxWithConstraintsScope.SudokuBoard(
     board: List<Array<TileState>>,
     tiles: List<TileState>,
     position: Pair<Int, Int>?,
+    vector: Int,
     updateSelectedPositionWith: (Pair<Int, Int>) -> Unit
 ) {
 
@@ -106,7 +107,7 @@ fun BoxWithConstraintsScope.SudokuBoard(
             .defaultBorder(Color.Black)
             .drawSudokuGrid(
                 color = Color.Black,
-                vector = tiles.vector()
+                vector = vector
             )
     ) {
 
@@ -116,7 +117,7 @@ fun BoxWithConstraintsScope.SudokuBoard(
                 Triple(
                     it.first,
                     it.second,
-                    tiles.vector()
+                    vector.multiplier()
                 )
             }
         ) { updateSelectedPositionWith(it) }

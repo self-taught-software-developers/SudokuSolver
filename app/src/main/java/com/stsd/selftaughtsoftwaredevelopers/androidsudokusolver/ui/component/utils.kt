@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import java.lang.Double.min
 import java.util.stream.IntStream
 import kotlin.math.absoluteValue
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 @Composable
@@ -231,7 +232,8 @@ fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
 
 }
 
-fun <T> List<T>.vector() = sqrt(this.size.toDouble()).toInt()
+fun Int.vector() = this.toDouble().pow(2).toInt()
+fun Int.multiplier() = sqrt(this.toDouble()).toInt()
 
 fun BoxWithConstraintsScope.calculateLocalBoardDimensions(
     density: Density,

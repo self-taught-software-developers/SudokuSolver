@@ -36,42 +36,7 @@ data class BoardState(
 
     fun selectedPosition() = backStack.lastOrNull()
     fun isLoading() = state == BoardActivityState.LOADING
-    var vector = dimensions.multiplier.toFloat().pow(2).toInt()
-
-    @Composable
-    fun calculateTileDimensions(scope : BoxWithConstraintsScope) : BoardState {
-        scope.apply {
-//            resolution = calculatePx()
-            calculateBoardDimensions().apply {
-
-                if (tiles.isEmpty() || sqrt(tiles.size.toFloat()).toInt() != vector) {
-                    val (x, y) = this.topLeft
-                    val (width, height) = this.size.div(vector.toFloat())
-
-                    (0 until vector).forEach { xp ->
-                        (0 until vector).forEach { yp ->
-                            tiles.add(
-                                TileState(
-                                    position = Pair(xp, yp),
-                                    rect = Rect(
-                                        offset = Offset(
-                                            x = (width * xp) + x,
-                                            y = (height * yp) + y
-                                        ),
-                                        size = Size(width, height)
-                                    )
-                                )
-                            )
-                        }
-                    }
-
-                    board.addAll(toBoardLayout())
-                }
-
-            }.also { return this@BoardState }
-        }
-
-    }
+    val vector = dimensions.multiplier.vector()
 
     fun calculateLocalTileDimensions(
         constraintsScope: BoxWithConstraintsScope,
@@ -113,35 +78,34 @@ data class BoardState(
     }
 
     private fun toBoardLayout(): List<Array<TileState>> = tiles.chunked(vector)
-
     fun updateSelectedPositionWith(position: Pair<Int, Int>?) {
-//        selectedPosition = position
+        position?.let {
+            backStack.add(position)
+        } ?: backStack.removeLastOrNull()
     }
+
     fun changeValue(value: String) {
 
-//        selectedPosition?.let { position ->
-//
-//            board[position.first] = isPlacementValid(
-//                value = value,
-//                position = position,
-//                board = board.toTypedArray().clone()
-//            ).clone()
-//
-//            if (value.isEmpty()) {
-//                updateSelectedPositionWith(backStack.takeTopOrNull(position))
-//            } else {
-//                backStack.top(position)
-//            }
-//
-//        }
+        selectedPosition()?.let { position ->
+
+            board[position.first] = isPlacementValid(
+                value = value,
+                position = position,
+                board = board.toTypedArray().clone()
+            ).clone()
+
+            if (value.isEmpty()) {
+                updateSelectedPositionWith(null)
+            }
+
+        }
 
     }
     private fun changeValue(value: String, position: Pair<Int, Int>) {
 
         if (value.isEmpty()) {
-            updateSelectedPositionWith(backStack.takeTopOrNull(position))
+            updateSelectedPositionWith(null)
         } else {
-            backStack.top(position)
             updateSelectedPositionWith(position)
         }
 
@@ -161,9 +125,11 @@ data class BoardState(
 
     fun undoLast() = scope.launch { changeValue(EMPTY_TILE) }
     fun clearBoard() = scope.launch {
-        backStack.reversed().onEach { _ ->
+
+        while(selectedPosition() != null) {
             delay(placementSpeed.time).also { undoLast() }
         }
+
     }
 
     fun solveTheBoard() = scope.launch { setBoard(findSolutionInstantly(fromUiBoard())) }

@@ -83,6 +83,7 @@ fun SudokuSolverScreen(
                 board = boardState.board,
                 tiles = boardState.tiles,
                 position = boardState.selectedPosition(),
+                vector = boardState.vector,
                 cameraEnabled = isCameraOn
             ) { boardState.updateSelectedPositionWith(it) }
 
