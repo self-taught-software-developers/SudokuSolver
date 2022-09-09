@@ -5,22 +5,26 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BoardTile(
     modifier: Modifier= Modifier,
     value: Int,
-    color: Color = Color.Unspecified,
+    color: Color,
     onClick: () -> Unit
 ) {
     Box(
@@ -55,7 +59,13 @@ fun BoardTile(
                 )
             }
         ) { targetCount ->
-            Text(text = toTileText(targetCount))
+            Text(
+                text = toTileText(targetCount),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme
+                    .typography
+                    .subtitle1
+            )
         }
     }
 }
@@ -68,27 +78,9 @@ fun BoxWithConstraintsScope.SudokuBoard(
     tiles: List<TileState>,
     position: Pair<Int, Int>?,
     vector: Int,
+    boardColor: Color = CustomTheme.colors.primary,
     updateSelectedPositionWith: (Pair<Int, Int>) -> Unit
 ) {
-
-//    LaunchedEffect(this) {
-//        println("SudokuBoard: recomposition")
-//        state.calculateTileDimensions(
-//            constraintsScope = this@SudokuBoard,
-//            padding = padding.medium,
-//            density = density,
-//        )
-//    }
-
-//        /*
-//            Dimensions (2x2 / 3x3 / 4x4)
-//            This will allow us to draw the grid with dynamic dimensions.
-//            Vectors -> The dimensions to the 2nd power will give us the number of rows and columns
-//            Tiles -> Then the 2nd power to get the number of tiles
-//            Row -> Then chunked(grid.power) can be used to split tiles in a board like way.
-//            listOfTileStates
-//            This will be used to identify in which tile an analyzed number falls within.
-//         */
 
     if (cameraEnabled) {
         Camera(
@@ -104,15 +96,17 @@ fun BoxWithConstraintsScope.SudokuBoard(
 
     Column(
         modifier = modifier
-            .defaultBorder(Color.Black)
-            .drawSudokuGrid(
-                color = Color.Black,
-                vector = vector
+            .defaultBorder(
+                borderColor = boardColor,
+                borderShape = CustomTheme.shapes.medium,
+                borderWidth = CustomTheme.padding.xx_small
             )
+            .drawSudokuGrid(color = boardColor, vector = vector)
     ) {
 
         placeTiles(
             board = board,
+            tileColor = boardColor,
             selectedTile = position?.let {
                 Triple(
                     it.first,

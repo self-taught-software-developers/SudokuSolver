@@ -7,27 +7,27 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateLocalBoardDimensions
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.vector
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.takeTopOrNull
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.top
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlin.math.pow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
-    val state: BoardActivityState,
     val placementSpeed: TimeState = TimeState.NONE,
+    var state: BoardActivityState,
     val scope: CoroutineScope,
     val tiles: MutableList<TileState> = mutableListOf(),
     val board: SnapshotStateList<Array<TileState>> = mutableStateListOf(),
@@ -146,7 +146,7 @@ data class BoardState(
                 }
             }
         }
-
+        state = BoardActivityState.SUCCESS
     }
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 
@@ -168,7 +168,6 @@ data class BoardState(
 
             return board
         }
-
 
     }
 

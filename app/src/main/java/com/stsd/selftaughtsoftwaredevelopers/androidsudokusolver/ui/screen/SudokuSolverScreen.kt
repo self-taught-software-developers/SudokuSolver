@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,13 +13,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState.*
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
 
 @Composable
@@ -28,8 +33,10 @@ fun SudokuSolverScreen(
     updateSolutionSpeed: (TimeState) -> Unit,
 ) {
 
-    var isEnabled by rememberSaveable { mutableStateOf(true) }
     var isCameraOn by rememberSaveable { mutableStateOf(false) }
+    val solutionComplete: Boolean by remember(boardState.board) {
+        derivedStateOf { boardState.board.all { it.all { it.isValid && it.text.isNotEmpty() } } }
+    }
 
     val moreItems = remember { mutableStateListOf<TimeState>() }
     val scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -82,8 +89,9 @@ fun SudokuSolverScreen(
                 modifier = Modifier.align(Alignment.Center),
                 board = boardState.board,
                 tiles = boardState.tiles,
-                position = boardState.selectedPosition(),
                 vector = boardState.vector,
+                boardColor = if (solutionComplete) successGreen else CustomTheme.colors.primary,
+                position = boardState.selectedPosition(),
                 cameraEnabled = isCameraOn
             ) { boardState.updateSelectedPositionWith(it) }
 

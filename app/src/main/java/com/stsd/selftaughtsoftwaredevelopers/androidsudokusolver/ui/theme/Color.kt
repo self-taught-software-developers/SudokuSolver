@@ -7,3 +7,5 @@ val Beige200 = Color(0xFFF8ECD1)
 val Wine200 = Color(0xFFDEB6AB)
 val Wine500 = Color(0xFFAC7D88)
 val Wine700 = Color(0xFF85586F)
+
+val successGreen = Color(0xFF4BB543)

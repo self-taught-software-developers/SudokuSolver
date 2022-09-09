@@ -43,22 +43,4 @@ class SudokuViewModel @Inject constructor(
         storagePreferences.updateSolutionSpeed(value)
     }
 
-//
-//    val gridDimension = storagePreferences.gridDimensions
-//
-//    fun updateGridDimension(value: GridState) = viewModelScope.launch {
-//        storagePreferences.updateGridDimensions(value)
-//    }
-//
-//    private val _scannerState = MutableStateFlow(ScannerState.OFF)
-//    val scannerState : StateFlow<ScannerState> = _scannerState.asStateFlow()
-//
-//    fun toggleCameraState() {
-//        _scannerState.value = when(_scannerState.value) {
-//            ScannerState.OFF -> ScannerState.IDLE
-//            ScannerState.IDLE -> ScannerState.OFF
-//            ScannerState.SCANNING -> ScannerState.OFF
-//        }
-//    }
-
 }

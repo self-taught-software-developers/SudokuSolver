@@ -13,6 +13,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
+import androidx.compose.ui.graphics.vector.DefaultStrokeLineWidth
+import androidx.compose.ui.graphics.vector.VectorProperty
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
@@ -33,17 +36,6 @@ import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-@Composable
-fun Boolean?.bordColor() : Color {
-
-    return when(this) {
-        true -> Color.Green
-        false -> CustomTheme.colors.error
-        else -> CustomTheme.colors.onSurface
-    }
-
-}
-
 fun DrawScope.drawSudokuLines(
     vector: Int,
     index: Int,
@@ -56,7 +48,7 @@ fun DrawScope.drawSudokuLines(
     val point = tileSize * index
 
     val alpha = if(index % sqrt(vector.toFloat()).toInt() != 0) 0.1f else 1f
-    val stroke = Stroke.DefaultMiter
+    val stroke = DefaultMiter.times(1.5F)
 
     drawLine(
         alpha = alpha,
@@ -284,6 +276,7 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 @Composable
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
+    tileColor: Color,
     board: List<Array<TileState>>,
     selectedTile: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
@@ -298,7 +291,7 @@ fun ColumnScope.placeTiles(
                 BoardTile(
                     modifier = modifier.size(tile.tileSize()),
                     value = tile.value(),
-                    color = tile.tileColor(coordinates = selectedTile)
+                    color = tile.tileColor(coordinates = selectedTile, color = tileColor)
                 ) { onTileSelected(Pair(x, y)) }
 
             }

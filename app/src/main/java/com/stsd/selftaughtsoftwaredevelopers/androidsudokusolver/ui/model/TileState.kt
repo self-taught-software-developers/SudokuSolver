@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.colors
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen
 
 data class TileState(
     var text: String = EMPTY_TILE,
@@ -30,18 +31,16 @@ data class TileState(
     private val isSelected = { coordinates : Pair<Int, Int> -> position == coordinates }
 
     @Composable
-    fun tileColor(coordinates: Triple<Int, Int, Int>?) : Color {
+    fun tileColor(coordinates: Triple<Int, Int, Int>?, color: Color) : Color {
 
         return coordinates?.let { (x,y,_) ->
             return when {
-                !isValid -> { colors.error.copy(alpha = 0.5F) }
-                isSelected(Pair(x,y)) -> { colors.primary.copy(alpha = 0.5F) }
-                sameRow(x) || sameColumn(y) || sameSubgrid(coordinates) -> {
-                    colors.primary.copy(alpha = 0.15F)
-                }
-                else -> Color.Unspecified
+                !isValid -> colors.error.copy(alpha = 0.5F)
+                isSelected(Pair(x,y)) -> color.copy(alpha = 0.5F)
+                sameRow(x) || sameColumn(y) || sameSubgrid(coordinates) -> color.copy(alpha = 0.2F)
+                else -> color.copy(alpha = 0.02F)
             }
-        } ?: Color.Unspecified
+        } ?: color.copy(alpha = 0.02F)
 
     }
 
