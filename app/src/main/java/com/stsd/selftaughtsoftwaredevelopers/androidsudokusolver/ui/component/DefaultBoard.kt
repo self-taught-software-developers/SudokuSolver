@@ -72,7 +72,6 @@ fun BoardTile(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun BoxWithConstraintsScope.SudokuBoard(
     modifier: Modifier = Modifier,
@@ -82,21 +81,19 @@ fun BoxWithConstraintsScope.SudokuBoard(
     position: Pair<Int, Int>?,
     vector: Int,
     boardColor: Color = CustomTheme.colors.primary,
+    enterValue: (String, Pair<Int, Int>) -> Unit,
     updateSelectedPositionWith: (Pair<Int, Int>) -> Unit
 ) {
+
 
     if (cameraEnabled) {
         CameraPermissionRequest {
 
-                Camera(
-                    modifier = modifier,
-                    tiles = tiles
-                ) {
-    //                    vm.enterNewValue(
-    //                        newValue = it.text,
-    //                        position = it.position
-    //                    )
-                }
+            Camera(
+                modifier = modifier,
+                tiles = tiles
+            ) { enterValue(it.text, it.position) }
+
             Column(
                 modifier = modifier
                     .defaultBorder(

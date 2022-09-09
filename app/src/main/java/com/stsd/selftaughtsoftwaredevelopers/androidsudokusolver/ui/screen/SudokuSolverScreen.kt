@@ -94,7 +94,10 @@ fun SudokuSolverScreen(
                 vector = boardState.vector,
                 boardColor = if (solutionComplete) successGreen else CustomTheme.colors.primary,
                 position = boardState.selectedPosition(),
-                cameraEnabled = isCameraOn
+                cameraEnabled = isCameraOn,
+                enterValue = { value, position ->
+                    boardState.changeValue(value, position)
+                }
             ) { boardState.updateSelectedPositionWith(it) }
 
             MoreOptionsBar(

@@ -101,7 +101,7 @@ data class BoardState(
         }
 
     }
-    private fun changeValue(value: String, position: Pair<Int, Int>) {
+    fun changeValue(value: String, position: Pair<Int, Int>) {
 
         if (value.isEmpty()) {
             updateSelectedPositionWith(null)
