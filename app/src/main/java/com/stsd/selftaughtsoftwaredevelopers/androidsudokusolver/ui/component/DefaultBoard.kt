@@ -67,8 +67,7 @@ fun BoxWithConstraintsScope.SudokuBoard(
     board: List<Array<TileState>>,
     tiles: List<TileState>,
     position: Pair<Int, Int>?,
-    enabled: Boolean,
-    onDisabled: (Boolean) -> Unit,
+    updateSelectedPositionWith: (Pair<Int, Int>) -> Unit
 ) {
 
 //    LaunchedEffect(this) {
@@ -111,20 +110,16 @@ fun BoxWithConstraintsScope.SudokuBoard(
             )
     ) {
 
-//        val selected by state.selectedPosition.collectAsState()
-
         placeTiles(
             board = board,
-            selectedTile = position?.let { Triple(
-                it.first,
-                it.second,
-                tiles.vector()
-            )
+            selectedTile = position?.let {
+                Triple(
+                    it.first,
+                    it.second,
+                    tiles.vector()
+                )
             }
-        ) { selection ->
-//            state.updateSelected(selection)
-
-        }
+        ) { updateSelectedPositionWith(it) }
 
     }
 }

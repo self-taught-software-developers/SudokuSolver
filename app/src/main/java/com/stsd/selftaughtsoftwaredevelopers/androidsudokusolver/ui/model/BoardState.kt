@@ -9,7 +9,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.core.graphics.PathUtils.flatten
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
@@ -27,15 +26,15 @@ import kotlin.math.sqrt
 
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
-
     val state: BoardActivityState,
     val placementSpeed: TimeState = TimeState.NONE,
     val scope: CoroutineScope,
     val tiles: MutableList<TileState> = mutableListOf(),
     val board: SnapshotStateList<Array<TileState>> = mutableStateListOf(),
-    val position: Pair<Int, Int>? = null
+    val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
 ) {
 
+    fun selectedPosition() = backStack.lastOrNull()
     fun isLoading() = state == BoardActivityState.LOADING
     var vector = dimensions.multiplier.toFloat().pow(2).toInt()
 
@@ -115,38 +114,35 @@ data class BoardState(
 
     private fun toBoardLayout(): List<Array<TileState>> = tiles.chunked(vector)
 
-    private val _selectedPosition = MutableStateFlow<Pair<Int,Int>?>(null)
-    var selectedPosition : StateFlow<Pair<Int, Int>?> = _selectedPosition.asStateFlow()
-
-    private var backStack : MutableList<Pair<Int, Int>?> = mutableListOf()
-
-    fun updateSelected(position: Pair<Int, Int>?) = _selectedPosition.update { position }
+    fun updateSelectedPositionWith(position: Pair<Int, Int>?) {
+//        selectedPosition = position
+    }
     fun changeValue(value: String) {
 
-        selectedPosition.value?.let { position ->
-
-            board[position.first] = isPlacementValid(
-                value = value,
-                position = position,
-                board = board.toTypedArray().clone()
-            ).clone()
-
-            if (value.isEmpty()) {
-                updateSelected(backStack.takeTopOrNull(position))
-            } else {
-                backStack.top(position)
-            }
-
-        }
+//        selectedPosition?.let { position ->
+//
+//            board[position.first] = isPlacementValid(
+//                value = value,
+//                position = position,
+//                board = board.toTypedArray().clone()
+//            ).clone()
+//
+//            if (value.isEmpty()) {
+//                updateSelectedPositionWith(backStack.takeTopOrNull(position))
+//            } else {
+//                backStack.top(position)
+//            }
+//
+//        }
 
     }
     private fun changeValue(value: String, position: Pair<Int, Int>) {
 
         if (value.isEmpty()) {
-            updateSelected(backStack.takeTopOrNull(position))
+            updateSelectedPositionWith(backStack.takeTopOrNull(position))
         } else {
             backStack.top(position)
-            updateSelected(position)
+            updateSelectedPositionWith(position)
         }
 
         board[position.first] = isPlacementValid(

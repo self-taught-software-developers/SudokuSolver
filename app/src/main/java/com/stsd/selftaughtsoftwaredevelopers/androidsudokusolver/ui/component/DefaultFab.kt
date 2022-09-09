@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
@@ -15,13 +16,14 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Custom
 @Composable
 fun DefaultFab(
     enabled : Boolean = true,
-    items: List<IconItem>
+    items: List<IconItem>,
+    backgroundColor: Color = Color.Black.copy(alpha = 0.05F)
 ) {
 
     Row(
         modifier = Modifier
             .clip(CircleShape)
-            .background(Color.Black.copy(alpha = 0.05F)),
+            .drawBehind { drawRect(color = backgroundColor) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(CustomTheme.padding.small)
     ) {

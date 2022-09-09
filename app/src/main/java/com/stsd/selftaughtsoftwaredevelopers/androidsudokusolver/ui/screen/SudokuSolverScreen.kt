@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
@@ -24,20 +25,20 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPre
 fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
     boardState: BoardState,
-    updateSolutionSpeed: (TimeState) -> Unit
+    updateSolutionSpeed: (TimeState) -> Unit,
 ) {
 
-    var enabled by rememberSaveable { mutableStateOf(true) }
+    var isEnabled by rememberSaveable { mutableStateOf(true) }
     var isCameraOn by rememberSaveable { mutableStateOf(false) }
+
     val moreItems = remember { mutableStateListOf<TimeState>() }
-    val scaffoldState = rememberScaffoldState()
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
 
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = modifier,
         topBar = {
             DefaultTopBar(
-                enabled = enabled,
                 isCameraOn = isCameraOn,
                 toggleCamera = { isCameraOn = !isCameraOn },
                 placementSpeed = boardState.placementSpeed,
@@ -46,7 +47,6 @@ fun SudokuSolverScreen(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             DefaultFab(
-                enabled = enabled,
                 items = listOf(
                     IconItem(rounded.Undo) { boardState.undoLast() },
                     IconItem(rounded.ClearAll) { boardState.clearBoard() }
@@ -55,13 +55,11 @@ fun SudokuSolverScreen(
         },
         bottomBar = {
              DefaultBottomBar(
-                 enabled = enabled,
                  onClickSolve = { boardState.solveTheBoard() },
                  onEnterValue = { boardState.changeValue(it) }
             )
         },
     ) { bounds ->
-
 
         BoxWithConstraints(
             modifier = Modifier
@@ -84,10 +82,9 @@ fun SudokuSolverScreen(
                 modifier = Modifier.align(Alignment.Center),
                 board = boardState.board,
                 tiles = boardState.tiles,
-                position = boardState.position,
-                cameraEnabled = isCameraOn,
-                enabled = enabled,
-            ) { enabled = it }
+                position = boardState.selectedPosition(),
+                cameraEnabled = isCameraOn
+            ) { boardState.updateSelectedPositionWith(it) }
 
             MoreOptionsBar(
                 modifier = Modifier.align(Alignment.TopCenter),
