@@ -18,6 +18,33 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Custom
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.sizing
 
 @Composable
+fun DefaultButton(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    text: String,
+    onClick: () -> Unit
+) {
+
+    TextButton(
+        modifier = modifier
+            .padding(padding.small)
+            .clip(shape = shapes.small),
+        enabled = enabled,
+        colors = buttonColors(Black.copy(alpha = 0.05F)),
+        onClick = { onClick() }
+    ) {
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme
+                .typography
+                .body1.copy(fontWeight = FontWeight.Black)
+        )
+    }
+
+}
+
+@Composable
 fun DefaultNumericButton(
     modifier: Modifier = Modifier,
     enabled: Boolean,
@@ -29,7 +56,7 @@ fun DefaultNumericButton(
         modifier = modifier
             .padding(padding.small)
             .clip(shape = shapes.small)
-            .size(sizing.xx_large),
+            .size(sizing.large_x2),
         enabled = enabled,
         colors = buttonColors(Black.copy(alpha = 0.05F)),
         onClick = { onClick(numericValue.toString()) }
@@ -80,7 +107,7 @@ fun DefaultIconButton(
             .padding(padding.small)
             .clip(shape = shapes.small)
             .drawBehind { drawRect(color = backgroundColor) }
-            .size(sizing.xx_large),
+            .size(sizing.large_x2),
         enabled = enabled,
         onClick = { onClick() }
     ) {

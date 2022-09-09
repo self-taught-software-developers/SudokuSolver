@@ -29,7 +29,7 @@ fun DefaultTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .requiredHeight(sizing.normal_bar)
+            .requiredHeight(sizing.default_top_bar)
             .background(color)
             .padding(horizontal = padding.small),
         verticalAlignment = Alignment.CenterVertically,
@@ -78,7 +78,7 @@ fun MoreOptionsBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .requiredHeight(sizing.normal_bar)
+                .requiredHeight(sizing.default_top_bar)
                 .background(colors.primary)
                 .padding(horizontal = padding.small),
             verticalAlignment = Alignment.CenterVertically,

@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
+import android.Manifest
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,9 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
@@ -70,6 +72,7 @@ fun BoardTile(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun BoxWithConstraintsScope.SudokuBoard(
     modifier: Modifier = Modifier,
@@ -83,40 +86,71 @@ fun BoxWithConstraintsScope.SudokuBoard(
 ) {
 
     if (cameraEnabled) {
-        Camera(
-            modifier = modifier,
-            tiles = tiles
-        ) {
-//                    vm.enterNewValue(
-//                        newValue = it.text,
-//                        position = it.position
-//                    )
-        }
-    }
+        CameraPermissionRequest {
 
-    Column(
-        modifier = modifier
-            .defaultBorder(
-                borderColor = boardColor,
-                borderShape = CustomTheme.shapes.medium,
-                borderWidth = CustomTheme.padding.xx_small
-            )
-            .drawSudokuGrid(color = boardColor, vector = vector)
-    ) {
+                Camera(
+                    modifier = modifier,
+                    tiles = tiles
+                ) {
+    //                    vm.enterNewValue(
+    //                        newValue = it.text,
+    //                        position = it.position
+    //                    )
+                }
+            Column(
+                modifier = modifier
+                    .defaultBorder(
+                        borderColor = boardColor,
+                        borderShape = CustomTheme.shapes.medium,
+                        borderWidth = CustomTheme.padding.small_x2
+                    )
+                    .drawSudokuGrid(color = boardColor, vector = vector)
+            ) {
 
-        placeTiles(
-            board = board,
-            tileColor = boardColor,
-            selectedTile = position?.let {
-                Triple(
-                    it.first,
-                    it.second,
-                    vector.multiplier()
-                )
+                placeTiles(
+                    board = board,
+                    tileColor = boardColor,
+                    selectedTile = position?.let {
+                        Triple(
+                            it.first,
+                            it.second,
+                            vector.multiplier()
+                        )
+                    }
+                ) { updateSelectedPositionWith(it) }
+
             }
-        ) { updateSelectedPositionWith(it) }
+
+            }
+    } else {
+
+        Column(
+            modifier = modifier
+                .defaultBorder(
+                    borderColor = boardColor,
+                    borderShape = CustomTheme.shapes.medium,
+                    borderWidth = CustomTheme.padding.small_x2
+                )
+                .drawSudokuGrid(color = boardColor, vector = vector)
+        ) {
+
+            placeTiles(
+                board = board,
+                tileColor = boardColor,
+                selectedTile = position?.let {
+                    Triple(
+                        it.first,
+                        it.second,
+                        vector.multiplier()
+                    )
+                }
+            ) { updateSelectedPositionWith(it) }
+
+        }
 
     }
+
+
 }
 
 

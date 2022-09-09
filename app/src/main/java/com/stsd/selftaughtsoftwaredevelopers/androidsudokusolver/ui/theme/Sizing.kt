@@ -7,16 +7,16 @@ import javax.annotation.concurrent.Immutable
 
 @Immutable
 data class Sizing(
-    val default: Dp = 0.dp,
-    val xx_small: Dp = 2.dp,
-    val x_small: Dp = 4.dp,
+    val small_x2: Dp = 2.dp,
+    val small_x1: Dp = 4.dp,
     val small: Dp = 8.dp,
     val medium: Dp = 16.dp,
     val large: Dp = 24.dp,
-    val x_large: Dp = 36.dp,
-    val xx_large: Dp = 48.dp,
-    val normal_bar: Dp = 56.dp,
-    val xxx_large: Dp = 60.dp
+    val large_x1: Dp = 36.dp,
+    val large_x2: Dp = 48.dp,
+    val large_x3: Dp = 60.dp,
+    val default_top_bar: Dp = 56.dp,
+    val default_icon_x2 : Dp = large_x2 * 2
 )
 
 internal val LocalPadding = staticCompositionLocalOf { Sizing() }

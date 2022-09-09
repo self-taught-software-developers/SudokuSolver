@@ -7,20 +7,36 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.BoxWithConstraintsScope
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.icons.rounded.Camera
+import androidx.compose.material.icons.rounded.CameraFront
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuBoardAnalyzer
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.SUBTITLE_camera_show_rationale
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.SUBTITLE_camera_permission_denied
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.BUTTON_request_permission
 
 @Composable
 fun BoxWithConstraintsScope.Camera(
@@ -29,66 +45,129 @@ fun BoxWithConstraintsScope.Camera(
     onProcessed: (TileState) -> Unit
 ) {
 
-    calculateLocalPx(LocalDensity.current).let {
 
-        val context = LocalContext.current
-        val lifecycleOwner = LocalLifecycleOwner.current
+        calculateLocalPx(LocalDensity.current).let {
 
-        val cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
-        val previewView = remember { PreviewView(context) }
+            val context = LocalContext.current
+            val lifecycleOwner = LocalLifecycleOwner.current
 
-        LaunchedEffect(cameraSelector) {
+            val cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
+            val previewView = remember { PreviewView(context) }
 
-            val executor = ContextCompat.getMainExecutor(context)
+            LaunchedEffect(cameraSelector) {
 
-            val cameraProvider = suspendCoroutine<ProcessCameraProvider> { con ->
-                ProcessCameraProvider.getInstance(context).also { future ->
-                    future.addListener({
-                        con.resume(future.get())
-                    }, executor)
+                val executor = ContextCompat.getMainExecutor(context)
+
+                val cameraProvider = suspendCoroutine<ProcessCameraProvider> { con ->
+                    ProcessCameraProvider.getInstance(context).also { future ->
+                        future.addListener({
+                            con.resume(future.get())
+                        }, executor)
+                    }
                 }
-            }
 
-            val imageCapture = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .build()
+                val imageCapture = ImageCapture.Builder()
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                    .build()
 
-            val cameraPreview = Preview.Builder()
-                .build()
-                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+                val cameraPreview = Preview.Builder()
+                    .build()
+                    .also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
-            val (width, height) = it.toIntPair()
+                val (width, height) = it.toIntPair()
 
-            val imageAnalyzer = ImageAnalysis.Builder()
-                .setTargetResolution(Size(width, height))
-                .build().also {
-                    it.setAnalyzer(
-                        executor,
-                        SudokuBoardAnalyzer(
-                            tileList = tiles,
-                            onProcessed = onProcessed
+                val imageAnalyzer = ImageAnalysis.Builder()
+                    .setTargetResolution(Size(width, height))
+                    .build().also {
+                        it.setAnalyzer(
+                            executor,
+                            SudokuBoardAnalyzer(
+                                tileList = tiles,
+                                onProcessed = onProcessed
+                            )
                         )
+                    }
+
+                runCatching {
+                    cameraProvider.unbindAll()
+                    cameraProvider.bindToLifecycle(
+                        lifecycleOwner,
+                        cameraSelector,
+                        cameraPreview,
+                        imageCapture,
+                        imageAnalyzer
                     )
                 }
 
-            runCatching {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    lifecycleOwner,
-                    cameraSelector,
-                    cameraPreview,
-                    imageCapture,
-                    imageAnalyzer
-                )
             }
+
+            AndroidView(
+                modifier = modifier.fillMaxSize(),
+                factory = { previewView }
+            )
 
         }
 
-        AndroidView(
-            modifier = modifier.fillMaxSize(),
-            factory = { previewView }
-        )
 
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun CameraPermissionRequest(
+   content : @Composable () -> Unit
+) {
+
+    val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
+
+    if (cameraPermissionState.status.isGranted) {
+        content()
+    } else {
+        RequestRationale(
+            icon = rounded.Camera,
+            shouldShowRationale = cameraPermissionState.status.shouldShowRationale
+        ) { cameraPermissionState.launchPermissionRequest() }
+
+    }
+}
+
+@Composable
+fun RequestRationale(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    shouldShowRationale: Boolean,
+    onPermissionRequest: () -> Unit
+) {
+
+
+        Box(modifier = modifier.fillMaxSize()) {
+
+            IconTitle(
+                modifier = Modifier.align(Alignment.Center),
+                icon = icon,
+                text = stringResource(id = if (shouldShowRationale) {
+                    SUBTITLE_camera_show_rationale
+                }else {
+                    SUBTITLE_camera_permission_denied
+                })
+            ) { onPermissionRequest() }
+
+
+    }
+
+
+}
+
+@AllPreviews
+@Composable
+fun CameraPermissionRequestPreview() {
+
+    AndroidSudokuSolverTheme {
+        RequestRationale(
+            icon = rounded.Camera,
+            shouldShowRationale = true
+        ) {
+
+        }
     }
 
 }

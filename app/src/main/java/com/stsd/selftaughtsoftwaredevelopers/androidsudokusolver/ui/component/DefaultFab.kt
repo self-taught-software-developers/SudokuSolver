@@ -1,6 +1,5 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.CircleShape
@@ -10,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
@@ -28,10 +28,19 @@ fun DefaultFab(
         horizontalArrangement = Arrangement.spacedBy(CustomTheme.padding.small)
     ) {
         items.forEach { item ->
-            DefaultIconButton(
-                enabled = enabled,
-                imageVector = item.icon
-            ) { item.onClick() }
+
+            item.icon?.let { icon ->
+                DefaultIconButton(
+                    enabled = enabled,
+                    imageVector = icon
+                ) { item.onClick() }
+            }
+            
+            item.textId?.let { id ->
+                DefaultButton(text = stringResource(id = id)) {
+                    item.onClick()
+                }
+            }
 
         }
     }

@@ -1,21 +1,25 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
-import androidx.compose.foundation.background
+import android.Manifest
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.ClearAll
+import androidx.compose.material.icons.rounded.Undo
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.BUTTON_request_permission
 import androidx.compose.ui.platform.LocalDensity
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
@@ -34,11 +38,13 @@ fun SudokuSolverScreen(
 ) {
 
     var isCameraOn by rememberSaveable { mutableStateOf(false) }
+
+
     val solutionComplete: Boolean by remember(boardState.board) {
         derivedStateOf { boardState.board.all { it.all { it.isValid && it.text.isNotEmpty() } } }
     }
-
     val moreItems = remember { mutableStateListOf<TimeState>() }
+
     val scaffoldState: ScaffoldState = rememberScaffoldState()
 
     Scaffold(
@@ -52,14 +58,10 @@ fun SudokuSolverScreen(
             ) { moreItems.addAll(listOf(INSTANT_SPEED, SUPER_SPEED, DEFAULT_SPEED, SLOW_SPEED)) }
         },
         floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            DefaultFab(
-                items = listOf(
-                    IconItem(rounded.Undo) { boardState.undoLast() },
-                    IconItem(rounded.ClearAll) { boardState.clearBoard() }
-                )
-            )
-        },
+        floatingActionButton = { DefaultFab(items = listOf(
+            IconItem(icon = rounded.Undo) { boardState.undoLast() },
+            IconItem(icon = rounded.ClearAll) { boardState.clearBoard() }
+        )) },
         bottomBar = {
              DefaultBottomBar(
                  onClickSolve = { boardState.solveTheBoard() },

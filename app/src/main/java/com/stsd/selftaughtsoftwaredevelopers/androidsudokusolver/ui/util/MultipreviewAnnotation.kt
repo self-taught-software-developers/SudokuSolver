@@ -57,10 +57,7 @@ annotation class DevicePreviews
  * Instead, each multipreview annotation acts by its own and renders only its own variants._
  */
 
-@Preview(
-    name = "light theme",
-    group = "themes",
-)
+@Preview
 @Preview(
     name = "dark theme",
     group = "themes",
@@ -71,4 +68,4 @@ annotation class DarkPreview
 @DarkPreview
 @FontScalePreviews
 @DevicePreviews
-annotation class CompletePreviews
+annotation class AllPreviews
