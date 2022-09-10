@@ -26,7 +26,7 @@ import kotlin.math.sqrt
 
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
-    val placementSpeed: TimeState = TimeState.NONE,
+    val placementSpeed: TimeState = TimeState.DEFAULT_SPEED,
     var state: BoardActivityState,
     val scope: CoroutineScope,
     val tiles: MutableList<TileState> = mutableListOf(),

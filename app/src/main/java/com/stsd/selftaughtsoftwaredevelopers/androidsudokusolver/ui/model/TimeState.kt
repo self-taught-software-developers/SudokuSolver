@@ -7,12 +7,11 @@ import androidx.compose.material.icons.rounded.Timer3
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.rounded
 
-enum class TimeState(val time: Long, var icon: ImageVector) {
+enum class TimeState(val time: Long, val icon: ImageVector) {
 
-    NONE(0L, rounded.Timer3),
     INSTANT_SPEED(10L, rounded.Timer3),
     SUPER_SPEED(50L, rounded.Timer10),
     DEFAULT_SPEED(200L, rounded.Timer),
-    SLOW_SPEED(800L, rounded.Snooze),
+    SLOW_SPEED(800L, rounded.Snooze)
 
 }

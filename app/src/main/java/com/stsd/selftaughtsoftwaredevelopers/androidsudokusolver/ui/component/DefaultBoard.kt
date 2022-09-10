@@ -1,6 +1,5 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
-import android.Manifest
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,8 +14,6 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
@@ -73,80 +70,38 @@ fun BoardTile(
 }
 
 @Composable
-fun BoxWithConstraintsScope.SudokuBoard(
+fun SudokuBoard(
     modifier: Modifier = Modifier,
-    cameraEnabled: Boolean = false,
     board: List<Array<TileState>>,
-    tiles: List<TileState>,
     position: Pair<Int, Int>?,
     vector: Int,
     boardColor: Color = CustomTheme.colors.primary,
-    enterValue: (String, Pair<Int, Int>) -> Unit,
     updateSelectedPositionWith: (Pair<Int, Int>) -> Unit
 ) {
 
+    Column(
+        modifier = modifier
+            .defaultBorder(
+                borderColor = boardColor,
+                borderShape = CustomTheme.shapes.medium,
+                borderWidth = CustomTheme.padding.small_x2
+            )
+            .drawSudokuGrid(color = boardColor, vector = vector)
+    ) {
 
-    if (cameraEnabled) {
-        CameraPermissionRequest {
-
-            Camera(
-                modifier = modifier,
-                tiles = tiles
-            ) { enterValue(it.text, it.position) }
-
-            Column(
-                modifier = modifier
-                    .defaultBorder(
-                        borderColor = boardColor,
-                        borderShape = CustomTheme.shapes.medium,
-                        borderWidth = CustomTheme.padding.small_x2
-                    )
-                    .drawSudokuGrid(color = boardColor, vector = vector)
-            ) {
-
-                placeTiles(
-                    board = board,
-                    tileColor = boardColor,
-                    selectedTile = position?.let {
-                        Triple(
-                            it.first,
-                            it.second,
-                            vector.multiplier()
-                        )
-                    }
-                ) { updateSelectedPositionWith(it) }
-
-            }
-
-            }
-    } else {
-
-        Column(
-            modifier = modifier
-                .defaultBorder(
-                    borderColor = boardColor,
-                    borderShape = CustomTheme.shapes.medium,
-                    borderWidth = CustomTheme.padding.small_x2
+        placeTiles(
+            board = board,
+            tileColor = boardColor,
+            selectedTile = position?.let {
+                Triple(
+                    it.first,
+                    it.second,
+                    vector.multiplier()
                 )
-                .drawSudokuGrid(color = boardColor, vector = vector)
-        ) {
-
-            placeTiles(
-                board = board,
-                tileColor = boardColor,
-                selectedTile = position?.let {
-                    Triple(
-                        it.first,
-                        it.second,
-                        vector.multiplier()
-                    )
-                }
-            ) { updateSelectedPositionWith(it) }
-
-        }
+            }
+        ) { updateSelectedPositionWith(it) }
 
     }
-
 
 }
 
