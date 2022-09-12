@@ -7,12 +7,10 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.rounded.Camera
-import androidx.compose.material.icons.rounded.CameraFront
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,22 +19,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.SUBTITLE_camera_permission_denied
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.SUBTITLE_camera_show_rationale
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuBoardAnalyzer
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.SUBTITLE_camera_show_rationale
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.SUBTITLE_camera_permission_denied
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.BUTTON_request_permission
 
 @Composable
 fun BoxWithConstraintsScope.Camera(

@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.TimeAuto
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.Timer10Alt1
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.Timer3Alt1
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.rounded
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 
 enum class TimeState(val time: Long, val icon: ImageVector) {
 

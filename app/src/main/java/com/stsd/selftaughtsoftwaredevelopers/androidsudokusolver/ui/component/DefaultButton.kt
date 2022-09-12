@@ -106,8 +106,7 @@ fun DefaultIconButton(
         modifier = modifier
             .padding(padding.small)
             .clip(shape = shapes.small)
-            .drawBehind { drawRect(color = backgroundColor) }
-            .size(sizing.large_x2),
+            .drawBehind { drawRect(color = backgroundColor) },
         enabled = enabled,
         onClick = { onClick() }
     ) {

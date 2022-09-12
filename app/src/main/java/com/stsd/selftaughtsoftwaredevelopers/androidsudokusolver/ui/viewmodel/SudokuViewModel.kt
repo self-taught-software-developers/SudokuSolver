@@ -18,16 +18,17 @@ class SudokuViewModel @Inject constructor(
     private val storagePreferences: StoragePreferences
 ) : ViewModel() {
 
-    private val boardState = MutableStateFlow(BoardState(state = LOADING, scope = viewModelScope))
+    private val scope = viewModelScope
+    private val boardState = MutableStateFlow(BoardState(state = LOADING, scope = scope))
     val uiBoardState = boardState.asStateFlow()
 
     init {
 
         viewModelScope.launch {
             storagePreferences.solutionSpeed.collectLatest { speed ->
-                boardState.update { state ->
-                    state.copy(placementSpeed = speed).also {
-                        println(it.tiles)
+                boardState.update { oldState ->
+                    oldState.copy(placementSpeed = speed).also { newState ->
+                        newState.isPlacingTile = oldState.isPlacingTile
                     }
                 }
             }
@@ -35,7 +36,7 @@ class SudokuViewModel @Inject constructor(
 
     }
 
-    fun boardIsLoaded(state: BoardActivityState = LOADED) {
+    fun loadingCompleted(state: BoardActivityState = LOADED) {
         boardState.update { it.copy(state = state) }
     }
 

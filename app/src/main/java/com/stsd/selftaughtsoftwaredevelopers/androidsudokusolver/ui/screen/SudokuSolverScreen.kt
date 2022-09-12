@@ -3,49 +3,54 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.FabPosition
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Undo
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.*
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultFab
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultTopBar
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
+import kotlinx.coroutines.channels.ProducerScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     boardState: BoardState,
     updateSolutionSpeed: (TimeState) -> Unit,
 ) {
 
-
-    var expanded by remember { mutableStateOf(false) }
-    val moreTimeStatItems = remember { mutableStateListOf<TimeState>() + TimeState.values() }
-
-    val solutionComplete: Boolean by remember(boardState.board) {
-        derivedStateOf { boardState.board.all { it.all { it.isValid && it.text.isNotEmpty() } } }
+    LaunchedEffect(boardState.state) {
+        println(boardState.state)
     }
 
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val solutionComplete by remember(boardState.board) {
+        derivedStateOf { boardState.allTilesAreValid() }
+    }
 
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = modifier,
         topBar = {
-            MoreOptionsBar(
-                items = listOf(boardState.placementSpeed, GridState.GRID_3X3)
-            ) {
-                updateSolutionSpeed(it)
-            }
-//            DefaultTopBar(
-//                placementSpeed = moreSpeedItems.first(),
-//            ) {  }
+            DefaultTopBar(
+                placementSpeed = boardState.placementSpeed
+            ) { updateSolutionSpeed(it) }
         },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = { DefaultFab(items = listOf(
@@ -84,13 +89,6 @@ fun SudokuSolverScreen(
                 vector = boardState.vector,
                 boardColor = if (solutionComplete) successGreen else CustomTheme.colors.primary
             ) { boardState.updateSelectedPositionWith(it) }
-
-//            MoreOptionsBar(
-//                modifier = Modifier.align(Alignment.TopCenter),
-//                iconList = moreSpeedItems
-//            ) {
-//                updateSolutionSpeed(it)
-//            }
 
         }
 

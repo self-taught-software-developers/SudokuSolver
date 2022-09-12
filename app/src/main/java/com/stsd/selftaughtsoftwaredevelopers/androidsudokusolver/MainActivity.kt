@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(boardState) {
                 if (boardState.isLoading()) {
-                    vm.boardIsLoaded()
+                    vm.loadingCompleted()
                 } else {
                     if (isLoading) {
                         delay(200L)

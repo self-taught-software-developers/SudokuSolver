@@ -1,13 +1,11 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateLocalBoardDimensions
@@ -16,12 +14,9 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.va
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.vector
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.math.sqrt
 
 data class BoardState(
@@ -33,10 +28,10 @@ data class BoardState(
     val board: SnapshotStateList<Array<TileState>> = mutableStateListOf(),
     val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
 ) {
-
+    val vector = dimensions.multiplier.vector()
+    
     fun selectedPosition() = backStack.lastOrNull()
     fun isLoading() = state == BoardActivityState.LOADING
-    val vector = dimensions.multiplier.vector()
 
     fun calculateLocalTileDimensions(
         constraintsScope: BoxWithConstraintsScope,
@@ -44,7 +39,6 @@ data class BoardState(
         density: Density,
     )  {
 
-        println("calculated")
         constraintsScope.apply {
             calculateLocalBoardDimensions(
                 density = density,
@@ -84,24 +78,20 @@ data class BoardState(
         } ?: backStack.removeLastOrNull()
     }
 
-    fun changeValue(value: String) {
+    fun changeValue(value: String) = selectedPosition()?.let { position ->
 
-        selectedPosition()?.let { position ->
+        board[position.first] = isPlacementValid(
+            value = value,
+            position = position,
+            board = board.toTypedArray().clone()
+        ).copyOf()
 
-            board[position.first] = isPlacementValid(
-                value = value,
-                position = position,
-                board = board.toTypedArray().clone()
-            ).clone()
-
-            if (value.isEmpty()) {
-                updateSelectedPositionWith(null)
-            }
-
+        if (value.isEmpty()) {
+            updateSelectedPositionWith(null)
         }
 
     }
-    fun changeValue(value: String, position: Pair<Int, Int>) {
+    private fun changeValue(value: String, position: Pair<Int, Int>) {
 
         if (value.isEmpty()) {
             updateSelectedPositionWith(null)
@@ -113,7 +103,7 @@ data class BoardState(
             value = value,
             position = position,
             board = board.toTypedArray().clone()
-        ).clone()
+        ).copyOf()
 
     }
 
@@ -123,18 +113,22 @@ data class BoardState(
         }.toTypedArray()
     }
 
-    fun undoLast() = scope.launch { changeValue(EMPTY_TILE) }
+    var isPlacingTile : Boolean = false
+    fun undoLast() = scope.launch { if(!isPlacingTile) { changeValue(EMPTY_TILE) } }
     fun clearBoard() = scope.launch {
 
-        while(selectedPosition() != null) {
+        while (selectedPosition() != null && !isPlacingTile) {
             delay(placementSpeed.time).also { undoLast() }
         }
 
     }
 
-    fun solveTheBoard() = scope.launch { setBoard(findSolutionInstantly(fromUiBoard())) }
+    fun solveTheBoard() = scope.launch {
+        if (solvable()) { setBoard(findSolutionInstantly(fromUiBoard())) }
+    }
 
     private suspend fun setBoard(board: Array<Array<Int>>) {
+        isPlacingTile = true
 
         board.forEachIndexed { x, ints ->
             ints.forEachIndexed { y, i ->
@@ -146,7 +140,8 @@ data class BoardState(
                 }
             }
         }
-        state = BoardActivityState.SUCCESS
+
+        isPlacingTile = false
     }
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 
@@ -224,4 +219,12 @@ data class BoardState(
 
     }
 
+    fun allTilesAreValid() : Boolean {
+        return board.all { row -> row.all { tile -> tile.isValid && tile.text.isNotEmpty() } }
+    }
+    private fun solvable() : Boolean {
+        return board.all { row ->
+            row.all { tile -> tile.isValid } && row.any { tile -> tile.text.isEmpty() }
+        }
+    }
 }

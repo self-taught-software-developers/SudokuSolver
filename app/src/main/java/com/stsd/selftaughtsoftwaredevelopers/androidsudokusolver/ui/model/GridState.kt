@@ -4,7 +4,7 @@ import androidx.compose.material.icons.rounded.Grid3x3
 import androidx.compose.material.icons.rounded.Grid4x4
 import androidx.compose.material.icons.rounded.Window
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.rounded
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 
 enum class GridState(val multiplier: Int, val icon: ImageVector) {
     GRID_2X2(multiplier = 2, rounded.Window),

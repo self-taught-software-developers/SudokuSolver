@@ -17,6 +17,7 @@ data class TileState(
     var isValid: Boolean = true
 ) {
 
+
     private val sameSubgrid = { coordinates : Triple<Int, Int, Int> ->
 
         val (sx,sy,ss) = coordinates
