@@ -141,23 +141,22 @@ data class BoardState(
     }
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 
-        val position = findEmptyPosition(board)
+        findEmptyPosition(board).also { position ->
+            if (position.isEmpty()) {
+                return board
+            } else {
+                (1..9).forEach { candidate ->
+                    if (validatePlacement(board, candidate, position)) {
+                        board[position[0]][position[1]] = candidate
 
-        if (position.isEmpty()) {
-            return board
-        } else {
-            (1..9).forEach { candidate ->
-                if (validatePlacement(board, candidate, position)) {
-                    board[position[0]][position[1]] = candidate
+                        if (findEmptyPosition(findSolutionInstantly(board)).isEmpty()) return board
 
-                    if (findEmptyPosition(findSolutionInstantly(board)).isEmpty()) return board
+                        board[position[0]][position[1]] = 0
+                    }
 
-                    board[position[0]][position[1]] = 0
                 }
-
+                return board
             }
-
-            return board
         }
 
     }
