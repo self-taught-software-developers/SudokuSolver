@@ -22,7 +22,7 @@ import kotlin.math.sqrt
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
     val placementSpeed: TimeState = TimeState.DEFAULT_SPEED,
-    var state: BoardActivityState = BoardActivityState.LOADING,
+    val state: BoardActivityState = BoardActivityState.LOADING,
     val tiles: MutableList<TileState> = mutableListOf(),
     val board: SnapshotStateList<Array<TileState>> = mutableStateListOf(),
     val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
@@ -36,7 +36,7 @@ data class BoardState(
         constraintsScope: BoxWithConstraintsScope,
         padding: Dp,
         density: Density,
-    )  {
+    ) {
 
         constraintsScope.apply {
             calculateLocalBoardDimensions(

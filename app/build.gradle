@@ -85,6 +85,8 @@ dependencies {
     implementation "com.google.mlkit:text-recognition:16.0.0-beta5"
     implementation "com.google.mlkit:digital-ink-recognition:18.0.0"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
+
     implementation "com.google.firebase:firebase-crashlytics-ktx:18.2.13"
 
     testImplementation 'junit:junit:4.13.2'

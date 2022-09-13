@@ -1,6 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -11,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme
 
 @Composable
 fun DefaultBottomBar(
@@ -21,30 +22,38 @@ fun DefaultBottomBar(
     onEnterValue: (String) -> Unit
 ) {
 
-    FlowRow(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(CustomTheme.colors.primary)
-            .padding(top = CustomTheme.padding.small),
-        mainAxisAlignment = MainAxisAlignment.Center
-    ) {
-        repeat(9) {
-            DefaultNumericButton(
+    Column {
+
+        ThemedDivider()
+
+        FlowRow(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(ExtendedTheme.colors.background)
+                .padding(top = ExtendedTheme.padding.small),
+            mainAxisAlignment = MainAxisAlignment.Center
+        ) {
+            repeat(9) {
+                ThemedNumericButton(
+                    enabled = enabled,
+                    numericValue = (it + 1),
+                    onClick = onEnterValue
+                )
+            }
+
+            ThemedIconButton(
                 enabled = enabled,
-                numericValue = (it + 1),
-                onClick = onEnterValue
+                imageVector = Icons.Default.SelectAll,
+                backgroundColor = ExtendedTheme.colors.primary,
+                onClick = onClickSolve
             )
         }
-
-        DefaultIconButton(
-            enabled = enabled,
-            imageVector = Icons.Default.SelectAll,
-            backgroundColor = CustomTheme.colors.secondary,
-            onClick = onClickSolve
-        )
     }
 
 }
+
+//TODO move to alpha
+private const val DividerAlpha = 0.12f
 
 @Preview
 @Composable

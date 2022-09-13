@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.shapes
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.sizing
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.shapes
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.dims
 
 @Composable
 fun DefaultButton(
@@ -45,7 +45,7 @@ fun DefaultButton(
 }
 
 @Composable
-fun DefaultNumericButton(
+fun ThemedNumericButton(
     modifier: Modifier = Modifier,
     enabled: Boolean,
     numericValue: Int,
@@ -56,7 +56,7 @@ fun DefaultNumericButton(
         modifier = modifier
             .padding(padding.small)
             .clip(shape = shapes.small)
-            .size(sizing.large_x2),
+            .size(dims.large_x2),
         enabled = enabled,
         colors = buttonColors(Black.copy(alpha = 0.05F)),
         onClick = { onClick(numericValue.toString()) }
@@ -73,10 +73,10 @@ fun DefaultNumericButton(
 }
 
 @Composable
-fun DefaultIconButton(
+fun ThemedIconButton(
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    imageVector: ImageVector,
+    enabled: Boolean,
+    icon: ImageVector,
     onClick: () -> Unit
 ) {
 
@@ -86,15 +86,15 @@ fun DefaultIconButton(
         onClick = { onClick() }
     ) {
         Icon(
-            imageVector = imageVector,
-            contentDescription = imageVector.name
+            imageVector = icon,
+            contentDescription = icon.name
         )
     }
 
 }
 
 @Composable
-fun DefaultIconButton(
+fun ThemedIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     imageVector: ImageVector,

@@ -14,25 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
-import androidx.compose.ui.graphics.vector.DefaultStrokeLineWidth
-import androidx.compose.ui.graphics.vector.VectorProperty
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.google.android.datatransport.runtime.scheduling.jobscheduling.SchedulerConfig.Flag
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import java.lang.Double.min
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
 import java.util.stream.IntStream
-import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.sqrt
 

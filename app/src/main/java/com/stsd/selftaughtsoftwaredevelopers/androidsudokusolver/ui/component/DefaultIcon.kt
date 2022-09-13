@@ -9,9 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.materialIcon
-import androidx.compose.material.icons.materialPath
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,9 +18,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.myiconpack.Grid2x2
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.sizing
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.typography
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.dims
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.typography
 
 @Composable
 fun IconTitle(
@@ -35,7 +32,7 @@ fun IconTitle(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(sizing.medium),
+        verticalArrangement = Arrangement.spacedBy(dims.medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -48,7 +45,7 @@ fun IconTitle(
             Icon(
                 modifier = Modifier
                     .padding(padding.medium)
-                    .size(sizing.default_icon_x2),
+                    .size(dims.default_icon_x2),
                 imageVector = icon,
                 contentDescription = icon.name
             )

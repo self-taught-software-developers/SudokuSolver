@@ -20,5 +20,4 @@ data class Sizing(
 )
 
 internal val LocalPadding = staticCompositionLocalOf { Sizing() }
-internal val LocalSizing = staticCompositionLocalOf { Sizing() }
-internal val LocalElevation = staticCompositionLocalOf { Sizing() }
+internal val LocalDimensions = staticCompositionLocalOf { Sizing() }

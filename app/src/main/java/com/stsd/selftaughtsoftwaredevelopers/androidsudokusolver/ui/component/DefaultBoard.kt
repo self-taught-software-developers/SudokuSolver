@@ -3,7 +3,6 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -13,11 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -77,7 +75,7 @@ fun SudokuBoard(
     board: List<Array<TileState>>,
     position: Pair<Int, Int>?,
     vector: Int,
-    boardColor: Color = CustomTheme.colors.primary,
+    boardColor: Color = ExtendedTheme.colors.primary,
     updateSelectedPositionWith: (Pair<Int, Int>) -> Unit
 ) {
 
@@ -85,8 +83,8 @@ fun SudokuBoard(
         modifier = modifier
             .defaultBorder(
                 borderColor = boardColor,
-                borderShape = CustomTheme.shapes.medium,
-                borderWidth = CustomTheme.padding.small_x2
+                borderShape = ExtendedTheme.shapes.medium,
+                borderWidth = ExtendedTheme.padding.small_x2
             )
             .drawSudokuGrid(color = boardColor, vector = vector)
     ) {

@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.colors
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.padding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme.sizing
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.colors
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.dims
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
 
 @Composable
 fun DefaultTopBar(
@@ -17,24 +17,28 @@ fun DefaultTopBar(
     updateSelection: (TimeState) -> Unit
 ) {
 
+    Column {
 
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .requiredHeight(sizing.default_top_bar)
-            .background(colors.primary)
-            .padding(horizontal = padding.small),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .requiredHeight(dims.default_top_bar)
+                .background(colors.background)
+                .padding(horizontal = padding.small),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
 
-        TimeState.values().onEach { state ->
-            DefaultIconButton(
-                imageVector = state.icon,
-                enabled = placementSpeed != state
-            ) { updateSelection(state) }
+            TimeState.values().forEach { state ->
+
+                ThemedIconButton(
+                    icon = state.icon,
+                    enabled = placementSpeed != state
+                ) { updateSelection(state) }
+
+            }
+
         }
-
+        ThemedDivider()
     }
-
 }

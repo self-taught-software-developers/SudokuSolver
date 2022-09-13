@@ -3,9 +3,8 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
@@ -30,7 +29,32 @@ private val LightColorPalette = lightColors(
     */
 )
 
-object CustomTheme {
+
+
+@Composable
+fun AndroidSudokuSolverTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+
+    val colors = if (darkTheme) DarkColorPalette else LightColorPalette
+
+    val systemUiController: SystemUiController = rememberSystemUiController()
+
+    LaunchedEffect(colors, systemUiController) {
+        systemUiController.setSystemBarsColor(color = colors.background)
+    }
+
+    MaterialTheme(
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
+
+}
+
+object ExtendedTheme {
     val colors: Colors
         @Composable
         get() = MaterialTheme.colors
@@ -43,37 +67,16 @@ object CustomTheme {
         @Composable
         get() = MaterialTheme.shapes
 
-    val sizing: Sizing
+    val dims: Sizing
         @Composable
-        get() = LocalSizing.current
+        get() = LocalDimensions.current
 
     val padding: Sizing
         @Composable
         get() = LocalPadding.current
 
-    val elevation: Sizing
+    val alpha: Alpha
         @Composable
-        get() = LocalElevation.current
-}
-
-@Composable
-fun AndroidSudokuSolverTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-
-    val systemUiController = rememberSystemUiController()
-    val colors = if (darkTheme) DarkColorPalette else LightColorPalette
-
-    LaunchedEffect(colors, systemUiController) {
-        systemUiController.setSystemBarsColor(color = colors.primary)
-    }
-
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
+        get() = LocalAlpha.current
 
 }
