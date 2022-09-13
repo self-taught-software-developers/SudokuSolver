@@ -16,7 +16,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -106,12 +108,22 @@ fun SudokuBoard(
 }
 
 
-@Preview
+@AllPreviews
 @Composable
 fun SudokuBoardPreview() {
 
-//    SudokuBoard(enabled = true) {
-//
-//    }
+    AndroidSudokuSolverTheme {
+        SudokuBoard(
+            board = List(9) { x ->
+                Array(9) { y ->
+                    TileState(position = Pair(x, y))
+                }
+            },
+            position = Pair(0, 0),
+            vector = 9
+        ) {
+
+        }
+    }
 
 }

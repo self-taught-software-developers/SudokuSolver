@@ -21,10 +21,11 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.ic
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 
 @Composable
 fun SudokuSolverScreen(
@@ -94,10 +95,21 @@ fun SudokuSolverScreen(
 
 }
 
-@DarkPreview
+@AllPreviews
 @Composable
 fun SudokuSolverScreenPreview() {
-//    SudokuSolverScreen(boardState = TimeState.DEFAULT_SPEED) {
-//
-//    }
+
+    AndroidSudokuSolverTheme {
+
+        SudokuSolverScreen(
+            boardState = BoardState(),
+            onSolveBoardClick = { /*TODO*/ },
+            onUpdateValueClick = { /*TODO*/ },
+            onUndoLastClick = { /*TODO*/ },
+            onUndoAllClick = { /*TODO*/ },
+            updateSolutionSpeed = { /*TODO*/ }
+        )
+
+    }
+
 }

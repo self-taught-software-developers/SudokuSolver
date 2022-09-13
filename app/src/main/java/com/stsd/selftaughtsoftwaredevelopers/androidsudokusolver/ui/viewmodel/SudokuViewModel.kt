@@ -18,7 +18,7 @@ class SudokuViewModel @Inject constructor(
     private val storagePreferences: StoragePreferences
 ) : ViewModel() {
 
-    private val boardState = MutableStateFlow(BoardState(state = LOADING))
+    private val boardState = MutableStateFlow(BoardState())
     val uiBoardState = boardState.asStateFlow()
 
     private var activelyPlacing: Boolean = false
