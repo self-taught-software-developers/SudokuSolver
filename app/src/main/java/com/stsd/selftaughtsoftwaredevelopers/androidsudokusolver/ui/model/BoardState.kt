@@ -29,7 +29,7 @@ data class BoardState(
 ) {
     val vector = dimensions.multiplier.vector()
 
-    val board: SnapshotStateList<List<TileState>> = mutableStateListOf()
+    val board: SnapshotStateList<TileState> = mutableStateListOf()
     private val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
 
     private val _placementSpeed = MutableStateFlow(TimeState.DEFAULT_SPEED)
@@ -48,58 +48,47 @@ data class BoardState(
         density = density,
         padding = padding
     ).also { rect ->
-        val (x, y) = rect.topLeft
-        val (width, height) = rect.size.div(vector.toFloat())
+        if (board.isEmpty()) {
 
-        List(vector) { xp ->
-            List(vector) { yp ->
-                TileState(
-                    position = Pair(xp, yp),
-                    rect = Rect(
-                        offset = Offset(
-                            x = (width * xp) + x,
-                            y = (height * yp) + y
-                        ),
-                        size = Size(width, height)
-                    )
-                )
+            val (x, y) = rect.topLeft
+            val (width, height) = rect.size.div(vector.toFloat())
+
+            List(vector) { xp ->
+                List(vector) { yp ->
+                    board.add(TileState(
+                        position = Pair(xp, yp),
+                        rect = Rect(
+                            offset = Offset(
+                                x = (width * xp) + x,
+                                y = (height * yp) + y
+                            ),
+                            size = Size(width, height)
+                        )
+                    ))
+                }
             }
-        }.also { board.addAll(it) }
 
-//        (0 until vector).map  { xp ->
-//            (0 until vector).map { yp ->
-//                TileState(
-//                    position = Pair(xp, yp),
-//                    rect = Rect(
-//                        offset = Offset(
-//                            x = (width * xp) + x,
-//                            y = (height * yp) + y
-//                        ),
-//                        size = Size(width, height)
-//                    )
-//                )
-//            }
-//        }.mapTo(board)
+        }
     }
-
 
     fun updateSelectedPositionWith(position: Pair<Int, Int>?) {
         position?.let {
+            println(it)
             backStack.add(position)
         } ?: backStack.removeLastOrNull()
     }
 
     fun changeValue(value: String) = selectedPosition()?.let { position ->
 
-        board[position.first] = isPlacementValid(
-            value = value,
-            position = position,
-            board = board
-        )
-
-        if (value.isEmpty()) {
-            updateSelectedPositionWith(null)
-        }
+//        board[position.first] = isPlacementValid(
+//            value = value,
+//            position = position,
+//            board = board
+//        )
+//
+//        if (value.isEmpty()) {
+//            updateSelectedPositionWith(null)
+//        }
 
     }
     private fun changeValue(value: String, position: Pair<Int, Int>) {
@@ -118,11 +107,11 @@ data class BoardState(
 
     }
 
-    private fun fromUiBoard() : Array<Array<Int>> {
-        return board.map { row ->
-            row.map { it.value() }.toTypedArray()
-        }.toTypedArray()
-    }
+//    private fun fromUiBoard() : Array<Array<Int>> {
+//        return board.map { row ->
+//            row.map { it.value() }.toTypedArray()
+//        }.toTypedArray()
+//    }
 
     fun undoLast() { changeValue(EMPTY_TILE) }
     suspend fun clearBoard() {
@@ -132,23 +121,23 @@ data class BoardState(
     }
 
     suspend fun solveTheBoard() {
-        if (solvable()) { setBoard(findSolutionInstantly(fromUiBoard())) }
+//        if (solvable()) { setBoard(findSolutionInstantly(fromUiBoard())) }
     }
 
     private suspend fun setBoard(solvedBoard: Array<Array<Int>>) {
 
-        fromUiBoard().forEachIndexed { x, ints ->
-            ints.forEachIndexed { y, i ->
-                if (i == 0) {
-                    delay(placementSpeed.value.time).also {
-                        changeValue(
-                            value = toTileText(solvedBoard[x][y]),
-                            position = Pair(x,y)
-                        )
-                    }
-                }
-            }
-        }
+//        fromUiBoard().forEachIndexed { x, ints ->
+//            ints.forEachIndexed { y, i ->
+//                if (i == 0) {
+//                    delay(placementSpeed.value.time).also {
+//                        changeValue(
+//                            value = toTileText(solvedBoard[x][y]),
+//                            position = Pair(x,y)
+//                        )
+//                    }
+//                }
+//            }
+//        }
 
     }
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
@@ -227,11 +216,13 @@ data class BoardState(
     }
 
     fun allTilesAreValid() : Boolean {
-        return board.all { row -> row.all { tile -> tile.isValid && tile.text.isNotEmpty() } }
+        return true
+//        return board.all { row -> row.all { tile -> tile.isValid && tile.text.isNotEmpty() } }
     }
     private fun solvable() : Boolean {
-        return board.all { row ->
-            row.all { tile -> tile.isValid } && row.any { tile -> tile.text.isEmpty() }
-        }
+        return true
+//        return board.all { row ->
+//            row.all { tile -> tile.isValid } && row.any { tile -> tile.text.isEmpty() }
+//        }
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileSt
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -72,7 +74,7 @@ fun BoardTile(
 @Composable
 fun SudokuBoard(
     modifier: Modifier = Modifier,
-    board: List<List<TileState>>,
+    board: List<TileState>,
     position: Pair<Int, Int>?,
     vector: Int,
     boardColor: Color = ExtendedTheme.colors.primary,
@@ -81,10 +83,11 @@ fun SudokuBoard(
 
     Column(
         modifier = modifier
+            .padding(horizontal = padding.medium)
             .defaultBorder(
                 borderColor = boardColor,
                 borderShape = ExtendedTheme.shapes.medium,
-                borderWidth = ExtendedTheme.padding.small_x2
+                borderWidth = padding.small_x2
             )
             .drawSudokuGrid(color = boardColor, vector = vector)
     ) {
@@ -109,19 +112,19 @@ fun SudokuBoard(
 @AllPreviews
 @Composable
 fun SudokuBoardPreview() {
-
-    AndroidSudokuSolverTheme {
-        SudokuBoard(
-            board = List(9) { x ->
-                List(9) { y ->
-                    TileState(position = Pair(x, y))
-                }
-            },
-            position = Pair(0, 0),
-            vector = 9
-        ) {
-
-        }
-    }
+//
+//    AndroidSudokuSolverTheme {
+//        SudokuBoard(
+//            board = List(9) { x ->
+//                List(9) { y ->
+//                    TileState(position = Pair(x, y))
+//                }
+//            },
+//            position = Pair(0, 0),
+//            vector = 9
+//        ) {
+//
+//        }
+//    }
 
 }

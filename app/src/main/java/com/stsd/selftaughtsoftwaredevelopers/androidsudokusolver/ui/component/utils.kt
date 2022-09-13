@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -12,15 +15,10 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
 import java.util.stream.IntStream
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -115,101 +113,19 @@ fun validatePlacement(
     return true
 }
 
-fun Modifier.drawSudokuGridTiles(
-    color: Color,
-    vector: Int
-) : Modifier {
-    return this@drawSudokuGridTiles.drawWithCache {
-        this@drawWithCache.onDrawBehind {
-
-            val (width, height) = this@onDrawBehind.size
-            val tileWidth = width / vector
-            val tileHeight = height / vector
-
-            repeat(vector) { y ->
-                repeat(vector) { x ->
-                    val gridPlacements = Offset(tileWidth * x, tileHeight * y)
-
-                    drawRect(
-                        topLeft = gridPlacements,
-                        color = color,
-                        style = Stroke(width = 20f),
-                        size = Size(tileWidth, tileWidth)
-                    )
-                }
-            }
-        }
-    }
-
-}
-
-@Composable
-fun BoxWithConstraintsScope.calculatePx() : Pair<Float,Float> {
-
-    val density = LocalDensity.current
-
-    val iWidth = with(density) { (maxWidth.toPx()) }
-    val iHeight = with(density) { (maxHeight.toPx())}
-
-    return Pair(iWidth, iHeight)
-}
-
 fun BoxWithConstraintsScope.calculateLocalPx(density: Density, extra: Dp? = null) : Triple<Float, Float, Float?> {
     with(density) {
         return Triple(maxWidth.toPx(), maxHeight.toPx(), extra?.toPx())
     }
 }
 
-@Composable
-fun calculatePx() : Pair<Float,Float> {
-
-    val config = LocalConfiguration.current
-    val density = LocalDensity.current
-
-    val iWidth = with(density) { (config.screenWidthDp.dp.toPx()) }
-    val iHeight = with(density) { (config.screenHeightDp.dp.toPx() )}
-
-    return Pair(iWidth, iHeight)
-}
-
-fun Pair<Float, Float>.toAspectRatio() = (second/first).toInt()
-fun Pair<Float, Float>.toIntPair() = Pair(this.first.toInt(), this.second.toInt())
 fun Triple<Float, Float, *>.toIntPair() = Pair(this.first.toInt(), this.second.toInt())
-
-@Composable
-fun BoxWithConstraintsScope.subtractDimensions(extra : Dp) : Pair<Float,Float> {
-
-    val density = LocalDensity.current
-
-    val width = with(density) { (maxWidth - extra).toPx() }
-    val height = with(density) { (maxHeight - extra).toPx() }
-
-    return Pair(width, height)
-}
 
 fun Triple<Float, Float, Float?>.subtractLocalDimensions() : Pair<Float,Float> {
 
     return this.third?.let { extra ->
         Pair(first - extra, second - extra)
     } ?: Pair(first, second)
-
-}
-
-@Composable
-fun BoxWithConstraintsScope.calculateBoardDimensions() : Rect {
-
-    val (widthPxl, heightPxl) = calculatePx()
-    val (width, height) = subtractDimensions((padding.medium * 2))
-
-    val scaling = minOf(width, height)
-
-    val x = (widthPxl - scaling).div(2)
-    val y = (heightPxl - scaling).div(2)
-
-    val start = Offset(x = x, y = y)
-    val size = Size(scaling,scaling)
-
-    return Rect(offset = start, size = size)
 
 }
 
@@ -236,55 +152,37 @@ fun BoxWithConstraintsScope.calculateLocalBoardDimensions(
 
 }
 
-
-
-fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
-
-    val tiles = arrayListOf<TileState>()
-    val (x, y) = this.topLeft
-    val (width, height) = this.size.div(cellCount.toFloat())
-
-    (0 until cellCount).forEach { xp ->
-        (0 until cellCount).forEach { yp ->
-            tiles.add(
-                TileState(
-                    position = Pair(xp, yp),
-                    rect = Rect(
-                        offset = Offset(x = (width * xp) + x, y = (height * yp) + y),
-                        size = Size(width, height)
-                    )
-                )
-
-            )
-        }
-    }
-
-    return tiles
-}
-
 @Composable
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
     tileColor: Color,
-    board: List<List<TileState>>,
+    board: List<TileState>,
     selectedTile: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) = this.apply {
 
-    board.forEachIndexed { x, rowOfTiles ->
+    board.chunked(9).forEach { row ->
 
         Row {
-
-            rowOfTiles.forEachIndexed { y, tile ->
-
+            row.forEach { tile ->
                 BoardTile(
                     modifier = modifier.size(tile.tileSize()),
                     value = tile.value(),
                     color = tile.tileColor(coordinates = selectedTile, color = tileColor)
-                ) { onTileSelected(Pair(x, y)) }
-
+                ) { onTileSelected(tile.position) }
             }
-
         }
+
     }
+//    LazyVerticalGrid(
+//        columns = GridCells.Fixed(9)
+//    ) {
+//        items(board) { tile ->
+//            BoardTile(
+//                modifier = modifier.size(tile.tileSize()),
+//                value = tile.value(),
+//                color = tile.tileColor(coordinates = selectedTile, color = tileColor)
+//            ) { onTileSelected(tile.position) }
+//        }
+//    }
 }
