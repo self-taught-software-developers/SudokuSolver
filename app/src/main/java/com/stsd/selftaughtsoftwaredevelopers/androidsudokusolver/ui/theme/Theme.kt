@@ -18,7 +18,6 @@ private val LightColorPalette = lightColors(
     primary = Wine500,
     primaryVariant = Wine700,
     secondary = SeaWeedBlue200,
-
     background = Beige200
 
     /* Other default colors to override
@@ -51,6 +50,10 @@ object CustomTheme {
     val padding: Sizing
         @Composable
         get() = LocalPadding.current
+
+    val elevation: Sizing
+        @Composable
+        get() = LocalElevation.current
 }
 
 @Composable
@@ -66,19 +69,11 @@ fun AndroidSudokuSolverTheme(
         systemUiController.setSystemBarsColor(color = colors.primary)
     }
 
-    CompositionLocalProvider(
-        LocalPadding provides Sizing(),
-        LocalSizing provides Sizing(),
-        LocalElevation provides Sizing()
-    ) {
-
-        MaterialTheme(
-            colors = colors,
-            typography = Typography,
-            shapes = Shapes,
-            content = content
-        )
-
-    }
+    MaterialTheme(
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
 
 }
