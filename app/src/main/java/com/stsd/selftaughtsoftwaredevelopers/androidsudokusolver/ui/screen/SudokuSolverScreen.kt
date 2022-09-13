@@ -25,20 +25,18 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Custom
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.DarkPreview
-import kotlinx.coroutines.channels.ProducerScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     boardState: BoardState,
+    onSolveBoardClick: () -> Unit,
+    onUpdateValueClick: (String) -> Unit,
+    onUndoLastClick: () -> Unit,
+    onUndoAllClick: () -> Unit,
     updateSolutionSpeed: (TimeState) -> Unit,
 ) {
-
-    LaunchedEffect(boardState.state) {
-        println(boardState.state)
-    }
 
     val solutionComplete by remember(boardState.board) {
         derivedStateOf { boardState.allTilesAreValid() }
@@ -54,13 +52,13 @@ fun SudokuSolverScreen(
         },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = { DefaultFab(items = listOf(
-            IconItem(icon = rounded.Undo) { boardState.undoLast() },
-            IconItem(icon = rounded.ClearAll) { boardState.clearBoard() }
+            IconItem(icon = rounded.Undo) { onUndoLastClick() },
+            IconItem(icon = rounded.ClearAll) { onUndoAllClick() }
         )) },
         bottomBar = {
              DefaultBottomBar(
-                 onClickSolve = { boardState.solveTheBoard() },
-                 onEnterValue = { boardState.changeValue(it) }
+                 onClickSolve = { onSolveBoardClick() },
+                 onEnterValue = { onUpdateValueClick(it) }
             )
         },
     ) { bounds ->

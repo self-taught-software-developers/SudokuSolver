@@ -14,6 +14,10 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen.Sudok
 fun SudokuSolverApp(
     navController: NavHostController = rememberNavController(),
     boardState: BoardState,
+    onSolveBoardClick: () -> Unit,
+    onUpdateValueClick: (String) -> Unit,
+    onUndoLastClick: () -> Unit,
+    onUndoAllClick: () -> Unit,
     updatePlacementSpeed: (TimeState) -> Unit
 ) {
 
@@ -23,7 +27,13 @@ fun SudokuSolverApp(
     ) {
 
         composable(SOLVER_DESTINATION) {
-            SudokuSolverScreen(boardState = boardState) { speed ->
+            SudokuSolverScreen(
+                boardState = boardState,
+                onSolveBoardClick = { onSolveBoardClick() },
+                onUpdateValueClick = { onUpdateValueClick(it) },
+                onUndoLastClick = { onUndoLastClick() },
+                onUndoAllClick = { onUndoAllClick() }
+            ) { speed ->
                 updatePlacementSpeed(speed)
             }
         }

@@ -23,7 +23,6 @@ data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
     val placementSpeed: TimeState = TimeState.DEFAULT_SPEED,
     var state: BoardActivityState,
-    val scope: CoroutineScope,
     val tiles: MutableList<TileState> = mutableListOf(),
     val board: SnapshotStateList<Array<TileState>> = mutableStateListOf(),
     val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
@@ -113,35 +112,32 @@ data class BoardState(
         }.toTypedArray()
     }
 
-    var isPlacingTile : Boolean = false
-    fun undoLast() = scope.launch { if(!isPlacingTile) { changeValue(EMPTY_TILE) } }
-    fun clearBoard() = scope.launch {
-
-        while (selectedPosition() != null && !isPlacingTile) {
+    fun undoLast() { changeValue(EMPTY_TILE) }
+    suspend fun clearBoard() {
+        while (selectedPosition() != null) {
             delay(placementSpeed.time).also { undoLast() }
         }
-
     }
 
-    fun solveTheBoard() = scope.launch {
+    suspend fun solveTheBoard() {
         if (solvable()) { setBoard(findSolutionInstantly(fromUiBoard())) }
     }
 
-    private suspend fun setBoard(board: Array<Array<Int>>) {
-        isPlacingTile = true
+    private suspend fun setBoard(solvedBoard: Array<Array<Int>>) {
 
-        board.forEachIndexed { x, ints ->
+        fromUiBoard().forEachIndexed { x, ints ->
             ints.forEachIndexed { y, i ->
-                delay(placementSpeed.time).also {
-                    changeValue(
-                        value = toTileText(i),
-                        position = Pair(x,y)
-                    )
+                if (i == 0) {
+                    delay(placementSpeed.time).also {
+                        changeValue(
+                            value = toTileText(solvedBoard[x][y]),
+                            position = Pair(x,y)
+                        )
+                    }
                 }
             }
         }
 
-        isPlacingTile = false
     }
     private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
 

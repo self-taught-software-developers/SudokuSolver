@@ -9,8 +9,8 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardS
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardActivityState.LOADING
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,18 +18,17 @@ class SudokuViewModel @Inject constructor(
     private val storagePreferences: StoragePreferences
 ) : ViewModel() {
 
-    private val scope = viewModelScope
-    private val boardState = MutableStateFlow(BoardState(state = LOADING, scope = scope))
+    private val boardState = MutableStateFlow(BoardState(state = LOADING))
     val uiBoardState = boardState.asStateFlow()
+
+    private var activelyPlacing: Boolean = false
 
     init {
 
         viewModelScope.launch {
             storagePreferences.solutionSpeed.collectLatest { speed ->
                 boardState.update { oldState ->
-                    oldState.copy(placementSpeed = speed).also { newState ->
-                        newState.isPlacingTile = oldState.isPlacingTile
-                    }
+                    oldState.copy(placementSpeed = speed)
                 }
             }
         }
@@ -42,6 +41,34 @@ class SudokuViewModel @Inject constructor(
 
     fun updatePlacementSpeed(value: TimeState) = viewModelScope.launch {
         storagePreferences.updateSolutionSpeed(value)
+    }
+
+    /**
+     * Modify BoardState
+     */
+    fun updateBoardWithSolvedPlacements() = viewModelScope.launch {
+        readyToPlace { boardState.value.solveTheBoard() }
+    }
+
+    fun updateSelectedValue(value: String) = viewModelScope.launch {
+        readyToPlace { uiBoardState.value.changeValue(value) }
+    }
+
+    fun undoLast() = viewModelScope.launch {
+        readyToPlace { uiBoardState.value.undoLast() }
+    }
+
+    fun undoAll() = viewModelScope.launch {
+        readyToPlace { uiBoardState.value.clearBoard() }
+    }
+
+
+    private suspend fun readyToPlace(action: suspend () -> Unit) {
+        if(!activelyPlacing) {
+            activelyPlacing = true
+            action()
+            activelyPlacing = false
+        }
     }
 
 }

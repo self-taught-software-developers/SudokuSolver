@@ -21,9 +21,7 @@ class MainActivity : ComponentActivity() {
     private var isLoading: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().apply {
-            setKeepOnScreenCondition { isLoading }
-        }
+        installSplashScreen().apply { setKeepOnScreenCondition { isLoading } }
         super.onCreate(savedInstanceState)
 
         setContent {
@@ -44,7 +42,11 @@ class MainActivity : ComponentActivity() {
             if(!boardState.isLoading()) {
                 AndroidSudokuSolverTheme {
                     SudokuSolverApp(
-                        boardState = boardState
+                        boardState = boardState,
+                        onSolveBoardClick = { vm.updateBoardWithSolvedPlacements() },
+                        onUpdateValueClick = { vm.updateSelectedValue(it) },
+                        onUndoLastClick = { vm.undoLast() },
+                        onUndoAllClick = { vm.undoAll() }
                     ) { vm.updatePlacementSpeed(it) }
                 }
             }
