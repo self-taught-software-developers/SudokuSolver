@@ -266,7 +266,7 @@ fun Rect.calculateTileDimensions(cellCount: Int = 9) : ArrayList<TileState> {
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
     tileColor: Color,
-    board: List<Array<TileState>>,
+    board: List<List<TileState>>,
     selectedTile: Triple<Int, Int, Int>?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) = this.apply {

@@ -42,12 +42,14 @@ fun SudokuSolverScreen(
         derivedStateOf { boardState.allTilesAreValid() }
     }
 
+    val placementSpeed by boardState.placementSpeed.collectAsState()
+
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = modifier,
         topBar = {
             DefaultTopBar(
-                placementSpeed = boardState.placementSpeed
+                placementSpeed = placementSpeed
             ) { updateSolutionSpeed(it) }
         },
         floatingActionButtonPosition = FabPosition.Center,

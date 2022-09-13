@@ -27,9 +27,7 @@ class SudokuViewModel @Inject constructor(
 
         viewModelScope.launch {
             storagePreferences.solutionSpeed.collectLatest { speed ->
-                boardState.update { oldState ->
-                    oldState.copy(placementSpeed = speed)
-                }
+                boardState.value.updatePlacementSpeed(speed)
             }
         }
 

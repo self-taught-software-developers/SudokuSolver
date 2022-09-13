@@ -17,17 +17,25 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileSt
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlin.math.sqrt
 
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
-    val placementSpeed: TimeState = TimeState.DEFAULT_SPEED,
-    val state: BoardActivityState = BoardActivityState.LOADING,
-    val tiles: MutableList<TileState> = mutableListOf(),
-    val board: SnapshotStateList<Array<TileState>> = mutableStateListOf(),
-    val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
+    val state: BoardActivityState = BoardActivityState.LOADING
 ) {
     val vector = dimensions.multiplier.vector()
+
+    val board: SnapshotStateList<List<TileState>> = mutableStateListOf()
+    private val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
+
+    private val _placementSpeed = MutableStateFlow(TimeState.DEFAULT_SPEED)
+    var placementSpeed: StateFlow<TimeState> = _placementSpeed.asStateFlow()
+
+    fun updatePlacementSpeed(value: TimeState) = _placementSpeed.update { value }
     
     fun selectedPosition() = backStack.lastOrNull()
     fun isLoading() = state == BoardActivityState.LOADING
@@ -36,41 +44,45 @@ data class BoardState(
         constraintsScope: BoxWithConstraintsScope,
         padding: Dp,
         density: Density,
-    ) {
+    ) = constraintsScope.calculateLocalBoardDimensions(
+        density = density,
+        padding = padding
+    ).also { rect ->
+        val (x, y) = rect.topLeft
+        val (width, height) = rect.size.div(vector.toFloat())
 
-        constraintsScope.apply {
-            calculateLocalBoardDimensions(
-                density = density,
-                padding = padding
-            ).let { rect ->
-
-                if (tiles.isEmpty() || sqrt(tiles.size.toFloat()).toInt() != vector) {
-                    val (x, y) = rect.topLeft
-                    val (width, height) = rect.size.div(vector.toFloat())
-
-                    (0 until vector).forEach { xp ->
-                        (0 until vector).forEach { yp ->
-                            tiles.add(
-                                TileState(
-                                    position = Pair(xp, yp),
-                                    rect = Rect(
-                                        offset = Offset(
-                                            x = (width * xp) + x,
-                                            y = (height * yp) + y
-                                        ),
-                                        size = Size(width, height)
-                                    )
-                                )
-                            )
-                        }
-                    }
-                    board.addAll(toBoardLayout())
-                }
+        List(vector) { xp ->
+            List(vector) { yp ->
+                TileState(
+                    position = Pair(xp, yp),
+                    rect = Rect(
+                        offset = Offset(
+                            x = (width * xp) + x,
+                            y = (height * yp) + y
+                        ),
+                        size = Size(width, height)
+                    )
+                )
             }
-        }
+        }.also { board.addAll(it) }
+
+//        (0 until vector).map  { xp ->
+//            (0 until vector).map { yp ->
+//                TileState(
+//                    position = Pair(xp, yp),
+//                    rect = Rect(
+//                        offset = Offset(
+//                            x = (width * xp) + x,
+//                            y = (height * yp) + y
+//                        ),
+//                        size = Size(width, height)
+//                    )
+//                )
+//            }
+//        }.mapTo(board)
     }
 
-    private fun toBoardLayout(): List<Array<TileState>> = tiles.chunked(vector)
+
     fun updateSelectedPositionWith(position: Pair<Int, Int>?) {
         position?.let {
             backStack.add(position)
@@ -82,8 +94,8 @@ data class BoardState(
         board[position.first] = isPlacementValid(
             value = value,
             position = position,
-            board = board.toTypedArray().clone()
-        ).copyOf()
+            board = board
+        )
 
         if (value.isEmpty()) {
             updateSelectedPositionWith(null)
@@ -92,17 +104,17 @@ data class BoardState(
     }
     private fun changeValue(value: String, position: Pair<Int, Int>) {
 
-        if (value.isEmpty()) {
-            updateSelectedPositionWith(null)
-        } else {
-            updateSelectedPositionWith(position)
-        }
-
-        board[position.first] = isPlacementValid(
-            value = value,
-            position = position,
-            board = board.toTypedArray().clone()
-        ).copyOf()
+//        if (value.isEmpty()) {
+//            updateSelectedPositionWith(null)
+//        } else {
+//            updateSelectedPositionWith(position)
+//        }
+//
+//        board[position.first] = isPlacementValid(
+//            value = value,
+//            position = position,
+//            board = board.toTypedArray().clone()
+//        ).copyOf()
 
     }
 
@@ -115,7 +127,7 @@ data class BoardState(
     fun undoLast() { changeValue(EMPTY_TILE) }
     suspend fun clearBoard() {
         while (selectedPosition() != null) {
-            delay(placementSpeed.time).also { undoLast() }
+            delay(placementSpeed.value.time).also { undoLast() }
         }
     }
 
@@ -128,7 +140,7 @@ data class BoardState(
         fromUiBoard().forEachIndexed { x, ints ->
             ints.forEachIndexed { y, i ->
                 if (i == 0) {
-                    delay(placementSpeed.time).also {
+                    delay(placementSpeed.value.time).also {
                         changeValue(
                             value = toTileText(solvedBoard[x][y]),
                             position = Pair(x,y)
@@ -164,8 +176,8 @@ data class BoardState(
     private fun isPlacementValid(
         value: String,
         position: Pair<Int, Int>,
-        board: Array<Array<TileState>>
-    ) : Array<TileState> {
+        board: List<List<TileState>>
+    ) : List<TileState> {
 
         position.let { (x,y) ->
 

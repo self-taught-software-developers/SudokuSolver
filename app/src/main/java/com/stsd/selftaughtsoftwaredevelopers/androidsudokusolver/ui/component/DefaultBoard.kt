@@ -72,7 +72,7 @@ fun BoardTile(
 @Composable
 fun SudokuBoard(
     modifier: Modifier = Modifier,
-    board: List<Array<TileState>>,
+    board: List<List<TileState>>,
     position: Pair<Int, Int>?,
     vector: Int,
     boardColor: Color = ExtendedTheme.colors.primary,
@@ -113,7 +113,7 @@ fun SudokuBoardPreview() {
     AndroidSudokuSolverTheme {
         SudokuBoard(
             board = List(9) { x ->
-                Array(9) { y ->
+                List(9) { y ->
                     TileState(position = Pair(x, y))
                 }
             },
