@@ -71,13 +71,14 @@ data class BoardState(
 
     fun updateSelectedPositionWith(position: Pair<Int, Int>?) {
         position?.let {
-            println(it)
             backStack.add(position)
         } ?: backStack.removeLastOrNull()
     }
 
     fun changeValue(value: String) = selectedPosition()?.let { position ->
+        val tileState = board.first { it.position == position }
 
+        board[board.indexOf(tileState)] = tileState.copy(text = value)
 //        board[position.first] = isPlacementValid(
 //            value = value,
 //            position = position,
