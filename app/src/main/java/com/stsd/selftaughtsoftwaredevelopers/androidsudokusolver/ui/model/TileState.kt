@@ -10,11 +10,11 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Extend
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.colors
 
 data class TileState(
-    var text: String = EMPTY_TILE,
+    val text: String = EMPTY_TILE,
     val position: Pair<Int, Int>,
     val subgrid: Pair<Int, Int>,
     val rect: Rect? = null,
-    var isValid: Boolean = true
+    val isValid: Boolean = true
 ) {
 
     private val isNotValid = !isValid
@@ -23,21 +23,26 @@ data class TileState(
     private val isSameRow = { x : Int -> position.first == x }
     private val isSelected = { coordinates : Pair<Int, Int> -> position == coordinates }
 
+    val x = position.first
+    val y = position.second
+
     @Composable
     fun tileColor(selected: TileState?, color: Color) : Color {
-
-        return color.copy(
-            alpha = selected?.position?.let { (x, y) ->
-                when {
-                    isNotValid -> alpha.large_60
-                    isSelected(selected.position) -> alpha.large_60
-                    isSameRow(x) || isSameColumn(y) || isSameSubgrid(selected.subgrid) -> {
-                        alpha.medium_30
+        return if (isNotValid) {
+            colors.error
+        } else {
+            color.copy(
+                alpha = selected?.position?.let { (x, y) ->
+                    when {
+                        isSelected(selected.position) -> alpha.large_60
+                        isSameRow(x) || isSameColumn(y) || isSameSubgrid(selected.subgrid) -> {
+                            alpha.medium_30
+                        }
+                        else -> alpha.default_0
                     }
-                    else -> alpha.default_0
-                }
-            } ?: alpha.default_0
-        )
+                } ?: alpha.default_0
+            )
+        }
 
     }
 

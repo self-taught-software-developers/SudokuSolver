@@ -153,6 +153,14 @@ fun BoxWithConstraintsScope.calculateLocalBoardDimensions(
 
 }
 
+inline fun <T> List<T>.indexOfFirstOrNull(predicate: (T) -> Boolean): Pair<Int, T>? {
+    for ((index, item) in this.withIndex()) {
+        if (predicate(item))
+            return Pair(index, item)
+    }
+    return null
+}
+
 @Composable
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,

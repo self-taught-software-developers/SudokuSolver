@@ -1,8 +1,11 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.StateRecord
+import androidx.compose.runtime.traceEventEnd
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -10,14 +13,13 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.annotation.Untainted
 import kotlin.math.sqrt
 
 data class BoardState(
@@ -75,20 +77,24 @@ data class BoardState(
         } ?: backStack.removeLastOrNull()
     }
 
-    fun changeValue(value: String) = selectedPosition()?.let { position ->
-        val tileState = board.first { it.position == position }
+    fun changeValue(value: String) {
 
-        board[board.indexOf(tileState)] = tileState.copy(text = value)
-//        board[position.first] = isPlacementValid(
-//            value = value,
-//            position = position,
-//            board = board
-//        )
-//
-//        if (value.isEmpty()) {
-//            updateSelectedPositionWith(null)
-//        }
+        selectedPosition()?.let { position ->
 
+            board.indexOfFirst { it.position == position }.also { index ->
+
+                validateAndChangeValue(
+                    index = index,
+                    value = value,
+                    sudokuBoard = board
+                )
+
+            }
+
+            if (value.isEmpty()) {
+                updateSelectedPositionWith(null)
+            }
+        }
     }
     private fun changeValue(value: String, position: Pair<Int, Int>) {
 
@@ -161,63 +167,79 @@ data class BoardState(
 
     }
 
-    private fun isPlacementValid(
+    private fun validateAndChangeValue(
+        index : Int,
         value: String,
-        position: Pair<Int, Int>,
-        board: List<List<TileState>>
-    ) : List<TileState> {
+        sudokuBoard: MutableList<TileState>
+    ) {
 
-        position.let { (x,y) ->
+        val excluded = mutableSetOf<Pair<Int,Int>>()
 
-            val excluded = mutableSetOf<Pair<Int,Int>>()
+        sudokuBoard.apply {
 
-            board.apply {
-                this[x][y].text = value
-                this[x].filter {
-                    it.text.isNotEmpty()
-                }.valid(excluded)
-
-                this.map { it[y] }.filter {
-                    it.text.isNotEmpty()
-                }.valid(excluded)
-
-                val area = sqrt(board.size.toDouble()).toInt()
-
-                this.flatMap {
-                    it.filter { tile ->
-                        tile.position.let { (tx, ty) ->
-                            Pair(x/area, y/area) == Pair(tx/area, ty/area)
-                        }
-                    }
-                }.filter { it.text.isNotEmpty() }.valid(excluded)
-
-                return this[x]
+            get(index).copy(text = value).also { changed ->
+                set(index, changed)
+                filter { tile -> tile.x == changed.x }.valid(excluded)
+                filter { tile -> tile.y == changed.y }.valid(excluded)
+                filter { tile -> tile.subgrid == changed.subgrid }.valid(excluded)
+                update(excluded) { it.copy(isValid = false) }
             }
-
         }
 
     }
 
-    private fun List<TileState>.valid(
-        excluded: MutableSet<Pair<Int,Int>>
-    ) {
+    /**
+     * [valid] extends a grouping of [TileState] in the same row, column or subgrid.
+     * [valid] takes a parameter called [excluded] [MutableSet] of type [Pair] of type [Int].
+     * {excluded} ensures that we don't override validation when we call multiple [valid] functions.
+     * i.e row, column, or subgrid.
+     *
+     * 1. filter out any [TileState] objects with a empty [TileState.text] value.
+     * 2. any [TileState] that contain the same [TileState.text] value are grouped together.
+     * 3. each [TileState] [Grouping] is counted(how many [TileState] in each group).
+     * 4. filter out any [TileState.position] contained in our [Grouping].
+     * 5. for any [TileState] with a [Grouping.eachCount] [greaterThanOne] it is invalid.
+     * 6. finally we place [TileState.position] within the [excluded] [Set].]
+     */
+    private fun List<TileState>.valid(excluded: MutableSet<Pair<Int,Int>>) {
 
-        val occurrenceCount = this.groupingBy { it.text }.eachCount()
+        val occurrenceCount = this.filter { it.text.isNotEmpty() }.groupingBy { it.text }.eachCount()
 
         this.filter { !excluded.contains(it.position) }.forEach {
-            it.isValid = !occurrenceCount[it.text].greaterThanOne().also { isInvalid ->
-                if (isInvalid) {
-                    excluded.add(it.position)
-                }
+            !occurrenceCount[it.text].greaterThanOne().also { isInvalid ->
+                if (isInvalid) { excluded.add(it.position) }
             }
         }
 
+    }
+
+
+    private fun MutableList<TileState>.update(
+        position: Pair<Int, Int>,
+        copy: (TileState) -> TileState
+    ) {
+        this.indexOfFirstOrNull {
+            it.position == position
+        }?.let { (index, tile) ->
+            this[index] = copy(tile)
+        }
+    }
+
+    private fun MutableList<TileState>.update(
+        positions: Set<Pair<Int, Int>>,
+        copy: (TileState) -> TileState
+    ) {
+        positions.forEach { position ->
+            this.update(position) {
+                copy(it)
+            }
+        }
     }
 
     fun allTilesAreValid() : Boolean {
-        return true
-//        return board.all { row -> row.all { tile -> tile.isValid && tile.text.isNotEmpty() } }
+        return board.all { tile -> tile.isValid && tile.text.isNotEmpty() }
     }
+
     private fun solvable() : Boolean {
         return true
 //        return board.all { row ->
