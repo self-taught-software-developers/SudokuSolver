@@ -50,10 +50,10 @@ class SudokuBoardAnalyzer(
                                                     //todo change the value if they are different.
                                                 } else {
 
-                                                    processedElements[tile.position] = TileState(
-                                                        text = value.toString(),
-                                                        position = tile.position
-                                                    ).apply(onProcessed)
+//                                                    processedElements[tile.position] = TileState(
+//                                                        text = value.toString(),
+//                                                        position = tile.position
+//                                                    ).apply(onProcessed)
 
                                                 }
 

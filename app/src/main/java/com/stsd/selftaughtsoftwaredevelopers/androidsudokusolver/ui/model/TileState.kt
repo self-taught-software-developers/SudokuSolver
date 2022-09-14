@@ -6,51 +6,45 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.alpha
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.colors
 
 data class TileState(
     var text: String = EMPTY_TILE,
-    var position: Pair<Int, Int>,
-    var rect: Rect? = null,
+    val position: Pair<Int, Int>,
+    val subgrid: Pair<Int, Int>,
+    val rect: Rect? = null,
     var isValid: Boolean = true
 ) {
 
-
-    private val sameSubgrid = { coordinates : Triple<Int, Int, Int> ->
-
-        val (sx,sy,ss) = coordinates
-
-        val tileSubGrid = position.let { (x,y) -> Pair(x/ss,y/ss) }
-        val selectedSubGrid = Pair(sx/ss,sy/ss)
-
-        selectedSubGrid == tileSubGrid
-    }
-    private val sameColumn = { y : Int -> position.second == y }
-    private val sameRow = { x : Int -> position.first == x }
+    private val isNotValid = !isValid
+    private val isSameSubgrid = { sg : Pair<Int, Int> -> sg == subgrid }
+    private val isSameColumn = { y : Int -> position.second == y }
+    private val isSameRow = { x : Int -> position.first == x }
     private val isSelected = { coordinates : Pair<Int, Int> -> position == coordinates }
 
     @Composable
-    fun tileColor(coordinates: Triple<Int, Int, Int>?, color: Color) : Color {
+    fun tileColor(selected: TileState?, color: Color) : Color {
 
-        return coordinates?.let { (x,y,_) ->
-            return when {
-                !isValid -> colors.error.copy(alpha = 0.5F)
-                isSelected(Pair(x,y)) -> color.copy(alpha = 0.5F)
-                sameRow(x) || sameColumn(y) || sameSubgrid(coordinates) -> color.copy(alpha = 0.2F)
-                else -> color.copy(alpha = 0.02F)
-            }
-        } ?: color.copy(alpha = 0.02F)
+        return color.copy(
+            alpha = selected?.position?.let { (x, y) ->
+                when {
+                    isNotValid -> alpha.large_60
+                    isSelected(selected.position) -> alpha.large_60
+                    isSameRow(x) || isSameColumn(y) || isSameSubgrid(selected.subgrid) -> {
+                        alpha.medium_30
+                    }
+                    else -> alpha.default_0
+                }
+            } ?: alpha.default_0
+        )
 
     }
-
-
 
     @Composable
     fun tileSize() : Dp {
 
-        val density = LocalDensity.current
-
-        with(density) {
+        with(LocalDensity.current) {
             return rect?.let { it ->
                 minOf(it.width, it.height).toDp()
             } ?: 64.dp

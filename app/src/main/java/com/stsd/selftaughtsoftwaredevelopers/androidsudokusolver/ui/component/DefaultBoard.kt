@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -81,6 +83,10 @@ fun SudokuBoard(
     updateSelectedPositionWith: (Pair<Int, Int>) -> Unit
 ) {
 
+    val selected = remember(position) {
+        derivedStateOf { board.firstOrNull { position == it.position } }
+    }
+
     Column(
         modifier = modifier
             .padding(horizontal = padding.medium)
@@ -95,13 +101,7 @@ fun SudokuBoard(
         placeTiles(
             board = board,
             tileColor = boardColor,
-            selectedTile = position?.let {
-                Triple(
-                    it.first,
-                    it.second,
-                    vector.multiplier()
-                )
-            }
+            selectedTile = selected.value
         ) { updateSelectedPositionWith(it) }
 
     }

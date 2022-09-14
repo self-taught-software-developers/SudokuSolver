@@ -8,10 +8,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.calculateLocalBoardDimensions
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.vector
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
@@ -57,6 +54,7 @@ data class BoardState(
                 List(vector) { yp ->
                     board.add(TileState(
                         position = Pair(xp, yp),
+                        subgrid = Pair(xp, yp).div(dimensions.multiplier),
                         rect = Rect(
                             offset = Offset(
                                 x = (width * xp) + x,

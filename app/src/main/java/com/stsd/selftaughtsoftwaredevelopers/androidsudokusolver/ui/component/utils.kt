@@ -131,6 +131,7 @@ fun Triple<Float, Float, Float?>.subtractLocalDimensions() : Pair<Float,Float> {
 
 fun Int.vector() = this.toDouble().pow(2).toInt()
 fun Int.multiplier() = sqrt(this.toDouble()).toInt()
+fun Pair<Int, Int>.div(divisor: Int) : Pair<Int, Int> = Pair(first/divisor, second/divisor)
 
 fun BoxWithConstraintsScope.calculateLocalBoardDimensions(
     density: Density,
@@ -157,7 +158,7 @@ fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
     tileColor: Color,
     board: List<TileState>,
-    selectedTile: Triple<Int, Int, Int>?,
+    selectedTile: TileState?,
     onTileSelected: (Pair<Int, Int>) -> Unit
 ) = this.apply {
 
@@ -168,7 +169,7 @@ fun ColumnScope.placeTiles(
                 BoardTile(
                     modifier = modifier.size(tile.tileSize()),
                     value = tile.value(),
-                    color = tile.tileColor(coordinates = selectedTile, color = tileColor)
+                    color = tile.tileColor(selected = selectedTile, color = tileColor)
                 ) { onTileSelected(tile.position) }
             }
         }
