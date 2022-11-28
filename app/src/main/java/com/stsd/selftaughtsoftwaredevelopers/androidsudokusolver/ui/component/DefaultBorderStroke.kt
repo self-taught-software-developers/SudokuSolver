@@ -2,20 +2,17 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import com.cerve.co.material3extension.designsystem.ExtendedTheme
 
-fun Modifier.defaultBorder(color: Color) : Modifier = composed {
-
-   this.border(
+fun Modifier.defaultBorder(color: Color): Modifier = composed {
+    this.border(
         border = BorderStroke(
-            width = CustomTheme.sizing.xx_small,
+            width = ExtendedTheme.sizes.xSmall,
             color = color
         ),
-        shape = CustomTheme.shapes.medium
+        shape = ExtendedTheme.shapes.medium
     )
-
 }

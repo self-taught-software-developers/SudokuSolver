@@ -1,6 +1,5 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver
 
-
 private val boardSize = (0..8)
 const val defaultNumberEntry = 1
 
@@ -10,7 +9,7 @@ val emptySudokuBoard = (boardSize).map {
     }.toTypedArray()
 }.toTypedArray()
 
-val inValidRowSudokuBoard = (boardSize).map {row ->
+val inValidRowSudokuBoard = (boardSize).map { row ->
     (boardSize).map { column ->
         if (row == 1 && column % 3 == 0) 1 else 0
     }.toTypedArray()

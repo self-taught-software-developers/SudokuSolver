@@ -4,14 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuSolverWorker
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +18,7 @@ class SudokuViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _sudokuBoardStateAlt = MutableStateFlow(BoardState())
-    val sudokuBoardStateAlt : StateFlow<BoardState> = _sudokuBoardStateAlt.asStateFlow()
+    val sudokuBoardStateAlt: StateFlow<BoardState> = _sudokuBoardStateAlt.asStateFlow()
 
     fun updateSelectedPosition(
         newPosition: Pair<Int, Int>
@@ -38,9 +35,6 @@ class SudokuViewModel @Inject constructor(
     fun clearBoard() = _sudokuBoardStateAlt.value.clearBoard()
 
     fun solveBoard() = viewModelScope.launch(Dispatchers.Default) {
-
         worker.solveBoard(_sudokuBoardStateAlt.value)
-
     }
-
 }

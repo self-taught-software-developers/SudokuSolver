@@ -6,7 +6,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,22 +18,26 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.Androi
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 
 @Composable
-fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
-
+fun SudokuScreen(
+    modifier: Modifier = Modifier,
+    vm: SudokuViewModel = viewModel()
+) {
     val state by vm.sudokuBoardStateAlt.collectAsState()
     val selected by state.selectedPosition.collectAsState(initial = null)
-    //TODO set a null state for the board.
+    // TODO set a null state for the board.
     val board by state.initialBoard.collectAsState(BoardState.emptySudokuBoard(state.dimensions))
 
     Scaffold(
+        modifier = modifier,
         bottomBar = {
             DefaultBottomBar(
                 onUndoRecentChange = vm::undoLast,
                 onClearBoard = vm::clearBoard,
-                onSolveBoard = vm::solveBoard
-            ) { number ->
-                vm.enterNewValue(number)
-            }
+                onSolveBoard = vm::solveBoard,
+                onEnterNewValue = { number ->
+                    vm.enterNewValue(number)
+                }
+            )
         }
     ) { bounds ->
 
@@ -42,22 +45,18 @@ fun SudokuScreen(vm: SudokuViewModel = viewModel()) {
             modifier = Modifier.padding(bounds),
             board = board,
             borderColor = state.solved.bordColor(),
-            selectedPosition = selected?.let { (x,y) -> Triple(x,y, state.dimensions.third) }
+            selectedPosition = selected?.let { (x, y) -> Triple(x, y, state.dimensions.third) }
         ) { newPosition ->
             vm.updateSelectedPosition(newPosition)
         }
-
     }
-
 }
 
 @Preview
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun SudokuScreenPreview() {
-
     AndroidSudokuSolverTheme {
         SudokuScreen(vm = SudokuViewModel(SudokuSolverWorker()))
     }
-
 }

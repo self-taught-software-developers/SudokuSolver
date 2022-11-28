@@ -10,21 +10,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
+import com.cerve.co.material3extension.designsystem.ExtendedTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
 
 @Composable
-fun Boolean?.bordColor() : Color {
-
-    return when(this) {
+fun Boolean?.bordColor(): Color {
+    return when (this) {
         true -> Color.Green
-        false -> CustomTheme.colors.error
-        else -> CustomTheme.colors.onSurface
+        false -> ExtendedTheme.colors.error
+        else -> ExtendedTheme.colors.onSurface
     }
-
 }
 
-fun Modifier.drawSudokuGrid(color: Color) : Modifier {
+fun Modifier.drawSudokuGrid(color: Color): Modifier {
     return this@drawSudokuGrid.drawWithCache {
         this@drawWithCache.onDrawBehind {
             val (width, height) = this@onDrawBehind.size
@@ -40,10 +38,9 @@ fun Modifier.drawSudokuGrid(color: Color) : Modifier {
                         end = Offset(x = x, y = height),
                         color = color,
                         strokeWidth = Stroke.DefaultMiter,
-                        alpha = if(index % 3 != 0) 0.1f else 1f
+                        alpha = if (index % 3 != 0) 0.1f else 1f
                     )
                 }
-
             }
 
             repeat(9) { index ->
@@ -56,39 +53,29 @@ fun Modifier.drawSudokuGrid(color: Color) : Modifier {
                         end = Offset(x = width, y = y),
                         color = color,
                         strokeWidth = Stroke.DefaultMiter,
-                        alpha = if(index % 3 != 0) 0.1f else 1f
+                        alpha = if (index % 3 != 0) 0.1f else 1f
                     )
                 }
-
             }
         }
     }
-
 }
 
 @Composable
-fun ColumnScope.PlaceTiles(
+fun ColumnScope.placeTiles(
     tileSize: Dp,
-    boardOfTiles: Array<Array<TileState>>,
+    sudokuRow: Pair<Int, Array<TileState>>,
     selectedTilePosition: Triple<Int, Int, Int>?,
-    onTileSelected: (Pair<Int, Int>) -> Unit
-) {
-    this.apply {
-        boardOfTiles.forEachIndexed { rowIndex, rowOfTiles ->
-
-            Row {
-
-                rowOfTiles.forEachIndexed { tileIndex, tile ->
-
-                    BoardTile(
-                        modifier = Modifier.size(tileSize),
-                        value = tile.value(),
-                        color = tile.tileColor(coordinates = selectedTilePosition)
-                    ) { onTileSelected(Pair(rowIndex, tileIndex)) }
-
-                }
-
-            }
+    modifier: Modifier = Modifier,
+    onTileSelected: (Pair<Int, Int>) -> Unit = { }
+) = this.apply {
+    Row(modifier = modifier) {
+        sudokuRow.second.forEachIndexed { tileIndex, tile ->
+            BoardTile(
+                modifier = Modifier.size(tileSize),
+                value = tile.value(),
+                color = tile.tileColor(coordinates = selectedTilePosition)
+            ) { onTileSelected(Pair(sudokuRow.first, tileIndex)) }
         }
     }
 }

@@ -11,13 +11,13 @@ class BoardState(
     var dimensions: Triple<Int, Int, Int> = Triple(9, 9, 3)
 ) {
 
-    private val _selectedPosition = MutableStateFlow<Pair<Int,Int>?>(null)
-    var selectedPosition : SharedFlow<Pair<Int, Int>?> = _selectedPosition.asSharedFlow()
+    private val _selectedPosition = MutableStateFlow<Pair<Int, Int>?>(null)
+    var selectedPosition: SharedFlow<Pair<Int, Int>?> = _selectedPosition.asSharedFlow()
 
     private val _initialBoard = MutableStateFlow(emptySudokuBoard(dimensions))
-    var initialBoard : SharedFlow<Array<Array<TileState>>> = _initialBoard.asSharedFlow()
+    var initialBoard: SharedFlow<Array<Array<TileState>>> = _initialBoard.asSharedFlow()
 
-    private var previousPosition : MutableList<Pair<Int, Int>?> = mutableListOf()
+    private var previousPosition: MutableList<Pair<Int, Int>?> = mutableListOf()
 
     fun selectPosition(position: Pair<Int, Int>) {
         _selectedPosition.update { position }
@@ -43,8 +43,8 @@ class BoardState(
         _selectedPosition.update { null }
     }
 
-    fun isValid() : Boolean {
-        //TODO solve isn't changing in th ui when the board is invalid when we click solve
+    fun isValid(): Boolean {
+        // TODO solve isn't changing in th ui when the board is invalid when we click solve
         // first verify if a row is valid. that's done by filtering all empty positions and calling a distinct on the board.
         // if the filtered board is not the same size as the distinct board then we know we have repeating values in our row.
 
@@ -64,7 +64,7 @@ class BoardState(
                 }
             }
 
-            if(bucket.any { it.distinct().size < it.size }) { solved = false ; return false }
+            if (bucket.any { it.distinct().size < it.size }) { solved = false ; return false }
             bucket = (0..lastIndex).map { arrayListOf() }
 
             // to verify that our 3 by 3 grid doesn't have any repeating values we need ot view our 3 by 3 grid
@@ -91,20 +91,18 @@ class BoardState(
                 }
             }
 
-            if(bucket.any { it.distinct().size < it.size }) { solved = false ; return false }
+            if (bucket.any { it.distinct().size < it.size }) { solved = false ; return false }
             return true
-
         }
-
     }
 
-    fun fromUiBoard() : Array<Array<Int>> {
+    fun fromUiBoard(): Array<Array<Int>> {
         return _initialBoard.value.map { row ->
             row.map { it.value() }.toTypedArray()
         }.toTypedArray()
     }
-    private fun <T> MutableList<T>.takeTopOrNull(value: T) : T? {
-        return if(value == lastOrNull()) {
+    private fun <T> MutableList<T>.takeTopOrNull(value: T): T? {
+        return if (value == lastOrNull()) {
             removeLastOrNull()
             lastOrNull()
         } else {
@@ -115,10 +113,12 @@ class BoardState(
         if (this.contains(value)) {
             this.remove(value)
             this.add(value)
-        } else this.add(value)
+        } else {
+            this.add(value)
+        }
     }
     private fun <T> MutableStateFlow<T>.updateCopy(function: (T) -> Unit) {
-        when(val array = this.value) {
+        when (val array = this.value) {
             is Array<*> -> this.update {
                 array.copy { function(array as T) } as T
             }
@@ -128,8 +128,8 @@ class BoardState(
         .copyOf().apply { function(this@copy) }
 
     companion object {
-        val emptySudokuBoard = { dimensions: Triple<Int,Int, Int>->
-            val (gx,gy,gq) = dimensions
+        val emptySudokuBoard = { dimensions: Triple<Int, Int, Int> ->
+            val (gx, gy, gq) = dimensions
             Array(gx) { x ->
                 Array(gy) { y ->
                     TileState(position = Pair(x, y))
@@ -140,10 +140,9 @@ class BoardState(
             Array(9) { y ->
                 TileState(
                     text = x.toString(),
-                    position = Pair(x,y)
+                    position = Pair(x, y)
                 )
             }
         }
     }
-
 }
