@@ -1,4 +1,4 @@
-package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.myiconpack
+package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon
 
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.materialIcon
@@ -7,12 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 
-val Grid2x2 : ImageVector
+val Grid2x2: ImageVector
     get() {
-        if (_grid2x2 != null) {
-            return _grid2x2!!
+        if (grid2x2 != null) {
+            return grid2x2!!
         }
-        _grid2x2 = materialIcon(name = "Rounded.Grid2x2") {
+        grid2x2 = materialIcon(name = "Rounded.Grid2x2") {
             materialPath {
                 moveTo(20.0f, 2.0f)
                 horizontalLineTo(4.0f)
@@ -50,18 +50,16 @@ val Grid2x2 : ImageVector
                 close()
             }
         }
-        return _grid2x2!!
+        return grid2x2!!
     }
 
-private var _grid2x2: ImageVector? = null
+private var grid2x2: ImageVector? = null
 
 @Preview
 @Composable
 fun IconPreview() {
-
     Icon(
         imageVector = Grid2x2,
         contentDescription = Grid2x2.name
     )
-
 }

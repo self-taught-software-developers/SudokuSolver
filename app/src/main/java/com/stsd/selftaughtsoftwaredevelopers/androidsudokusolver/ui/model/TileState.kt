@@ -13,16 +13,16 @@ data class TileState(
 ) {
 
     private val isNotValid = !isValid
-    private val isSameSubgrid = { sg : Pair<Int, Int> -> sg == subgrid }
-    private val isSameColumn = { y : Int -> position.second == y }
-    private val isSameRow = { x : Int -> position.first == x }
-    private val isSelected = { coordinates : Pair<Int, Int> -> position == coordinates }
+    private val isSameSubgrid = { sg: Pair<Int, Int> -> sg == subgrid }
+    private val isSameColumn = { y: Int -> position.second == y }
+    private val isSameRow = { x: Int -> position.first == x }
+    private val isSelected = { coordinates: Pair<Int, Int> -> position == coordinates }
 
     val x = position.first
     val y = position.second
 
     @Composable
-    fun tileColor(selected: TileState?, color: Color) : Color {
+    fun tileColor(selected: TileState?, color: Color): Color {
         return if (isNotValid) {
             colors.error
         } else {
@@ -38,7 +38,6 @@ data class TileState(
                 } ?: alphas.default_0
             )
         }
-
     }
 
     fun value() = if (text.isEmpty()) 0 else text.toInt()

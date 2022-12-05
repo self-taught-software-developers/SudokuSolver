@@ -1,6 +1,13 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -34,10 +41,10 @@ import kotlin.math.sqrt
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BoardTile(
-    modifier: Modifier= Modifier,
     value: Int,
     color: Color,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = { }
 ) {
     Box(
         modifier = modifier
@@ -49,7 +56,6 @@ fun BoardTile(
             },
         contentAlignment = Alignment.Center
     ) {
-
         AnimatedContent(
             targetState = value,
             transitionSpec = {
@@ -58,12 +64,12 @@ fun BoardTile(
                     // If the target number is larger, it slides up and fades in
                     // while the initial (smaller) number slides up and fades out.
                     slideInVertically { height -> height } + fadeIn() with
-                            slideOutVertically { height -> -height } + fadeOut()
+                        slideOutVertically { height -> -height } + fadeOut()
                 } else {
                     // If the target number is smaller, it slides down and fades in
                     // while the initial number slides down and fades out.
                     slideInVertically { height -> -height } + fadeIn() with
-                            slideOutVertically { height -> height } + fadeOut()
+                        slideOutVertically { height -> height } + fadeOut()
                 }.using(
                     // Disable clipping since the faded slide-in/out should
                     // be displayed out of bounds.
@@ -90,7 +96,6 @@ fun SudokuBoard(
     boardColor: Color = ExtendedTheme.colors.primary,
     onPositionUpdate: (Pair<Int, Int>) -> Unit = { }
 ) {
-
     val selected = remember(selectedPosition) {
         derivedStateOf { board.firstOrNull { selectedPosition == it.position } }
     }
@@ -105,7 +110,6 @@ fun SudokuBoard(
             .padding(spacing.medium),
         contentAlignment = Alignment.Center
     ) {
-
         val dimensions = minOf(maxWidth, maxHeight)
         val tileSize by remember(dimensions) {
             mutableStateOf(dimensions / vector)
@@ -124,29 +128,22 @@ fun SudokuBoard(
                     borderWidth = sizes.xSmall
                 )
         ) {
-
             placeTiles(
                 board = board,
                 tileColor = boardColor,
                 tileSize = tileSize,
                 selectedTile = selected.value
             ) { onPositionUpdate(it) }
-
         }
-
     }
-
 }
 
 @AllPreviews
 @Composable
 fun SudokuBoardPreview() {
-
     SudokuBoard(
         board = persistentListOf(),
         selectedPosition = Pair(0, 0)
     ) {
-
     }
-
 }

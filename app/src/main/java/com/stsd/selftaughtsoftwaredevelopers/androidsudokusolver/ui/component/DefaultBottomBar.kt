@@ -21,11 +21,9 @@ fun DefaultBottomBar(
     onEnterValue: (String) -> Unit,
     modifier: Modifier = Modifier,
     dividerColor: Color = colors.primary,
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
-
     Column {
-
         ThemedDivider(color = dividerColor)
 
         FlowRow(
@@ -53,7 +51,6 @@ fun DefaultBottomBar(
             )
         }
     }
-
 }
 
 @Preview
@@ -63,5 +60,4 @@ fun DefaultBottomBarPreview() {
         onClickSolve = { },
         onEnterValue = { }
     )
-
 }

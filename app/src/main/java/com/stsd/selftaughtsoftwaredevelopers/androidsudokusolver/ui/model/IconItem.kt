@@ -2,7 +2,6 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @Immutable

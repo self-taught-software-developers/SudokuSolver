@@ -10,15 +10,12 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import okhttp3.Dispatcher
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,11 +23,11 @@ object StorageModule {
 
     private const val SUDOKU_HERO_PREFERENCES = "sudoku_hero_application_settings"
 
-    @[Singleton Provides]
+    @Singleton
+    @Provides
     fun providePreferencesDataStore(
         @ApplicationContext context: Context
     ): DataStore<Preferences> {
-
         return PreferenceDataStoreFactory.create(
             corruptionHandler = ReplaceFileCorruptionHandler(
                 produceNewData = { emptyPreferences() }
@@ -39,5 +36,4 @@ object StorageModule {
             produceFile = { context.preferencesDataStoreFile(SUDOKU_HERO_PREFERENCES) }
         )
     }
-
 }

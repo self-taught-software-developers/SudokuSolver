@@ -27,7 +27,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
             val boardState by vm.uiBoardState.collectAsState()
 
             LaunchedEffect(boardState) {
@@ -41,7 +40,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            if(!boardState.isLoading()) {
+            if (!boardState.isLoading()) {
                 ExtendedTheme(
                     darkColorScheme = DarkColorPalette,
                     lightColorScheme = LightColorPalette
@@ -58,8 +57,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-
         }
-
     }
 }

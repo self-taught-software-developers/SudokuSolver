@@ -32,7 +32,6 @@ class SudokuViewModel @Inject constructor(
                 boardState.value.updatePlacementSpeed(speed)
             }
         }
-
     }
 
     fun loadingCompleted(state: BoardActivityState = LOADED) {
@@ -62,13 +61,11 @@ class SudokuViewModel @Inject constructor(
         readyToPlace { uiBoardState.value.clearBoard() }
     }
 
-
     private suspend fun readyToPlace(action: suspend () -> Unit) {
-        if(!activelyPlacing) {
+        if (!activelyPlacing) {
             activelyPlacing = true
             action()
             activelyPlacing = false
         }
     }
-
 }

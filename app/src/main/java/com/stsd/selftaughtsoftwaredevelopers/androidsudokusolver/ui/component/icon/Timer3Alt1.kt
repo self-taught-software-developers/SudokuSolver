@@ -9,11 +9,11 @@ import androidx.compose.ui.tooling.preview.Preview
 
 val Timer3Alt1: ImageVector
     get() {
-        if (_timer3Alt1 != null) {
-            return _timer3Alt1!!
+        if (timer3Alt1 != null) {
+            return timer3Alt1!!
         }
-        _timer3Alt1 = materialIcon(name = "Timer3Alt1") {
-            materialPath() {
+        timer3Alt1 = materialIcon(name = "Timer3Alt1") {
+            materialPath {
                 moveTo(8.95f, 17.225f)
                 horizontalLineToRelative(4.225f)
                 quadToRelative(0.875f, 0.0f, 1.5f, -0.537f)
@@ -74,10 +74,10 @@ val Timer3Alt1: ImageVector
                 close()
             }
         }
-        return _timer3Alt1!!
+        return timer3Alt1!!
     }
 
-private var _timer3Alt1: ImageVector? = null
+private var timer3Alt1: ImageVector? = null
 
 @Preview
 @Composable

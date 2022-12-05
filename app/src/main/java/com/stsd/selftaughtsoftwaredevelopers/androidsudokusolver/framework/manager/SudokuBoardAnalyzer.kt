@@ -14,11 +14,10 @@ class SudokuBoardAnalyzer(
 ) : ImageAnalysis.Analyzer {
 
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.Builder().build())
-    private val processedElements = hashMapOf<Pair<Int,Int>,TileState>()
+    private val processedElements = hashMapOf<Pair<Int, Int>, TileState>()
 
     @ExperimentalGetImage
     override fun analyze(imageProxy: ImageProxy) {
-
         imageProxy.image?.let { mediaImage ->
             val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
@@ -44,15 +43,15 @@ class SudokuBoardAnalyzer(
 //                                            }?.let { tile ->
 //                                                //TODO hash of items already added.
 //                                                //TODO add it
-////                                                println("$value, ${tile.position}, ${tile.rect}, $rect")
+// //                                                println("$value, ${tile.position}, ${tile.rect}, $rect")
 //                                                if (processedElements.contains(tile.position)) {
 //                                                    //todo change the value if they are different.
 //                                                } else {
 //
-////                                                    processedElements[tile.position] = TileState(
-////                                                        text = value.toString(),
-////                                                        position = tile.position
-////                                                    ).apply(onProcessed)
+// //                                                    processedElements[tile.position] = TileState(
+// //                                                        text = value.toString(),
+// //                                                        position = tile.position
+// //                                                    ).apply(onProcessed)
 //
 //                                                }
 //
@@ -68,7 +67,6 @@ class SudokuBoardAnalyzer(
 
                     imageProxy.close()
                 }
-
         }
     }
 
@@ -82,5 +80,4 @@ class SudokuBoardAnalyzer(
 //        overlayBoundingBox.intersect(barcodeBoundingBox)
 //
 //    }
-
 }

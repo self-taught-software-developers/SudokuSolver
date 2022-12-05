@@ -19,22 +19,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.myiconpack.Grid2x2
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.Grid2x2
 
 @Composable
 fun IconTitle(
-    modifier: Modifier = Modifier,
     icon: ImageVector,
     text: String,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = { }
 ) {
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Surface(
             modifier = Modifier
                 .clip(CircleShape)
@@ -51,21 +49,19 @@ fun IconTitle(
         }
 
         Text(
-            modifier = modifier.padding(spacing.medium),
+            modifier = Modifier.padding(spacing.medium),
             text = text,
             textAlign = TextAlign.Center
         )
     }
-
 }
 
 @Preview
 @Composable
 fun IconTitlePreview() {
-   IconTitle(
-       icon = Grid2x2,
-       text = Grid2x2.name
-   ) {
-
-   }
+    IconTitle(
+        icon = Grid2x2,
+        text = Grid2x2.name
+    ) {
+    }
 }

@@ -4,7 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 
 /**
- * Add this multipreview annotation to a composable to render the composable in extra small and
+ * Add this multi-preview annotation to a composable to render the composable in extra small and
  * extra large font size.
  *
  * Read more in the [documentation](https://d.android.com/jetpack/compose/tooling#preview-multipreview)
@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 annotation class FontScalePreviews
 
 /**
- * Add this multipreview annotation to a composable to render the composable on various device
- * sizes: phone, foldable, and tablet.
+ * Add this multi-preview annotation to a composable to render the composable on various device
+ * sizes: phone, fold-able, and tablet.
  *
  * Read more in the [documentation](https://d.android.com/jetpack/compose/tooling#preview-multipreview)
  */
@@ -33,7 +33,7 @@ annotation class FontScalePreviews
     device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480"
 )
 @Preview(
-    name = "foldable",
+    name = "fold-able",
     group = "devices",
     device = "spec:shape=Normal,width=673,height=841,unit=dp,dpi=480"
 )
@@ -45,7 +45,7 @@ annotation class FontScalePreviews
 annotation class DevicePreviews
 
 /**
- * Add this multipreview annotation to a composable to render the composable in various common
+ * Add this multi-preview annotation to a composable to render the composable in various common
  * configurations:
  * - Dark theme
  * - Small and large font size
@@ -53,8 +53,8 @@ annotation class DevicePreviews
  *
  * Read more in the [documentation](https://d.android.com/jetpack/compose/tooling#preview-multipreview)
  *
- * _Note: Combining multipreview annotations doesn't mean all the different combinations are shown.
- * Instead, each multipreview annotation acts by its own and renders only its own variants._
+ * _Note: Combining multi-preview annotations doesn't mean all the different combinations are shown.
+ * Instead, each multi-preview annotation acts by its own and renders only its own variants._
  */
 
 @Preview
@@ -63,9 +63,9 @@ annotation class DevicePreviews
     group = "themes",
     uiMode = UI_MODE_NIGHT_YES
 )
-annotation class DarkPreview
+annotation class DarkPreviews
 
-@DarkPreview
+@DarkPreviews
 @FontScalePreviews
 @DevicePreviews
 annotation class AllPreviews

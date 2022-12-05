@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.rounded.Camera
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,88 +35,80 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manag
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
+import kotlinx.collections.immutable.PersistentList
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Composable
 fun BoxWithConstraintsScope.Camera(
+    tiles: PersistentList<TileState>,
     modifier: Modifier = Modifier,
-    tiles: List<TileState>,
-    onProcessed: (TileState) -> Unit
+    onProcessed: (TileState) -> Unit = { }
 ) {
+    calculateLocalPx(LocalDensity.current).let {
+        val context = LocalContext.current
+        val lifecycleOwner = LocalLifecycleOwner.current
 
+        val cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
+        val previewView = remember { PreviewView(context) }
 
-        calculateLocalPx(LocalDensity.current).let {
+        LaunchedEffect(cameraSelector) {
+            val executor = ContextCompat.getMainExecutor(context)
 
-            val context = LocalContext.current
-            val lifecycleOwner = LocalLifecycleOwner.current
-
-            val cameraSelector by remember { mutableStateOf(CameraSelector.DEFAULT_BACK_CAMERA) }
-            val previewView = remember { PreviewView(context) }
-
-            LaunchedEffect(cameraSelector) {
-
-                val executor = ContextCompat.getMainExecutor(context)
-
-                val cameraProvider = suspendCoroutine<ProcessCameraProvider> { con ->
-                    ProcessCameraProvider.getInstance(context).also { future ->
-                        future.addListener({
-                            con.resume(future.get())
-                        }, executor)
-                    }
+            val cameraProvider = suspendCoroutine<ProcessCameraProvider> { con ->
+                ProcessCameraProvider.getInstance(context).also { future ->
+                    future.addListener({
+                        con.resume(future.get())
+                    }, executor)
                 }
+            }
 
-                val imageCapture = ImageCapture.Builder()
-                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                    .build()
+            val imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .build()
 
-                val cameraPreview = Preview.Builder()
-                    .build()
-                    .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+            val cameraPreview = Preview.Builder()
+                .build()
+                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
-                val (width, height) = it.toIntPair()
+            val (width, height) = it.toIntPair()
 
-                val imageAnalyzer = ImageAnalysis.Builder()
-                    .setTargetResolution(Size(width, height))
-                    .build().also {
-                        it.setAnalyzer(
-                            executor,
-                            SudokuBoardAnalyzer(
-                                tileList = tiles,
-                                onProcessed = onProcessed
-                            )
+            val imageAnalyzer = ImageAnalysis.Builder()
+                .setTargetResolution(Size(width, height))
+                .build().also {
+                    it.setAnalyzer(
+                        executor,
+                        SudokuBoardAnalyzer(
+                            tileList = tiles,
+                            onProcessed = onProcessed
                         )
-                    }
-
-                runCatching {
-                    cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(
-                        lifecycleOwner,
-                        cameraSelector,
-                        cameraPreview,
-                        imageCapture,
-                        imageAnalyzer
                     )
                 }
 
+            runCatching {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    lifecycleOwner,
+                    cameraSelector,
+                    cameraPreview,
+                    imageCapture,
+                    imageAnalyzer
+                )
             }
-
-            AndroidView(
-                modifier = modifier.fillMaxSize(),
-                factory = { previewView }
-            )
-
         }
 
-
+        AndroidView(
+            modifier = modifier.fillMaxSize(),
+            factory = { previewView }
+        )
+    }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraPermissionRequest(
-   content : @Composable () -> Unit
+    content: @Composable () -> Unit
 ) {
-
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
 
     if (cameraPermissionState.status.isGranted) {
@@ -122,46 +118,37 @@ fun CameraPermissionRequest(
             icon = rounded.Camera,
             shouldShowRationale = cameraPermissionState.status.shouldShowRationale
         ) { cameraPermissionState.launchPermissionRequest() }
-
     }
 }
 
 @Composable
 fun RequestRationale(
-    modifier: Modifier = Modifier,
     icon: ImageVector,
     shouldShowRationale: Boolean,
-    onPermissionRequest: () -> Unit
+    modifier: Modifier = Modifier,
+    onPermissionRequest: () -> Unit = { }
 ) {
-
-
-        Box(modifier = modifier.fillMaxSize()) {
-
-            IconTitle(
-                modifier = Modifier.align(Alignment.Center),
-                icon = icon,
-                text = stringResource(id = if (shouldShowRationale) {
+    Box(modifier = modifier.fillMaxSize()) {
+        IconTitle(
+            modifier = Modifier.align(Alignment.Center),
+            icon = icon,
+            text = stringResource(
+                id = if (shouldShowRationale) {
                     SUBTITLE_camera_show_rationale
-                }else {
+                } else {
                     SUBTITLE_camera_permission_denied
-                })
-            ) { onPermissionRequest() }
-
-
+                }
+            )
+        ) { onPermissionRequest() }
     }
-
-
 }
 
 @AllPreviews
 @Composable
 fun CameraPermissionRequestPreview() {
-
     RequestRationale(
         icon = rounded.Camera,
         shouldShowRationale = true
     ) {
-
     }
-
 }

@@ -39,12 +39,8 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-<!-- ## About The Project
-<!-- 
-Here's why:
-* 
-* 
-*  -->
+<!-- ## About The Project-->
+<!-- Here's why:-->
 
 ### Built With
 
@@ -96,8 +92,8 @@ Here's why:
 - [ ] Publish to the Google app store
 
 - [ ] Allow users to take a photo of a Sudoku board
-  - [ ] Anaylze the image
-  - [ ] Generate a Sudoku board from the anaylzed image
+  - [ ] Analyze the image
+  - [ ] Generate a Sudoku board from the analyzed image
   - [ ] Validate generated Sudoku board
   - [ ] Solve generated Sudoku board
   - [ ] Display a Solved board

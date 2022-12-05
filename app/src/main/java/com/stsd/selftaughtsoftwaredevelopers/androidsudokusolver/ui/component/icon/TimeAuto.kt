@@ -7,12 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 
+private var timeAuto: ImageVector? = null
 val TimeAuto: ImageVector
     get() {
-        if (_timeAuto != null) {
-            return _timeAuto!!
+        if (timeAuto != null) {
+            return timeAuto!!
         }
-        _timeAuto = materialIcon(name = "TimeAuto") {
+        timeAuto = materialIcon(name = "TimeAuto") {
             materialPath {
                 moveTo(8.0f, 17.0f)
                 horizontalLineToRelative(1.85f)
@@ -67,10 +68,10 @@ val TimeAuto: ImageVector
                 close()
             }
         }
-        return _timeAuto!!
+        return timeAuto!!
     }
 
-private var _timeAuto: ImageVector? = null
+
 
 @Preview
 @Composable

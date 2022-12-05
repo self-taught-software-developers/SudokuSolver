@@ -20,15 +20,13 @@ fun SudokuSolverApp(
     onUndoAllClick: () -> Unit,
     onPlacementUpdate: (TimeState) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberNavController()
 ) {
-
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = SOLVER_DESTINATION
     ) {
-
         composable(SOLVER_DESTINATION) {
             SudokuSolverScreen(
                 boardState = boardState,
@@ -39,7 +37,5 @@ fun SudokuSolverApp(
                 onSolutionSpeedUpdate = { speed -> onPlacementUpdate(speed) }
             )
         }
-
     }
-
 }

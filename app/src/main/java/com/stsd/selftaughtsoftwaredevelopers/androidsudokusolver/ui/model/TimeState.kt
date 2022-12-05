@@ -13,5 +13,4 @@ enum class TimeState(val time: Long, val icon: ImageVector) {
     SUPER_SPEED(50L, Timer10Alt1),
     DEFAULT_SPEED(200L, TimeAuto),
     SLOW_SPEED(800L, rounded.Snooze)
-
 }

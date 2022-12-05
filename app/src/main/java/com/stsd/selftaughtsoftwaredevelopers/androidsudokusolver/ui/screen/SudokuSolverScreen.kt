@@ -33,9 +33,8 @@ fun SudokuSolverScreen(
     onUndoAllClick: () -> Unit,
     onSolutionSpeedUpdate: (TimeState) -> Unit,
     modifier: Modifier = Modifier,
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-
     val placementSpeed by boardState.placementSpeed.collectAsState()
 
     Scaffold(
@@ -47,7 +46,7 @@ fun SudokuSolverScreen(
                 dividerColor = boardState.color(),
                 onSelectionUpdate = { onSolutionSpeedUpdate(it) }
             )
-                 },
+        },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             ThemedFab(
@@ -67,12 +66,12 @@ fun SudokuSolverScreen(
             )
         },
         bottomBar = {
-             DefaultBottomBar(
-                 dividerColor = boardState.color(),
-                 onClickSolve = { onSolveBoardClick() },
-                 onEnterValue = { onUpdateValueClick(it) }
+            DefaultBottomBar(
+                dividerColor = boardState.color(),
+                onClickSolve = { onSolveBoardClick() },
+                onEnterValue = { onUpdateValueClick(it) }
             )
-        },
+        }
     ) { bounds ->
 
         SudokuBoard(
@@ -83,15 +82,12 @@ fun SudokuSolverScreen(
             selectedPosition = boardState.selectedPosition(),
             boardColor = boardState.color()
         ) { boardState.updateSelectedPositionWith(it) }
-
     }
-
 }
 
 @AllPreviews
 @Composable
 fun SudokuSolverScreenPreview() {
-
     SudokuSolverScreen(
         boardState = BoardState(),
         onSolveBoardClick = { /*TODO*/ },
@@ -100,5 +96,4 @@ fun SudokuSolverScreenPreview() {
         onUndoAllClick = { /*TODO*/ },
         onSolutionSpeedUpdate = { /*TODO*/ }
     )
-
 }

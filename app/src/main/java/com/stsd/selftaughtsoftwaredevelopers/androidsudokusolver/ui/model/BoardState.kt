@@ -27,13 +27,13 @@ data class BoardState(
     val vector = dimensions.multiplier.vector()
 
     val board: SnapshotStateList<TileState> = mutableStateListOf()
-    private val backStack : SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
+    private val backStack: SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
 
     private val _placementSpeed = MutableStateFlow(TimeState.DEFAULT_SPEED)
     var placementSpeed: StateFlow<TimeState> = _placementSpeed.asStateFlow()
 
     fun updatePlacementSpeed(value: TimeState) = _placementSpeed.update { value }
-    
+
     fun selectedPosition() = backStack.lastOrNull()
     fun isLoading() = state == BoardActivityState.LOADING
 
@@ -46,18 +46,17 @@ data class BoardState(
 
         if (board.isEmpty()) {
 
-
             List(vector) { xp ->
                 List(vector) { yp ->
-                    board.add(TileState(
-                        position = Pair(xp, yp),
-                        subgrid = Pair(xp, yp).div(dimensions.multiplier)
-                    ))
+                    board.add(
+                        TileState(
+                            position = Pair(xp, yp),
+                            subgrid = Pair(xp, yp).div(dimensions.multiplier)
+                        )
+                    )
                 }
             }
-
         }
-
     }
 
     fun updateSelectedPositionWith(position: Pair<Int, Int>?) {
@@ -67,7 +66,6 @@ data class BoardState(
     }
 
     fun changeValue(value: String) {
-
         selectedPosition()?.let { position ->
 
             board.indexOfFirst { it.position == position }.also { index ->
@@ -84,7 +82,6 @@ data class BoardState(
         }
     }
     private fun changeValue(value: String, position: Pair<Int, Int>) {
-
         if (value.isEmpty()) {
             updateSelectedPositionWith(null)
         } else {
@@ -98,10 +95,9 @@ data class BoardState(
                 sudokuBoard = board
             )
         }
-
     }
 
-    private fun fromUiBoard() : Array<Array<Int>> {
+    private fun fromUiBoard(): Array<Array<Int>> {
         return board.map { it.value() }.chunked(vector).toTypedArray()
     }
 
@@ -117,23 +113,20 @@ data class BoardState(
     }
 
     private suspend fun setBoard(solvedBoard: Array<Array<Int>>) {
-
         fromUiBoard().forEachIndexed { x, ints ->
             ints.forEachIndexed { y, i ->
                 if (i == 0) {
                     delay(placementSpeed.value.time).also {
                         changeValue(
                             value = toTileText(solvedBoard[x][y]),
-                            position = Pair(x,y)
+                            position = Pair(x, y)
                         )
                     }
                 }
             }
         }
-
     }
-    private fun findSolutionInstantly(board: Array<Array<Int>>) : Array<Array<Int>> {
-
+    private fun findSolutionInstantly(board: Array<Array<Int>>): Array<Array<Int>> {
         findEmptyPosition(board).also { position ->
             if (position.isEmpty()) {
                 return board
@@ -146,25 +139,21 @@ data class BoardState(
 
                         board[position[0]][position[1]] = 0
                     }
-
                 }
                 return board
             }
         }
-
     }
 
     private fun validateAndChangeValue(
-        index : Int,
+        index: Int,
         value: String,
         sudokuBoard: MutableList<TileState>
     ) {
-
-        val excluded = mutableSetOf<Pair<Int,Int>>()
-        val included = mutableSetOf<Pair<Int,Int>>()
+        val excluded = mutableSetOf<Pair<Int, Int>>()
+        val included = mutableSetOf<Pair<Int, Int>>()
 
         sudokuBoard.apply {
-
             get(index).copy(text = value).also { changed ->
                 set(index, changed)
                 filter { tile -> tile.x == changed.x }.valid(excluded, included)
@@ -175,7 +164,6 @@ data class BoardState(
                 update(included.filter { !excluded.contains(it) }.toSet()) { it.copy(isValid = true) }
             }
         }
-
     }
 
     /**
@@ -192,10 +180,9 @@ data class BoardState(
      * 6. finally we place [TileState.position] within the [excluded] [Set].]
      */
     private fun List<TileState>.valid(
-        excluded: MutableSet<Pair<Int,Int>>,
+        excluded: MutableSet<Pair<Int, Int>>,
         included: MutableSet<Pair<Int, Int>>
     ) {
-
         val filteredList = this.filter { it.text.isNotEmpty() }
         val occurrenceCount = filteredList.groupingBy { it.text }.eachCount()
 
@@ -210,9 +197,7 @@ data class BoardState(
                 }
             }
         }
-
     }
-
 
     private fun MutableList<TileState>.update(
         position: Pair<Int, Int>,
@@ -236,11 +221,11 @@ data class BoardState(
         }
     }
 
-    fun allTilesAreValid() : Boolean {
+    private fun allTilesAreValid(): Boolean {
         return board.all { tile -> tile.isValid && tile.text.isNotEmpty() }
     }
 
-    private fun solvable() : Boolean {
+    private fun solvable(): Boolean {
         return board.all { tile -> tile.isValid } && board.any { tile -> tile.text.isEmpty() }
     }
 }

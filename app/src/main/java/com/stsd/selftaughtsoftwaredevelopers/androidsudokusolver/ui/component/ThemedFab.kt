@@ -22,12 +22,11 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ThemedFab(
-    modifier: Modifier = Modifier,
-    enabled : Boolean = true,
+    enabled: Boolean,
     items: () -> ImmutableList<IconItem>,
+    modifier: Modifier = Modifier,
     backgroundColor: Color = colors.primary
 ) {
-
     Row(
         modifier = modifier
             .clip(CircleShape)
@@ -44,20 +43,20 @@ fun ThemedFab(
                     onClick = item.onClick
                 )
             }
-
         }
     }
-
 }
 
 @AllPreviews
 @Composable
 fun ThemedFabPreview() {
-
-        ThemedFab(items = { persistentListOf(
-            IconItem(icon = rounded.Undo) { },
-            IconItem(icon = rounded.ClearAll) { }
-        )
-        })
-
+    ThemedFab(
+        enabled = true,
+        items = {
+            persistentListOf(
+                IconItem(icon = rounded.Undo) { },
+                IconItem(icon = rounded.ClearAll) { }
+            )
+        }
+    )
 }

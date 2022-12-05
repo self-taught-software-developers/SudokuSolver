@@ -16,11 +16,10 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeSt
 @Composable
 fun DefaultTopBar(
     placementSpeed: TimeState,
-    dividerColor: Color = colors.primary,
     onSelectionUpdate: (TimeState) -> Unit,
     modifier: Modifier = Modifier,
+    dividerColor: Color = colors.primary
 ) {
-
     Column {
         TopAppBar(
             modifier = modifier,
@@ -35,7 +34,6 @@ fun DefaultTopBar(
                         backgroundColor = dividerColor,
                         enabled = { placementSpeed != state }
                     ) { onSelectionUpdate(state) }
-
                 }
             }
         )
