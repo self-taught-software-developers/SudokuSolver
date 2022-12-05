@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.alphas
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
@@ -24,13 +25,13 @@ fun ThemedFab(
     modifier: Modifier = Modifier,
     enabled : Boolean = true,
     items: () -> ImmutableList<IconItem>,
-    backgroundColor: Color = Color.Black.copy(alpha = alphas.small_10)
+    backgroundColor: Color = colors.primary
 ) {
 
     Row(
         modifier = modifier
             .clip(CircleShape)
-            .background(backgroundColor),
+            .background(backgroundColor.copy(alpha = alphas.small_10)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(spacing.small)
     ) {
@@ -38,7 +39,7 @@ fun ThemedFab(
 
             item.icon?.let { icon ->
                 ThemedIconButton(
-                    enabled = enabled,
+                    enabled = { enabled },
                     icon = icon,
                     onClick = item.onClick
                 )

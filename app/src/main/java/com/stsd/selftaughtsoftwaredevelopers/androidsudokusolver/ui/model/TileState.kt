@@ -1,11 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.alphas
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 
@@ -13,7 +9,6 @@ data class TileState(
     val text: String = EMPTY_TILE,
     val position: Pair<Int, Int>,
     val subgrid: Pair<Int, Int>,
-    val rect: Rect? = null,
     val isValid: Boolean = true
 ) {
 
@@ -42,17 +37,6 @@ data class TileState(
                     }
                 } ?: alphas.default_0
             )
-        }
-
-    }
-
-    @Composable
-    fun tileSize() : Dp {
-
-        with(LocalDensity.current) {
-            return rect?.let { it ->
-                minOf(it.width, it.height).toDp()
-            } ?: 64.dp
         }
 
     }

@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
@@ -165,6 +162,7 @@ inline fun <T> List<T>.indexOfFirstOrNull(predicate: (T) -> Boolean): Pair<Int, 
 fun ColumnScope.placeTiles(
     modifier: Modifier = Modifier,
     tileColor: Color,
+    tileSize: Dp,
     board: List<TileState>,
     selectedTile: TileState?,
     onTileSelected: (Pair<Int, Int>) -> Unit
@@ -175,7 +173,7 @@ fun ColumnScope.placeTiles(
         Row {
             row.forEach { tile ->
                 BoardTile(
-                    modifier = modifier.size(tile.tileSize()),
+                    modifier = modifier.size(tileSize),
                     value = tile.value(),
                     color = tile.tileColor(selected = selectedTile, color = tileColor)
                 ) { onTileSelected(tile.position) }
@@ -183,15 +181,5 @@ fun ColumnScope.placeTiles(
         }
 
     }
-//    LazyVerticalGrid(
-//        columns = GridCells.Fixed(9)
-//    ) {
-//        items(board) { tile ->
-//            BoardTile(
-//                modifier = modifier.size(tile.tileSize()),
-//                value = tile.value(),
-//                color = tile.tileColor(coordinates = selectedTile, color = tileColor)
-//            ) { onTileSelected(tile.position) }
-//        }
-//    }
+
 }

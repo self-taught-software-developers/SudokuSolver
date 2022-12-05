@@ -1,16 +1,17 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
-import androidx.compose.foundation.layout.BoxWithConstraintsScope
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.*
+import com.cerve.co.material3extension.designsystem.ExtendedTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.div
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.indexOfFirstOrNull
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.vector
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
 import kotlinx.coroutines.delay
@@ -36,36 +37,27 @@ data class BoardState(
     fun selectedPosition() = backStack.lastOrNull()
     fun isLoading() = state == BoardActivityState.LOADING
 
-    fun calculateLocalTileDimensions(
-        constraintsScope: BoxWithConstraintsScope,
-        padding: Dp,
-        density: Density,
-    ) = constraintsScope.calculateLocalBoardDimensions(
-        density = density,
-        padding = padding
-    ).also { rect ->
+    @Composable
+    fun color() = if (this.allTilesAreValid()) {
+        successGreen500
+    } else { ExtendedTheme.colors.primary }
+
+    init {
+
         if (board.isEmpty()) {
 
-            val (x, y) = rect.topLeft
-            val (width, height) = rect.size.div(vector.toFloat())
 
             List(vector) { xp ->
                 List(vector) { yp ->
                     board.add(TileState(
                         position = Pair(xp, yp),
-                        subgrid = Pair(xp, yp).div(dimensions.multiplier),
-                        rect = Rect(
-                            offset = Offset(
-                                x = (width * xp) + x,
-                                y = (height * yp) + y
-                            ),
-                            size = Size(width, height)
-                        )
+                        subgrid = Pair(xp, yp).div(dimensions.multiplier)
                     ))
                 }
             }
 
         }
+
     }
 
     fun updateSelectedPositionWith(position: Pair<Int, Int>?) {

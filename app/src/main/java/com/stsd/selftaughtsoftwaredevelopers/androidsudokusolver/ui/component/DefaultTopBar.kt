@@ -6,7 +6,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 
@@ -14,6 +16,7 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeSt
 @Composable
 fun DefaultTopBar(
     placementSpeed: TimeState,
+    dividerColor: Color = colors.primary,
     onSelectionUpdate: (TimeState) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -29,13 +32,14 @@ fun DefaultTopBar(
 
                     ThemedIconButton(
                         icon = state.icon,
-                        enabled = placementSpeed != state
+                        backgroundColor = dividerColor,
+                        enabled = { placementSpeed != state }
                     ) { onSelectionUpdate(state) }
 
                 }
             }
         )
 
-        ThemedDivider()
+        ThemedDivider(color = dividerColor)
     }
 }

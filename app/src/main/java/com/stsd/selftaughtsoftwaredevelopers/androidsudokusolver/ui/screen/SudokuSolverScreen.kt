@@ -1,6 +1,5 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FabPosition
@@ -10,16 +9,9 @@ import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Undo
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
-import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultTopBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
@@ -28,9 +20,9 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.ic
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun SudokuSolverScreen(
@@ -44,10 +36,6 @@ fun SudokuSolverScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
 ) {
 
-    val solutionComplete by remember(boardState.board) {
-        derivedStateOf { boardState.allTilesAreValid() }
-    }
-
     val placementSpeed by boardState.placementSpeed.collectAsState()
 
     Scaffold(
@@ -56,59 +44,45 @@ fun SudokuSolverScreen(
         topBar = {
             DefaultTopBar(
                 placementSpeed = placementSpeed,
+                dividerColor = boardState.color(),
                 onSelectionUpdate = { onSolutionSpeedUpdate(it) }
             )
                  },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            ThemedFab(items = {
-                persistentListOf(
-                    IconItem(
-                        icon = rounded.Undo,
-                        onClick = onUndoLastClick
-                    ),
-                    IconItem(
-                        icon = rounded.ClearAll,
-                        onClick = onUndoAllClick
+            ThemedFab(
+                backgroundColor = boardState.color(),
+                items = {
+                    persistentListOf(
+                        IconItem(
+                            icon = rounded.Undo,
+                            onClick = onUndoLastClick
+                        ),
+                        IconItem(
+                            icon = rounded.ClearAll,
+                            onClick = onUndoAllClick
+                        )
                     )
-                )
-            })
+                }
+            )
         },
         bottomBar = {
              DefaultBottomBar(
+                 dividerColor = boardState.color(),
                  onClickSolve = { onSolveBoardClick() },
                  onEnterValue = { onUpdateValueClick(it) }
             )
         },
     ) { bounds ->
 
-        BoxWithConstraints(
+        SudokuBoard(
             modifier = Modifier
                 .padding(bounds)
-                .fillMaxSize()
-        ) {
-
-            val density = LocalDensity.current
-            val padding = spacing.default
-
-            LaunchedEffect(boardState.dimensions) {
-                boardState.calculateLocalTileDimensions(
-                    constraintsScope = this@BoxWithConstraints,
-                    density = density,
-                    padding = padding
-                )
-            }
-
-            //read is happening when call get bad state
-            SudokuBoard(
-                modifier = Modifier.align(Alignment.Center),
-                board = boardState.board,
-                position = boardState.selectedPosition(),
-                vector = boardState.vector,
-                boardColor = if (solutionComplete) successGreen500 else colors.primary
-            ) { boardState.updateSelectedPositionWith(it) }
-
-        }
+                .fillMaxSize(),
+            board = boardState.board.toPersistentList(),
+            selectedPosition = boardState.selectedPosition(),
+            boardColor = boardState.color()
+        ) { boardState.updateSelectedPositionWith(it) }
 
     }
 
