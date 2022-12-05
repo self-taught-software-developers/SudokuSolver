@@ -34,14 +34,14 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun SudokuSolverScreen(
-    modifier: Modifier = Modifier,
-    scaffoldState: ScaffoldState = rememberScaffoldState(),
     boardState: BoardState,
     onSolveBoardClick: () -> Unit,
     onUpdateValueClick: (String) -> Unit,
     onUndoLastClick: () -> Unit,
     onUndoAllClick: () -> Unit,
-    updateSolutionSpeed: (TimeState) -> Unit,
+    onSolutionSpeedUpdate: (TimeState) -> Unit,
+    modifier: Modifier = Modifier,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
 ) {
 
     val solutionComplete by remember(boardState.board) {
@@ -55,9 +55,10 @@ fun SudokuSolverScreen(
         modifier = modifier,
         topBar = {
             DefaultTopBar(
-                placementSpeed = placementSpeed
-            ) { updateSolutionSpeed(it) }
-        },
+                placementSpeed = placementSpeed,
+                onSelectionUpdate = { onSolutionSpeedUpdate(it) }
+            )
+                 },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             ThemedFab(items = {
@@ -88,7 +89,7 @@ fun SudokuSolverScreen(
         ) {
 
             val density = LocalDensity.current
-            val padding = spacing.medium
+            val padding = spacing.default
 
             LaunchedEffect(boardState.dimensions) {
                 boardState.calculateLocalTileDimensions(
@@ -117,15 +118,13 @@ fun SudokuSolverScreen(
 @Composable
 fun SudokuSolverScreenPreview() {
 
-
-        SudokuSolverScreen(
-            boardState = BoardState(),
-            onSolveBoardClick = { /*TODO*/ },
-            onUpdateValueClick = { /*TODO*/ },
-            onUndoLastClick = { /*TODO*/ },
-            onUndoAllClick = { /*TODO*/ },
-            updateSolutionSpeed = { /*TODO*/ }
-        )
-
+    SudokuSolverScreen(
+        boardState = BoardState(),
+        onSolveBoardClick = { /*TODO*/ },
+        onUpdateValueClick = { /*TODO*/ },
+        onUndoLastClick = { /*TODO*/ },
+        onUndoAllClick = { /*TODO*/ },
+        onSolutionSpeedUpdate = { /*TODO*/ }
+    )
 
 }

@@ -1,46 +1,41 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
-import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
+import androidx.compose.ui.res.stringResource
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultTopBar(
-    modifier: Modifier = Modifier,
     placementSpeed: TimeState,
-    updateSelection: (TimeState) -> Unit
+    onSelectionUpdate: (TimeState) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
 
     Column {
+        TopAppBar(
+            modifier = modifier,
+            title = {
+                Text(text = stringResource(id = R.string.app_name))
+            },
+            actions = {
+                TimeState.values().forEach { state ->
 
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(colors.background)
-                .padding(horizontal = spacing.small),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+                    ThemedIconButton(
+                        icon = state.icon,
+                        enabled = placementSpeed != state
+                    ) { onSelectionUpdate(state) }
 
-            TimeState.values().forEach { state ->
-
-                ThemedIconButton(
-                    icon = state.icon,
-                    enabled = placementSpeed != state
-                ) { updateSelection(state) }
-
+                }
             }
+        )
 
-        }
         ThemedDivider()
     }
 }

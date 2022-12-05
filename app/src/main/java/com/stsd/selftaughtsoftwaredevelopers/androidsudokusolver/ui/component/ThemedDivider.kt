@@ -10,5 +10,5 @@ import com.cerve.co.material3extension.designsystem.ExtendedTheme
 fun ThemedDivider(
     color: Color = ExtendedTheme.colors.primary,
     alpha: Float = ExtendedTheme.alphas.small_10,
-    thickness: Dp = ExtendedTheme.sizes.small
-) = Divider(thickness = thickness,color = color.copy(alpha = alpha))
+    thickness: Dp = ExtendedTheme.sizes.xSmall
+) = Divider(thickness = thickness, color = color.copy(alpha = alpha))

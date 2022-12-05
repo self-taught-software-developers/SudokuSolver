@@ -1,6 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,16 +13,18 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen.Sudok
 
 @Composable
 fun SudokuSolverApp(
-    navController: NavHostController = rememberNavController(),
     boardState: BoardState,
     onSolveBoardClick: () -> Unit,
     onUpdateValueClick: (String) -> Unit,
     onUndoLastClick: () -> Unit,
     onUndoAllClick: () -> Unit,
-    updatePlacementSpeed: (TimeState) -> Unit
+    onPlacementUpdate: (TimeState) -> Unit,
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
 ) {
 
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = SOLVER_DESTINATION
     ) {
@@ -32,10 +35,9 @@ fun SudokuSolverApp(
                 onSolveBoardClick = { onSolveBoardClick() },
                 onUpdateValueClick = { onUpdateValueClick(it) },
                 onUndoLastClick = { onUndoLastClick() },
-                onUndoAllClick = { onUndoAllClick() }
-            ) { speed ->
-                updatePlacementSpeed(speed)
-            }
+                onUndoAllClick = { onUndoAllClick() },
+                onSolutionSpeedUpdate = { speed -> onPlacementUpdate(speed) }
+            )
         }
 
     }

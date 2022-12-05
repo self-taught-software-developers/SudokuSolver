@@ -45,14 +45,17 @@ class MainActivity : ComponentActivity() {
                 ExtendedTheme(
                     darkColorScheme = DarkColorPalette,
                     lightColorScheme = LightColorPalette
-                ) {
+                ) { contentModifier ->
+
                     SudokuSolverApp(
+                        modifier = contentModifier,
                         boardState = boardState,
                         onSolveBoardClick = { vm.updateBoardWithSolvedPlacements() },
                         onUpdateValueClick = { vm.updateSelectedValue(it) },
                         onUndoLastClick = { vm.undoLast() },
-                        onUndoAllClick = { vm.undoAll() }
-                    ) { vm.updatePlacementSpeed(it) }
+                        onUndoAllClick = { vm.undoAll() },
+                        onPlacementUpdate = { vm.updatePlacementSpeed(it) }
+                    )
                 }
             }
 
