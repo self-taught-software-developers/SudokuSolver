@@ -1,14 +1,17 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.colors
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.dims
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
 
 @Composable
 fun DefaultTopBar(
@@ -22,9 +25,8 @@ fun DefaultTopBar(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .requiredHeight(dims.default_top_bar)
                 .background(colors.background)
-                .padding(horizontal = padding.small),
+                .padding(horizontal = spacing.small),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

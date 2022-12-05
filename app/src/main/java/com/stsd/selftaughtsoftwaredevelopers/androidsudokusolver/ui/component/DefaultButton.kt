@@ -2,8 +2,12 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.*
 import androidx.compose.material.ButtonDefaults.buttonColors
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -13,9 +17,9 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.shapes
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.dims
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.shapes
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 
 @Composable
 fun DefaultButton(
@@ -27,7 +31,7 @@ fun DefaultButton(
 
     TextButton(
         modifier = modifier
-            .padding(padding.small)
+            .padding(spacing.small)
             .clip(shape = shapes.small),
         enabled = enabled,
         colors = buttonColors(Black.copy(alpha = 0.05F)),
@@ -54,9 +58,9 @@ fun ThemedNumericButton(
 
     TextButton(
         modifier = modifier
-            .padding(padding.small)
+            .padding(spacing.small)
             .clip(shape = shapes.small)
-            .size(dims.large_x2),
+            .size(sizes.xLarge),
         enabled = enabled,
         colors = buttonColors(Black.copy(alpha = 0.05F)),
         onClick = { onClick(numericValue.toString()) }
@@ -104,7 +108,7 @@ fun ThemedIconButton(
 
     IconButton(
         modifier = modifier
-            .padding(padding.small)
+            .padding(spacing.small)
             .clip(shape = shapes.small)
             .drawBehind { drawRect(color = backgroundColor) },
         enabled = enabled,

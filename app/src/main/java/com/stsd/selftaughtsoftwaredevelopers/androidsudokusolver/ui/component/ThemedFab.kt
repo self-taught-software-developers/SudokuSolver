@@ -7,16 +7,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Undo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.alphas
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.alpha
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -26,7 +24,7 @@ fun ThemedFab(
     modifier: Modifier = Modifier,
     enabled : Boolean = true,
     items: () -> ImmutableList<IconItem>,
-    backgroundColor: Color = Color.Black.copy(alpha = alpha.small_10)
+    backgroundColor: Color = Color.Black.copy(alpha = alphas.small_10)
 ) {
 
     Row(
@@ -34,7 +32,7 @@ fun ThemedFab(
             .clip(CircleShape)
             .background(backgroundColor),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(padding.small)
+        horizontalArrangement = Arrangement.spacedBy(spacing.small)
     ) {
         items().forEach { item ->
 
@@ -55,12 +53,10 @@ fun ThemedFab(
 @Composable
 fun ThemedFabPreview() {
 
-    AndroidSudokuSolverTheme {
         ThemedFab(items = { persistentListOf(
             IconItem(icon = rounded.Undo) { },
             IconItem(icon = rounded.ClearAll) { }
         )
         })
-    }
 
 }

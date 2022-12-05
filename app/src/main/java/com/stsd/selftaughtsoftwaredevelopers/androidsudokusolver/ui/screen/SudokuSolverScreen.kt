@@ -3,13 +3,23 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.FabPosition
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.icons.rounded.ClearAll
 import androidx.compose.material.icons.rounded.Undo
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultTopBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
@@ -18,10 +28,6 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.ic
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.colors
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 import kotlinx.collections.immutable.persistentListOf
@@ -81,14 +87,14 @@ fun SudokuSolverScreen(
                 .fillMaxSize()
         ) {
 
-            val padding = LocalPadding.current
             val density = LocalDensity.current
+            val padding = spacing.medium
 
             LaunchedEffect(boardState.dimensions) {
                 boardState.calculateLocalTileDimensions(
                     constraintsScope = this@BoxWithConstraints,
                     density = density,
-                    padding = padding.medium
+                    padding = padding
                 )
             }
 
@@ -111,7 +117,6 @@ fun SudokuSolverScreen(
 @Composable
 fun SudokuSolverScreenPreview() {
 
-    AndroidSudokuSolverTheme {
 
         SudokuSolverScreen(
             boardState = BoardState(),
@@ -122,6 +127,5 @@ fun SudokuSolverScreenPreview() {
             updateSolutionSpeed = { /*TODO*/ }
         )
 
-    }
 
 }

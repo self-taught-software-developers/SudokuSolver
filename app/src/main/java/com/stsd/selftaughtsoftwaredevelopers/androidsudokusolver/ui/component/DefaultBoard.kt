@@ -15,11 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import com.cerve.co.material3extension.designsystem.ExtendedTheme
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -89,11 +88,11 @@ fun SudokuBoard(
 
     Column(
         modifier = modifier
-            .padding(horizontal = padding.medium)
+            .padding(horizontal = spacing.medium)
             .defaultBorder(
                 borderColor = boardColor,
                 borderShape = ExtendedTheme.shapes.medium,
-                borderWidth = padding.small_x2
+                borderWidth = spacing.small
             )
             .drawSudokuGrid(color = boardColor, vector = vector)
     ) {

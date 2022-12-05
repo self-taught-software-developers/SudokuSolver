@@ -9,10 +9,9 @@ import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.cerve.co.material3extension.designsystem.ExtendedTheme
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme
 
 @Composable
 fun DefaultBottomBar(
@@ -30,7 +29,7 @@ fun DefaultBottomBar(
             modifier = modifier
                 .fillMaxWidth()
                 .background(ExtendedTheme.colors.background)
-                .padding(top = ExtendedTheme.padding.small),
+                .padding(top = ExtendedTheme.spacing.small),
             mainAxisAlignment = MainAxisAlignment.Center
         ) {
             repeat(9) {
@@ -52,15 +51,11 @@ fun DefaultBottomBar(
 
 }
 
-//TODO move to alpha
-private const val DividerAlpha = 0.12f
-
 @Preview
 @Composable
 fun DefaultBottomBarPreview() {
-    AndroidSudokuSolverTheme {
-        DefaultBottomBar(
-            onClickSolve = { }
-        ) { }
-    }
+    DefaultBottomBar(
+        onClickSolve = { }
+    ) { }
+
 }

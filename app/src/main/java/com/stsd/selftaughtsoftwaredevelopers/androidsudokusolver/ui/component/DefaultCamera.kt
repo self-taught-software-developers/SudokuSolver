@@ -30,7 +30,6 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R.string.SUBTIT
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.framework.manager.SudokuBoardAnalyzer
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -158,13 +157,11 @@ fun RequestRationale(
 @Composable
 fun CameraPermissionRequestPreview() {
 
-    AndroidSudokuSolverTheme {
-        RequestRationale(
-            icon = rounded.Camera,
-            shouldShowRationale = true
-        ) {
+    RequestRationale(
+        icon = rounded.Camera,
+        shouldShowRationale = true
+    ) {
 
-        }
     }
 
 }

@@ -17,10 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.myiconpack.Grid2x2
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.padding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.dims
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.typography
 
 @Composable
 fun IconTitle(
@@ -32,7 +31,7 @@ fun IconTitle(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(dims.medium),
+        verticalArrangement = Arrangement.spacedBy(spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -44,18 +43,17 @@ fun IconTitle(
         ) {
             Icon(
                 modifier = Modifier
-                    .padding(padding.medium)
-                    .size(dims.default_icon_x2),
+                    .padding(spacing.medium)
+                    .size(sizes.xSmall),
                 imageVector = icon,
                 contentDescription = icon.name
             )
         }
 
         Text(
-            modifier = modifier.padding(padding.medium),
+            modifier = modifier.padding(spacing.medium),
             text = text,
-            textAlign = TextAlign.Center,
-            style = typography.h6
+            textAlign = TextAlign.Center
         )
     }
 

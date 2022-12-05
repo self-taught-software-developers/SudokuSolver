@@ -8,8 +8,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.cerve.co.material3extension.designsystem.ExtendedTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation.SudokuSolverApp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.AndroidSudokuSolverTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.DarkColorPalette
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LightColorPalette
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.viewmodel.SudokuViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -40,7 +42,10 @@ class MainActivity : ComponentActivity() {
             }
 
             if(!boardState.isLoading()) {
-                AndroidSudokuSolverTheme {
+                ExtendedTheme(
+                    darkColorScheme = DarkColorPalette,
+                    lightColorScheme = LightColorPalette
+                ) {
                     SudokuSolverApp(
                         boardState = boardState,
                         onSolveBoardClick = { vm.updateBoardWithSolvedPlacements() },

@@ -6,8 +6,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.alpha
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.ExtendedTheme.colors
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.alphas
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 
 data class TileState(
     val text: String = EMPTY_TILE,
@@ -34,13 +34,13 @@ data class TileState(
             color.copy(
                 alpha = selected?.position?.let { (x, y) ->
                     when {
-                        isSelected(selected.position) -> alpha.large_60
+                        isSelected(selected.position) -> alphas.large_60
                         isSameRow(x) || isSameColumn(y) || isSameSubgrid(selected.subgrid) -> {
-                            alpha.medium_30
+                            alphas.medium_30
                         }
-                        else -> alpha.default_0
+                        else -> alphas.default_0
                     }
-                } ?: alpha.default_0
+                } ?: alphas.default_0
             )
         }
 
