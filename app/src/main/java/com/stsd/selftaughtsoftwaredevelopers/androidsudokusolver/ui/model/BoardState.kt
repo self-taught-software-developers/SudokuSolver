@@ -8,7 +8,6 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.ch
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.div
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.vector
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
@@ -23,17 +22,16 @@ data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
     val state: BoardActivityState = BoardActivityState.LOADING
 ) {
-    val vector = dimensions.multiplier.vector()
 
     val board: SnapshotStateList<TileState> = mutableStateListOf()
-    private val backStack: SnapshotStateList<Position?> = mutableStateListOf()
 
+    private val placementBackStack: SnapshotStateList<Position?> = mutableStateListOf()
     private val _placementSpeed = MutableStateFlow(TimeState.DEFAULT_SPEED)
-    var placementSpeed: StateFlow<TimeState> = _placementSpeed.asStateFlow()
+    val placementSpeed: StateFlow<TimeState> = _placementSpeed.asStateFlow()
 
     fun updatePlacementSpeed(value: TimeState) = _placementSpeed.update { value }
 
-    fun selectedPosition() = backStack.lastOrNull()
+    fun selectedPosition() = placementBackStack.lastOrNull()
     fun isLoading() = state == BoardActivityState.LOADING
 
     @Composable
@@ -45,8 +43,8 @@ data class BoardState(
 
         if (board.isEmpty()) {
 
-            List(vector) { xp ->
-                List(vector) { yp ->
+            List(dimensions.vector()) { xp ->
+                List(dimensions.vector()) { yp ->
                     board.add(
                         TileState(
                             position = Position(x = xp,y = yp),
@@ -60,8 +58,8 @@ data class BoardState(
 
     fun updateSelectedPositionWith(position: Position?) {
         position?.let {
-            backStack.add(position)
-        } ?: backStack.removeLastOrNull()
+            placementBackStack.add(position)
+        } ?: placementBackStack.removeLastOrNull()
     }
 
     fun changeValue(value: String) {
@@ -97,7 +95,7 @@ data class BoardState(
     }
 
     private fun fromUiBoard(): Array<Array<Int>> {
-        return board.map { it.value() }.chunked(vector).toTypedArray()
+        return board.map { it.value() }.chunked(dimensions.vector()).toTypedArray()
     }
 
     fun undoLast() { changeValue(EMPTY_TILE) }
