@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultTopBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
@@ -38,6 +39,7 @@ fun SudokuSolverScreen(
     val placementSpeed by boardState.placementSpeed.collectAsState()
 
     Scaffold(
+        backgroundColor = Color.Transparent,
         scaffoldState = scaffoldState,
         modifier = modifier,
         topBar = {
@@ -50,6 +52,7 @@ fun SudokuSolverScreen(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             ThemedFab(
+                enabled = true,
                 backgroundColor = boardState.color(),
                 items = {
                     persistentListOf(

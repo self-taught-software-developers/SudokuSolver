@@ -7,19 +7,16 @@ import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 
 data class TileState(
     val text: String = EMPTY_TILE,
-    val position: Pair<Int, Int>,
-    val subgrid: Pair<Int, Int>,
+    val position: Position,
+    val subgrid: Position,
     val isValid: Boolean = true
 ) {
 
     private val isNotValid = !isValid
-    private val isSameSubgrid = { sg: Pair<Int, Int> -> sg == subgrid }
-    private val isSameColumn = { y: Int -> position.second == y }
-    private val isSameRow = { x: Int -> position.first == x }
-    private val isSelected = { coordinates: Pair<Int, Int> -> position == coordinates }
-
-    val x = position.first
-    val y = position.second
+    private val isSameSubgrid = { sg: Position -> sg == subgrid }
+    private val isSameColumn = { y: Int -> position.y == y }
+    private val isSameRow = { x: Int -> position.x == x }
+    private val isSelected = { coordinates: Position -> position == coordinates }
 
     @Composable
     fun tileColor(selected: TileState?, color: Color): Color {
@@ -40,7 +37,7 @@ data class TileState(
         }
     }
 
-    fun value() = if (text.isEmpty()) 0 else text.toInt()
+    fun value() = text.toIntOrNull() ?: 0
 
     companion object {
         const val EMPTY_TILE = ""

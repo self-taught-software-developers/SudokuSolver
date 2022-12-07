@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat.setDecorFitsSystemWindows
 import com.cerve.co.material3extension.designsystem.ExtendedTheme
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.navigation.SudokuSolverApp
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.DarkColorPalette
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().apply { setKeepOnScreenCondition { isLoading } }
         super.onCreate(savedInstanceState)
+        setDecorFitsSystemWindows(window, false)
 
         setContent {
             val boardState by vm.uiBoardState.collectAsState()
@@ -43,7 +45,8 @@ class MainActivity : ComponentActivity() {
             if (!boardState.isLoading()) {
                 ExtendedTheme(
                     darkColorScheme = DarkColorPalette,
-                    lightColorScheme = LightColorPalette
+                    lightColorScheme = LightColorPalette,
+                    dynamicColor = true
                 ) { contentModifier ->
 
                     SudokuSolverApp(

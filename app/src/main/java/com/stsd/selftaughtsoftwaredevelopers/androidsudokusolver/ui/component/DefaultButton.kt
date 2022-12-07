@@ -7,7 +7,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +32,7 @@ fun ThemedNumericButton(
         modifier = modifier.size(sizes.large + sizes.medium),
         shape = shapes.small,
         color = backgroundColor.copy(alpha = alphas.small_10),
-        contentColor = contentColorFor(backgroundColor = backgroundColor),
+        contentColor = colors.onSurface,
         enabled = enabled,
         onClick = { onClick(numericValue.toString()) }
     ) {
@@ -61,7 +60,7 @@ fun ThemedIconButton(
         color = if (enabled()) {
             Color.Transparent
         } else { backgroundColor.copy(alpha = alphas.medium_30) },
-        contentColor = contentColorFor(backgroundColor = backgroundColor),
+        contentColor = colors.onSurface,
         enabled = enabled(),
         onClick = { onClick() }
     ) {
@@ -86,7 +85,7 @@ fun ThemedIconButton(
         modifier = modifier.size(sizes.large + sizes.medium),
         shape = shapes.small,
         color = backgroundColor.copy(alpha = alphas.medium_30),
-        contentColor = contentColorFor(backgroundColor = backgroundColor),
+        contentColor = colors.onSurface,
         enabled = enabled,
         onClick = { onClick() }
     ) {

@@ -4,16 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.cerve.co.material3extension.designsystem.ExtendedTheme
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.checkValidity
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.div
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.indexOfFirstOrNull
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.vector
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.greaterThanOne
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +26,7 @@ data class BoardState(
     val vector = dimensions.multiplier.vector()
 
     val board: SnapshotStateList<TileState> = mutableStateListOf()
-    private val backStack: SnapshotStateList<Pair<Int, Int>?> = mutableStateListOf()
+    private val backStack: SnapshotStateList<Position?> = mutableStateListOf()
 
     private val _placementSpeed = MutableStateFlow(TimeState.DEFAULT_SPEED)
     var placementSpeed: StateFlow<TimeState> = _placementSpeed.asStateFlow()
@@ -50,8 +49,8 @@ data class BoardState(
                 List(vector) { yp ->
                     board.add(
                         TileState(
-                            position = Pair(xp, yp),
-                            subgrid = Pair(xp, yp).div(dimensions.multiplier)
+                            position = Position(x = xp,y = yp),
+                            subgrid = Position(x = xp, y = yp).div(dimensions.multiplier)
                         )
                     )
                 }
@@ -59,7 +58,7 @@ data class BoardState(
         }
     }
 
-    fun updateSelectedPositionWith(position: Pair<Int, Int>?) {
+    fun updateSelectedPositionWith(position: Position?) {
         position?.let {
             backStack.add(position)
         } ?: backStack.removeLastOrNull()
@@ -70,7 +69,7 @@ data class BoardState(
 
             board.indexOfFirst { it.position == position }.also { index ->
                 validateAndChangeValue(
-                    index = index,
+                    changedIndex = index,
                     value = value,
                     sudokuBoard = board
                 )
@@ -81,7 +80,7 @@ data class BoardState(
             }
         }
     }
-    private fun changeValue(value: String, position: Pair<Int, Int>) {
+    private fun changeValue(value: String, position: Position) {
         if (value.isEmpty()) {
             updateSelectedPositionWith(null)
         } else {
@@ -90,7 +89,7 @@ data class BoardState(
 
         board.indexOfFirst { it.position == position }.also { index ->
             validateAndChangeValue(
-                index = index,
+                changedIndex = index,
                 value = value,
                 sudokuBoard = board
             )
@@ -119,7 +118,7 @@ data class BoardState(
                     delay(placementSpeed.value.time).also {
                         changeValue(
                             value = toTileText(solvedBoard[x][y]),
-                            position = Pair(x, y)
+                            position = Position(x = x, y = y)
                         )
                     }
                 }
@@ -146,80 +145,37 @@ data class BoardState(
     }
 
     private fun validateAndChangeValue(
-        index: Int,
+        changedIndex: Int,
         value: String,
         sudokuBoard: MutableList<TileState>
     ) {
-        val excluded = mutableSetOf<Pair<Int, Int>>()
-        val included = mutableSetOf<Pair<Int, Int>>()
+
+        /**
+         * for each tile check if it's valid then move to next tile.
+         */
 
         sudokuBoard.apply {
-            get(index).copy(text = value).also { changed ->
-                set(index, changed)
-                filter { tile -> tile.x == changed.x }.valid(excluded, included)
-                filter { tile -> tile.y == changed.y }.valid(excluded, included)
-                filter { tile -> tile.subgrid == changed.subgrid }.valid(excluded, included)
+            this[changedIndex] = get(changedIndex).copy(text = value)
+            val comparitor = map { it.value() }.chunked(9).toTypedArray()
 
-                update(excluded) { it.copy(isValid = false) }
-                update(included.filter { !excluded.contains(it) }.toSet()) { it.copy(isValid = true) }
-            }
-        }
-    }
+            (sudokuBoard.indices).forEach { index ->
+                 get(index).also { modified ->
 
-    /**
-     * [valid] extends a grouping of [TileState] in the same row, column or subgrid.
-     * [valid] takes a parameter called [excluded] [MutableSet] of type [Pair] of type [Int].
-     * {excluded} ensures that we don't override validation when we call multiple [valid] functions.
-     * i.e row, column, or subgrid.
-     *
-     * 1. filter out any [TileState] objects with a empty [TileState.text] value.
-     * 2. any [TileState] that contain the same [TileState.text] value are grouped together.
-     * 3. each [TileState] [Grouping] is counted(how many [TileState] in each group).
-     * 4. filter out any [TileState.position] contained in our [Grouping].
-     * 5. for any [TileState] with a [Grouping.eachCount] [greaterThanOne] it is invalid.
-     * 6. finally we place [TileState.position] within the [excluded] [Set].]
-     */
-    private fun List<TileState>.valid(
-        excluded: MutableSet<Pair<Int, Int>>,
-        included: MutableSet<Pair<Int, Int>>
-    ) {
-        val filteredList = this.filter { it.text.isNotEmpty() }
-        val occurrenceCount = filteredList.groupingBy { it.text }.eachCount()
-
-        filteredList.filter {
-            !excluded.contains(it.position)
-        }.forEach {
-            !occurrenceCount[it.text].greaterThanOne().also { isInvalid ->
-                if (isInvalid) {
-                    excluded.add(it.position)
-                } else {
-                    included.add(it.position)
+                     this[index] = modified.copy(
+                        isValid = checkValidity(
+                            number = modified.value(),
+                            position = modified.position,
+                            board = comparitor
+                        )
+                    )
                 }
+
             }
+
         }
+
     }
 
-    private fun MutableList<TileState>.update(
-        position: Pair<Int, Int>,
-        copy: (TileState) -> TileState
-    ) {
-        this.indexOfFirstOrNull {
-            it.position == position
-        }?.let { (index, tile) ->
-            this[index] = copy(tile)
-        }
-    }
-
-    private fun MutableList<TileState>.update(
-        positions: Set<Pair<Int, Int>>,
-        copy: (TileState) -> TileState
-    ) {
-        positions.forEach { position ->
-            this.update(position) {
-                copy(it)
-            }
-        }
-    }
 
     private fun allTilesAreValid(): Boolean {
         return board.all { tile -> tile.isValid && tile.text.isNotEmpty() }

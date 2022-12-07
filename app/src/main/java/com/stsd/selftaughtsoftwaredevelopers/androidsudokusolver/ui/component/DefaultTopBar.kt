@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,9 +21,8 @@ fun DefaultTopBar(
     modifier: Modifier = Modifier,
     dividerColor: Color = colors.primary
 ) {
-    Column {
+    Column(modifier = modifier) {
         TopAppBar(
-            modifier = modifier,
             title = {
                 Text(text = stringResource(id = R.string.app_name))
             },
@@ -35,7 +35,10 @@ fun DefaultTopBar(
                         enabled = { placementSpeed != state }
                     ) { onSelectionUpdate(state) }
                 }
-            }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent
+            )
         )
 
         ThemedDivider(color = dividerColor)

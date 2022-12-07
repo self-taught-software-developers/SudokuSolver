@@ -9,13 +9,14 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.with
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -31,6 +32,7 @@ import com.cerve.co.material3extension.designsystem.ExtendedTheme
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.shapes
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
@@ -46,7 +48,7 @@ fun BoardTile(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = { }
 ) {
-    Box(
+    Surface(
         modifier = modifier
             .clickable { onClick() }
             .drawWithCache {
@@ -54,7 +56,8 @@ fun BoardTile(
                     drawRect(color)
                 }
             },
-        contentAlignment = Alignment.Center
+        color = Color.Transparent,
+        contentColor = ExtendedTheme.colors.onSurface,
     ) {
         AnimatedContent(
             targetState = value,
@@ -78,6 +81,7 @@ fun BoardTile(
             }
         ) { targetCount ->
             Text(
+                modifier = Modifier.wrapContentHeight(),
                 text = toTileText(targetCount),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme
@@ -92,9 +96,9 @@ fun BoardTile(
 fun SudokuBoard(
     board: PersistentList<TileState>,
     modifier: Modifier = Modifier,
-    selectedPosition: Pair<Int, Int>? = null,
+    selectedPosition: Position? = null,
     boardColor: Color = ExtendedTheme.colors.primary,
-    onPositionUpdate: (Pair<Int, Int>) -> Unit = { }
+    onPositionUpdate: (Position) -> Unit = { }
 ) {
     val selected = remember(selectedPosition) {
         derivedStateOf { board.firstOrNull { selectedPosition == it.position } }
@@ -143,7 +147,7 @@ fun SudokuBoard(
 fun SudokuBoardPreview() {
     SudokuBoard(
         board = persistentListOf(),
-        selectedPosition = Pair(0, 0)
+        selectedPosition = Position(0, 0)
     ) {
     }
 }

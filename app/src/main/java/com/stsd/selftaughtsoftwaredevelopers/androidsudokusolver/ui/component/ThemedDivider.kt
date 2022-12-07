@@ -11,7 +11,7 @@ import com.cerve.co.material3extension.designsystem.ExtendedTheme
 fun ThemedDivider(
     modifier: Modifier = Modifier,
     color: Color = ExtendedTheme.colors.primary,
-    alpha: Float = ExtendedTheme.alphas.small_10,
+    alpha: Float = ExtendedTheme.alphas.medium_30,
     thickness: Dp = ExtendedTheme.sizes.xSmall
 ) = Divider(
     modifier = modifier,
