@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -83,54 +82,6 @@ fun findEmptyPosition(board: Array<Array<Int>>): List<Int> {
     return emptyList()
 }
 
-fun main() {
-    /**
-     * x[1] && y[0] valid
-     * x[0] && y[1] invalid
-     *
-     * sx[2] sy[2] valid
-     * sx[1] sy[2] invalid
-     */
-
-
-    val board = arrayOf(
-        arrayOf(0,1,2,2,3,4,5,6,7),
-        arrayOf(1,2,3,4,5,6,7,8,9),
-        arrayOf(0,0,2,2,3,4,5,6,7),
-        arrayOf(0,1,2,2,3,4,5,6,7),
-        arrayOf(0,3,2,2,3,4,5,6,7),
-        arrayOf(0,4,2,2,3,4,5,6,7),
-        arrayOf(0,5,2,2,3,4,5,6,9),
-        arrayOf(0,6,2,2,3,4,1,0,8),
-        arrayOf(0,7,2,2,3,4,2,3,4)
-    )
-
-    val row = board[1]
-    val column = board.map { it[1] }.toTypedArray()
-
-    val position = Position(x = 2, y = 2)
-
-    val subgrid = board.flatMapIndexed { index, ints ->
-        ints.filterIndexed { indexInts, _ ->
-            position == Position(x = index / 3, y = indexInts / 3 )
-        }
-    }.toTypedArray()
-
-    val positiono = Position(x = 1, y = 2)
-
-    val subgrido = board.flatMapIndexed { index, ints ->
-        ints.filterIndexed { indexInts, _ ->
-            positiono == Position(x = index / 3, y = indexInts / 3 )
-        }
-    }.toTypedArray()
-
-    println(subgrid.isValid(2))
-    println(subgrido.isValid(7))
-    println(row.isValid(2))
-    println(column.isValid(1))
-
-}
-
 fun Any?.logIt(function: String) {
     Timber.d("${Thread.currentThread()} | $function | $this")
 }
@@ -203,42 +154,9 @@ fun BoxWithConstraintsScope.calculateLocalPx(density: Density, extra: Dp? = null
 
 fun Triple<Float, Float, *>.toIntPair() = Pair(this.first.toInt(), this.second.toInt())
 
-fun Triple<Float, Float, Float?>.subtractLocalDimensions(): Pair<Float, Float> {
-    return this.third?.let { extra ->
-        Pair(first - extra, second - extra)
-    } ?: Pair(first, second)
-}
 
 fun Int.vector() = this.toDouble().pow(2).toInt()
-fun Int.multiplier() = sqrt(this.toDouble()).toInt()
 fun Position.div(divisor: Int) = Position(x = x / divisor, y = y / divisor)
-
-fun BoxWithConstraintsScope.calculateLocalBoardDimensions(
-    density: Density,
-    padding: Dp
-): Rect {
-    val calculatedPx = calculateLocalPx(density, (padding * 2))
-    val (sub_width, sub_height) = calculatedPx.subtractLocalDimensions()
-
-    val scaling = minOf(sub_width, sub_height)
-
-    val x = (calculatedPx.first - scaling).div(2)
-    val y = (calculatedPx.second - scaling).div(2)
-
-    val start = Offset(x = x, y = y)
-    val size = Size(scaling, scaling)
-
-    return Rect(offset = start, size = size)
-}
-
-inline fun <T> List<T>.indexOfFirstOrNull(predicate: (T) -> Boolean): Pair<Int, T>? {
-    for ((index, item) in this.withIndex()) {
-        if (predicate(item)) {
-            return Pair(index, item)
-        }
-    }
-    return null
-}
 
 @Composable
 fun ColumnScope.placeTiles(
