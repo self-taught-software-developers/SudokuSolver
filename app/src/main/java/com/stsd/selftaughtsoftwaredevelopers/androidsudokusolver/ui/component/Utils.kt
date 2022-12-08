@@ -14,11 +14,9 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.BuildConfig
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import kotlinx.collections.immutable.PersistentList
-import timber.log.Timber
 import java.util.stream.IntStream
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -83,56 +81,37 @@ fun findEmptyPosition(board: Array<Array<Int>>): List<Int> {
     return emptyList()
 }
 
-fun Any?.logIt(function: String) {
-
-    if (BuildConfig.DEBUG) {
-        try {
-            val thread = "thread ${Thread.currentThread().name}"
-            Timber.d("$thread | $function | $this")
-        } catch (_: Exception) { }
-    }
-
-}
-
-private fun Array<Int>.isValid(number: Int): Boolean {
-
-    val occurrences = (groupBy { it == number }[true]?.count())
-
-    occurrences.logIt("isValid")
-
-    return (occurrences ?: 0) <= 1
-}
-
-fun checkValidity(
-    board: Array<Array<Int>>,
+fun validatePlacement(
     number: Int,
-    position: Position
+    position: Position,
+    board: Array<Array<Int>>
 ): Boolean {
+    if (number == 0) return true
+    // validate row
+    if (board[position.x].contains(number)) return false
 
-    val row = board[position.x]
-    val column = board.map { it[1] }.toTypedArray()
-    val subgrid = board.flatMapIndexed { index, ints ->
-        ints.filterIndexed { indexInts, _ ->
-            position == Position(x = index / 3, y = indexInts / 3)
-        }
-    }.toTypedArray()
-
-    return when {
-        number == 0 -> true
-        (!row.isValid(number)) -> false
-        (!column.isValid(number)) -> false
-        (!subgrid.isValid(number)) -> false
-        else -> true
+    // validate column
+    for (i in board) {
+        if (i[position.y] == number) return false
     }
 
+    val x = position.y / 3
+    val y = position.x / 3
+
+    for (row in IntStream.range(y * 3, (y * 3) + 3)) {
+        for (column in IntStream.range(x * 3, (x * 3) + 3)) {
+            if (board[row][column] == number && Position(row, column) != position) return false
+        }
+    }
+
+    return true
 }
 
 fun validatePlacement(
     board: Array<Array<Int>>,
     number: Int,
-    position: List<Int> //todo change to xy
+    position: List<Int> // todo change to xy
 ): Boolean {
-
     if (number == 0) return true
     // validate row
     if (board[position[0]].contains(number)) return false
@@ -161,7 +140,6 @@ fun BoxWithConstraintsScope.calculateLocalPx(density: Density, extra: Dp? = null
 }
 
 fun Triple<Float, Float, *>.toIntPair() = Pair(this.first.toInt(), this.second.toInt())
-
 
 fun Int.vector() = this.toDouble().pow(2).toInt()
 fun Position.div(divisor: Int) = Position(x = x / divisor, y = y / divisor)

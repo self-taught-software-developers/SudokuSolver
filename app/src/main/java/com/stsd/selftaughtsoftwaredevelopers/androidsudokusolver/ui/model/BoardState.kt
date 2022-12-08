@@ -8,6 +8,7 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.va
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +27,7 @@ data class BoardState(
         if (board.isEmpty()) {
             List(dimensions.vector()) { x ->
                 List(dimensions.vector()) { y ->
-                    Position(x = x,y = y).let { position ->
+                    Position(x = x, y = y).let { position ->
                         board.add(
                             TileState(
                                 position = position,
@@ -37,7 +38,6 @@ data class BoardState(
                 }
             }
         }
-
     }
 
     private val _solutionState = MutableStateFlow(SolutionState.IDLE)
@@ -72,13 +72,12 @@ data class BoardState(
         } ?: placementBackStack.removeLastOrNull()
     }
 
-    suspend fun changeValue(value: String, position: Position? = null) {
-
+    fun changeValue(value: String, position: Position? = null) {
         selectedPosition(position)?.let { selectedPosition ->
 
             board.apply {
                 val index = indexOfFirst { it.position == selectedPosition }
-                val changedTile = get(index).copy(text = value)
+                val changedTile = get(index).copy(text = value, isValid = true)
 
                 set(index, changedTile)
             }
@@ -86,13 +85,11 @@ data class BoardState(
             if (value.isEmpty()) {
                 updateSelectedPosition(null)
             }
-
         }
         _solutionState.update { SolutionState.IDLE }
-
     }
 
-    suspend fun undoLast() {
+    fun undoLast() {
         changeValue(EMPTY_TILE)
     }
 
@@ -107,7 +104,7 @@ data class BoardState(
         if (solvable()) {
             setBoard(findSolutionInstantly(fromUiBoard()))
         } else {
-            highlightErrors()
+            _solutionState.update { SolutionState.ERROR }
         }
     }
 
@@ -145,40 +142,29 @@ data class BoardState(
         }
     }
     private fun fromUiBoard(): Array<Array<Int>> {
-        return board.map { it.value() }.chunked(dimensions.vector()).toTypedArray()
+        return board
+            .map { it.value() }
+            .chunked(dimensions.vector())
+            .toTypedArray()
     }
 
-    private suspend fun highlightErrors() {
+    private suspend fun solvable(): Boolean {
+        return CompletableDeferred<Boolean>().apply {
+            board.apply {
+                (indices).forEach { index ->
 
-//        sudokuBoard.apply {
-//            this[changedIndex] = get(changedIndex).copy(text = value)
-//            val comparitor = map { it.value() }.chunked(9).toTypedArray()
-//
-//            (sudokuBoard.indices).forEach { index ->
-//                 get(index).also { modified ->
-//
-//                     this[index] = modified.copy(
-//                        isValid = checkValidity(
-//                            number = modified.value(),
-//                            position = modified.position,
-//                            board = comparitor
-//                        )
-//                    )
-//                }
-//
-//            }
-//
-//        }
-        _solutionState.update { SolutionState.ERROR }
-
+                    get(index).also { tile ->
+                        this[index] = get(index).copy(
+                            isValid = validatePlacement(
+                                position = tile.position,
+                                number = tile.value(),
+                                board = fromUiBoard()
+                            )
+                        )
+                    }
+                }
+                complete(all { it.isValid } && any { it.text.isEmpty() })
+            }
+        }.await()
     }
-
-    private fun allTilesAreValid(): Boolean {
-        return board.all { tile -> tile.isValid && tile.text.isNotEmpty() }
-    }
-
-    private fun solvable(): Boolean {
-        return board.all { tile -> tile.isValid } && board.any { tile -> tile.text.isEmpty() }
-    }
-
 }

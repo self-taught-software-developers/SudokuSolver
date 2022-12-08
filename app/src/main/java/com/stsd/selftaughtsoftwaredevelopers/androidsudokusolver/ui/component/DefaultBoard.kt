@@ -58,7 +58,7 @@ fun BoardTile(
                 }
             },
         color = Color.Transparent,
-        contentColor = ExtendedTheme.colors.onSurface,
+        contentColor = ExtendedTheme.colors.onSurface
     ) {
         AnimatedContent(
             targetState = value,
@@ -96,9 +96,9 @@ fun BoardTile(
 @Composable
 fun SudokuBoard(
     board: PersistentList<TileState>,
+    color: @Composable () -> Color,
     modifier: Modifier = Modifier,
     selectedPosition: Position? = null,
-    color: @Composable () -> Color,
     onPositionUpdate: (Position) -> Unit = { }
 ) {
     val selected = remember(selectedPosition) {

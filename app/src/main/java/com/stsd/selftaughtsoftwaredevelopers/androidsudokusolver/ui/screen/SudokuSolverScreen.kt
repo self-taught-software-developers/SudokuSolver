@@ -2,11 +2,8 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.FabPosition
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.icons.rounded.ClearAll
-import androidx.compose.material.icons.rounded.Undo
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,15 +14,10 @@ import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultTopBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.ThemedFab
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.SolutionState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -39,7 +31,6 @@ fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-
     val placementSpeed by boardState.placementSpeed.collectAsState()
     val solutionState by boardState.solutionState.collectAsState()
 
@@ -54,28 +45,12 @@ fun SudokuSolverScreen(
                 onSelectionUpdate = { onSolutionSpeedUpdate(it) }
             )
         },
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            ThemedFab(
-                enabled = true,
-                color = { color(solutionState) },
-                items = {
-                    persistentListOf(
-                        IconItem(
-                            icon = rounded.Undo,
-                            onClick = onUndoLastClick
-                        ),
-                        IconItem(
-                            icon = rounded.ClearAll,
-                            onClick = onUndoAllClick
-                        )
-                    )
-                }
-            )
-        },
         bottomBar = {
             DefaultBottomBar(
                 color = { color(solutionState) },
+                onUndoLastClick = { onUndoLastClick() },
+                onFeatureRequest = { },
+                onUndoAllClick = { onUndoAllClick() },
                 onClickSolve = { onSolveBoardClick() },
                 onEnterValue = { onUpdateValueClick(it) }
             )
@@ -93,12 +68,11 @@ fun SudokuSolverScreen(
     }
 }
 
-
 @Composable
-fun color(state: SolutionState) : Color {
-    return when(state) {
-        SolutionState.SUCCESS -> successGreen500
-        SolutionState.ERROR -> colors.error
+fun color(state: SolutionState): Color {
+    return when (state) {
+        SolutionState.SUCCESS -> Color.Green
+        SolutionState.ERROR -> Color.Red
         else -> colors.primary
     }
 }

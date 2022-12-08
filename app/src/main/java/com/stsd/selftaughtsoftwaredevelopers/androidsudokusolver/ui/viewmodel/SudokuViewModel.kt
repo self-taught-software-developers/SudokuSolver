@@ -45,7 +45,7 @@ class SudokuViewModel @Inject constructor(
     /**
      * Modify BoardState
      */
-    fun updateBoardWithSolvedPlacements() = viewModelScope.launch {
+    fun updateBoardWithSolution() = viewModelScope.launch {
         readyToPlace { boardState.value.solveTheBoard() }
     }
 

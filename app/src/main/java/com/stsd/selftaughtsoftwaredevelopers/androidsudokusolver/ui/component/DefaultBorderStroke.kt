@@ -21,4 +21,3 @@ fun Modifier.defaultBorder(
         ),
         shape = borderShape
     )
-

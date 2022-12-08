@@ -71,8 +71,6 @@ val TimeAuto: ImageVector
         return timeAuto!!
     }
 
-
-
 @Preview
 @Composable
 fun TimeAutoPreview() {

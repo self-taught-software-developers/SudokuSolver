@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     SudokuSolverApp(
                         modifier = contentModifier,
                         boardState = boardState,
-                        onSolveBoardClick = { vm.updateBoardWithSolvedPlacements() },
+                        onSolveBoardClick = { vm.updateBoardWithSolution() },
                         onUpdateValueClick = { vm.updateSelectedValue(it) },
                         onUndoLastClick = { vm.undoLast() },
                         onUndoAllClick = { vm.undoAll() },

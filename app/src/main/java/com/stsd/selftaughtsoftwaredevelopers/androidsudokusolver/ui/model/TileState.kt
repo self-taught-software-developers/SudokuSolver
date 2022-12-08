@@ -3,7 +3,6 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.alphas
-import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 
 data class TileState(
     val text: String = EMPTY_TILE,
@@ -21,7 +20,7 @@ data class TileState(
     @Composable
     fun tileColor(selected: TileState?, color: Color): Color {
         return if (isNotValid) {
-            colors.error
+            Color.Red
         } else {
             color.copy(
                 alpha = selected?.position?.let { (x, y) ->
