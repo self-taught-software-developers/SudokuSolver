@@ -31,6 +31,7 @@ fun DefaultTopBar(
 
                     ThemedIconButton(
                         icon = state.icon,
+                        border = themedBorder(color = color()),
                         backgroundColor = color(),
                         enabled = { placementSpeed != state }
                     ) { onSelectionUpdate(state) }

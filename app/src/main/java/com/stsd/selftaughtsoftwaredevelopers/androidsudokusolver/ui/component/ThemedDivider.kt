@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
@@ -38,6 +39,17 @@ fun ThemedVerticalDivider(
         .fillMaxHeight()
         .width(thickness),
     color = color.copy(alpha = alpha)
+)
+
+@Composable
+fun themedBorder(
+    color: Color? = null,
+    alpha: Float? = null,
+    thickness: Dp? = null
+) = BorderStroke(
+    width = thickness ?: sizes.xSmall,
+    color = (color ?: colors.primary).copy(alpha = (alpha ?: alphas.medium_30))
+
 )
 
 fun Modifier.themedBorder(

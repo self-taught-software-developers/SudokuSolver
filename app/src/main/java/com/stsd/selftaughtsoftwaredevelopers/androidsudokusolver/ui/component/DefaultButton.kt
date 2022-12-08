@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,6 +52,7 @@ fun ThemedIconButton(
     enabled: () -> Boolean,
     icon: ImageVector,
     modifier: Modifier = Modifier,
+    border: BorderStroke? = null,
     backgroundColor: Color = colors.primary,
     onClick: () -> Unit = { }
 ) {
@@ -61,6 +63,7 @@ fun ThemedIconButton(
             Color.Transparent
         } else { backgroundColor.copy(alpha = alphas.medium_30) },
         contentColor = colors.onSurface,
+        border = border,
         enabled = enabled(),
         onClick = { onClick() }
     ) {

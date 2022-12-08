@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 ExtendedTheme(
                     darkColorScheme = DarkColorPalette,
                     lightColorScheme = LightColorPalette,
-                    dynamicColor = true
+                    dynamicColor = false
                 ) { contentModifier ->
 
                     SudokuSolverApp(

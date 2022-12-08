@@ -58,7 +58,7 @@ fun BoardTile(
                 }
             },
         color = Color.Transparent,
-        contentColor = ExtendedTheme.colors.onSurface
+        contentColor = colors.onSurface
     ) {
         AnimatedContent(
             targetState = value,

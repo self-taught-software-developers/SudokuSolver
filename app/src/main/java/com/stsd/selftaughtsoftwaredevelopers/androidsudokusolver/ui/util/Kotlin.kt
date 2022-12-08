@@ -6,8 +6,3 @@ inline fun <reified T> Iterable<T>.chunked(size: Int): List<Array<T>> {
     }
 }
 
-fun Int?.greaterThanOne(): Boolean {
-    return this?.let {
-        it > 1
-    } ?: false
-}

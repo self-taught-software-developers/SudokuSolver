@@ -99,8 +99,8 @@
   - [ ] Display a Solved board
 
 - [ ] Allow users to upload of a Sudoku board
-  - [ ] Anaylze the image
-  - [ ] Generate a Sudoku board from the anaylzed image
+  - [ ] Analyze the image
+  - [ ] Generate a Sudoku board from the analyzed image
   - [ ] Validate generated Sudoku board
   - [ ] Solve generated Sudoku board
   - [ ] Display a Solved board
