@@ -5,4 +5,3 @@ inline fun <reified T> Iterable<T>.chunked(size: Int): List<Array<T>> {
         it.toTypedArray()
     }
 }
-

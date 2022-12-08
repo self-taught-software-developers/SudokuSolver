@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import com.cerve.co.material3extension.designsystem.ExtendedTheme
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.shapes
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
