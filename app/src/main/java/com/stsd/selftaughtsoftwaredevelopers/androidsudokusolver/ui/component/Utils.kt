@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.BuildConfig
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import kotlinx.collections.immutable.PersistentList
@@ -83,7 +84,14 @@ fun findEmptyPosition(board: Array<Array<Int>>): List<Int> {
 }
 
 fun Any?.logIt(function: String) {
-    Timber.d("${Thread.currentThread()} | $function | $this")
+
+    if (BuildConfig.DEBUG) {
+        try {
+            val thread = "thread ${Thread.currentThread().name}"
+            Timber.d("$thread | $function | $this")
+        } catch (_: Exception) { }
+    }
+
 }
 
 private fun Array<Int>.isValid(number: Int): Boolean {

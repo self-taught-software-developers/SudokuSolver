@@ -58,7 +58,7 @@ class SudokuViewModel @Inject constructor(
     }
 
     fun undoAll() = viewModelScope.launch {
-        readyToPlace { uiBoardState.value.clearBoard() }
+        readyToPlace { uiBoardState.value.undoAll() }
     }
 
     private suspend fun readyToPlace(action: suspend () -> Unit) {

@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.cerve.co.material3extension.designsystem.rounded
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
@@ -20,11 +19,11 @@ fun DefaultBottomBar(
     onClickSolve: () -> Unit,
     onEnterValue: (String) -> Unit,
     modifier: Modifier = Modifier,
-    dividerColor: Color = colors.primary,
+    color: @Composable () -> Color,
     enabled: Boolean = true
 ) {
     Column {
-        ThemedDivider(color = dividerColor)
+        ThemedDivider(color = color())
 
         FlowRow(
             modifier = modifier.padding(vertical = spacing.small),
@@ -36,7 +35,7 @@ fun DefaultBottomBar(
                 ThemedNumericButton(
                     modifier = Modifier.padding(spacing.small),
                     enabled = enabled,
-                    backgroundColor = dividerColor,
+                    backgroundColor = color(),
                     numericValue = (it + 1),
                     onClick = onEnterValue
                 )
@@ -45,7 +44,7 @@ fun DefaultBottomBar(
             ThemedIconButton(
                 modifier = Modifier.padding(spacing.small),
                 enabled = enabled,
-                backgroundColor = dividerColor,
+                backgroundColor = color(),
                 imageVector = rounded.PlayCircleOutline,
                 onClick = onClickSolve
             )
@@ -58,6 +57,7 @@ fun DefaultBottomBar(
 fun DefaultBottomBarPreview() {
     DefaultBottomBar(
         onClickSolve = { },
-        onEnterValue = { }
+        onEnterValue = { },
+        color = { Color.Green }
     )
 }

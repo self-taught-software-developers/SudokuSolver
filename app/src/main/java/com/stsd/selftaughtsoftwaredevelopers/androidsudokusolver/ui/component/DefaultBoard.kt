@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.cerve.co.material3extension.designsystem.ExtendedTheme
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.shapes
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
@@ -97,7 +98,7 @@ fun SudokuBoard(
     board: PersistentList<TileState>,
     modifier: Modifier = Modifier,
     selectedPosition: Position? = null,
-    boardColor: Color = ExtendedTheme.colors.primary,
+    color: @Composable () -> Color,
     onPositionUpdate: (Position) -> Unit = { }
 ) {
     val selected = remember(selectedPosition) {
@@ -123,18 +124,18 @@ fun SudokuBoard(
             modifier = Modifier
                 .size(dimensions)
                 .drawSudokuGrid(
-                    color = boardColor,
+                    color = color(),
                     vector = vector
                 )
                 .defaultBorder(
-                    borderColor = boardColor,
+                    borderColor = color(),
                     borderShape = shapes.medium,
                     borderWidth = sizes.xSmall
                 )
         ) {
             placeTiles(
                 board = board,
-                tileColor = boardColor,
+                tileColor = color(),
                 tileSize = tileSize,
                 selectedTile = selected.value
             ) { onPositionUpdate(it) }
@@ -147,7 +148,7 @@ fun SudokuBoard(
 fun SudokuBoardPreview() {
     SudokuBoard(
         board = persistentListOf(),
-        selectedPosition = Position(0, 0)
-    ) {
-    }
+        selectedPosition = Position(0, 0),
+        color = { colors.primary }
+    ) { }
 }

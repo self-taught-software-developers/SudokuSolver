@@ -19,7 +19,7 @@ fun DefaultTopBar(
     placementSpeed: TimeState,
     onSelectionUpdate: (TimeState) -> Unit,
     modifier: Modifier = Modifier,
-    dividerColor: Color = colors.primary
+    color: @Composable () -> Color = { colors.primary }
 ) {
     Column(modifier = modifier) {
         TopAppBar(
@@ -31,7 +31,7 @@ fun DefaultTopBar(
 
                     ThemedIconButton(
                         icon = state.icon,
-                        backgroundColor = dividerColor,
+                        backgroundColor = color(),
                         enabled = { placementSpeed != state }
                     ) { onSelectionUpdate(state) }
                 }
@@ -41,6 +41,6 @@ fun DefaultTopBar(
             )
         )
 
-        ThemedDivider(color = dividerColor)
+        ThemedDivider(color = color())
     }
 }

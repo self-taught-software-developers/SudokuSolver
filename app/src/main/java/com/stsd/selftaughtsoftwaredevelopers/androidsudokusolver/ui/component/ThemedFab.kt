@@ -25,12 +25,12 @@ fun ThemedFab(
     enabled: Boolean,
     items: () -> ImmutableList<IconItem>,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = colors.primary
+    color: @Composable () -> Color
 ) {
     Row(
         modifier = modifier
             .clip(CircleShape)
-            .background(backgroundColor.copy(alpha = alphas.small_10)),
+            .background(color().copy(alpha = alphas.small_10)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(spacing.small)
     ) {
@@ -57,6 +57,7 @@ fun ThemedFabPreview() {
                 IconItem(icon = rounded.Undo) { },
                 IconItem(icon = rounded.ClearAll) { }
             )
-        }
+        },
+        color = { colors.primary }
     )
 }

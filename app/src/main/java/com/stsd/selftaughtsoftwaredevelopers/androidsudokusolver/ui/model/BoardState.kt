@@ -1,16 +1,12 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.cerve.co.material3extension.designsystem.ExtendedTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.checkValidity
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.div
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.EMPTY_TILE
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState.Companion.toTileText
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.chunked
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,91 +18,97 @@ data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
     val state: BoardActivityState = BoardActivityState.LOADING
 ) {
-
+    fun isLoading() = state == BoardActivityState.LOADING
     val board: SnapshotStateList<TileState> = mutableStateListOf()
 
+    init {
+
+        if (board.isEmpty()) {
+            List(dimensions.vector()) { x ->
+                List(dimensions.vector()) { y ->
+                    Position(x = x,y = y).let { position ->
+                        board.add(
+                            TileState(
+                                position = position,
+                                subgrid = position.div(dimensions.multiplier)
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+    }
+
+    private val _solutionState = MutableStateFlow(SolutionState.IDLE)
+    val solutionState = _solutionState.asStateFlow()
+
     private val placementBackStack: SnapshotStateList<Position?> = mutableStateListOf()
+
     private val _placementSpeed = MutableStateFlow(TimeState.DEFAULT_SPEED)
     val placementSpeed: StateFlow<TimeState> = _placementSpeed.asStateFlow()
 
     fun updatePlacementSpeed(value: TimeState) = _placementSpeed.update { value }
 
-    fun selectedPosition() = placementBackStack.lastOrNull()
-    fun isLoading() = state == BoardActivityState.LOADING
-
-    @Composable
-    fun color() = if (this.allTilesAreValid()) {
-        successGreen500
-    } else { ExtendedTheme.colors.primary }
-
-    init {
-
-        if (board.isEmpty()) {
-
-            List(dimensions.vector()) { xp ->
-                List(dimensions.vector()) { yp ->
-                    board.add(
-                        TileState(
-                            position = Position(x = xp,y = yp),
-                            subgrid = Position(x = xp, y = yp).div(dimensions.multiplier)
-                        )
-                    )
-                }
-            }
-        }
+    fun selectedPosition(position: Position? = null): Position? {
+        position?.let { placementBackStack.add(position) }
+        return placementBackStack.lastOrNull()
     }
 
-    fun updateSelectedPositionWith(position: Position?) {
+    /**
+     * @[updateSelectedPosition] takes a nullable @[Position].
+     *
+     * When null is passed for the position parameter.
+     * The last item in @[placementBackStack] is removed, this updates the @[selectedPosition] to
+     * it's previous position.
+     *
+     * When a value is passed for the position parameter.
+     * That value is added to the top of our @[placementBackStack], this updates the
+     * @[selectedPosition] to it's previous position.
+     */
+    fun updateSelectedPosition(position: Position?) {
         position?.let {
             placementBackStack.add(position)
         } ?: placementBackStack.removeLastOrNull()
     }
 
-    fun changeValue(value: String) {
-        selectedPosition()?.let { position ->
+    suspend fun changeValue(value: String, position: Position? = null) {
 
-            board.indexOfFirst { it.position == position }.also { index ->
-                validateAndChangeValue(
-                    changedIndex = index,
-                    value = value,
-                    sudokuBoard = board
-                )
+        selectedPosition(position)?.let { selectedPosition ->
+
+            board.apply {
+                val index = indexOfFirst { it.position == selectedPosition }
+                val changedTile = get(index).copy(text = value)
+
+                set(index, changedTile)
             }
 
             if (value.isEmpty()) {
-                updateSelectedPositionWith(null)
+                updateSelectedPosition(null)
             }
-        }
-    }
-    private fun changeValue(value: String, position: Position) {
-        if (value.isEmpty()) {
-            updateSelectedPositionWith(null)
-        } else {
-            updateSelectedPositionWith(position)
-        }
 
-        board.indexOfFirst { it.position == position }.also { index ->
-            validateAndChangeValue(
-                changedIndex = index,
-                value = value,
-                sudokuBoard = board
-            )
         }
+        _solutionState.update { SolutionState.IDLE }
+
     }
 
-    private fun fromUiBoard(): Array<Array<Int>> {
-        return board.map { it.value() }.chunked(dimensions.vector()).toTypedArray()
+    suspend fun undoLast() {
+        changeValue(EMPTY_TILE)
     }
 
-    fun undoLast() { changeValue(EMPTY_TILE) }
-    suspend fun clearBoard() {
+    suspend fun undoAll() {
         while (selectedPosition() != null) {
-            delay(placementSpeed.value.time).also { undoLast() }
+            delay(placementSpeed.value.time)
+            undoLast()
         }
     }
 
     suspend fun solveTheBoard() {
-        if (solvable()) { setBoard(findSolutionInstantly(fromUiBoard())) }
+        if (solvable()) {
+            setBoard(findSolutionInstantly(fromUiBoard()))
+        } else {
+            highlightErrors()
+        }
     }
 
     private suspend fun setBoard(solvedBoard: Array<Array<Int>>) {
@@ -122,6 +124,7 @@ data class BoardState(
                 }
             }
         }
+        _solutionState.update { SolutionState.SUCCESS }
     }
     private fun findSolutionInstantly(board: Array<Array<Int>>): Array<Array<Int>> {
         findEmptyPosition(board).also { position ->
@@ -141,39 +144,34 @@ data class BoardState(
             }
         }
     }
-
-    private fun validateAndChangeValue(
-        changedIndex: Int,
-        value: String,
-        sudokuBoard: MutableList<TileState>
-    ) {
-
-        /**
-         * for each tile check if it's valid then move to next tile.
-         */
-
-        sudokuBoard.apply {
-            this[changedIndex] = get(changedIndex).copy(text = value)
-            val comparitor = map { it.value() }.chunked(9).toTypedArray()
-
-            (sudokuBoard.indices).forEach { index ->
-                 get(index).also { modified ->
-
-                     this[index] = modified.copy(
-                        isValid = checkValidity(
-                            number = modified.value(),
-                            position = modified.position,
-                            board = comparitor
-                        )
-                    )
-                }
-
-            }
-
-        }
-
+    private fun fromUiBoard(): Array<Array<Int>> {
+        return board.map { it.value() }.chunked(dimensions.vector()).toTypedArray()
     }
 
+    private suspend fun highlightErrors() {
+
+//        sudokuBoard.apply {
+//            this[changedIndex] = get(changedIndex).copy(text = value)
+//            val comparitor = map { it.value() }.chunked(9).toTypedArray()
+//
+//            (sudokuBoard.indices).forEach { index ->
+//                 get(index).also { modified ->
+//
+//                     this[index] = modified.copy(
+//                        isValid = checkValidity(
+//                            number = modified.value(),
+//                            position = modified.position,
+//                            board = comparitor
+//                        )
+//                    )
+//                }
+//
+//            }
+//
+//        }
+        _solutionState.update { SolutionState.ERROR }
+
+    }
 
     private fun allTilesAreValid(): Boolean {
         return board.all { tile -> tile.isValid && tile.text.isNotEmpty() }
@@ -182,4 +180,5 @@ data class BoardState(
     private fun solvable(): Boolean {
         return board.all { tile -> tile.isValid } && board.any { tile -> tile.text.isEmpty() }
     }
+
 }

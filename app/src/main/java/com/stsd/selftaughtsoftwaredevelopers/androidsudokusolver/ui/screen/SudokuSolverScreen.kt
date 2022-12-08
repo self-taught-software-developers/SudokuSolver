@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultTopBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.SudokuBoard
@@ -20,7 +21,9 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.Th
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.SolutionState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.successGreen500
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -36,7 +39,9 @@ fun SudokuSolverScreen(
     modifier: Modifier = Modifier,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
+
     val placementSpeed by boardState.placementSpeed.collectAsState()
+    val solutionState by boardState.solutionState.collectAsState()
 
     Scaffold(
         backgroundColor = Color.Transparent,
@@ -45,7 +50,7 @@ fun SudokuSolverScreen(
         topBar = {
             DefaultTopBar(
                 placementSpeed = placementSpeed,
-                dividerColor = boardState.color(),
+                color = { color(solutionState) },
                 onSelectionUpdate = { onSolutionSpeedUpdate(it) }
             )
         },
@@ -53,7 +58,7 @@ fun SudokuSolverScreen(
         floatingActionButton = {
             ThemedFab(
                 enabled = true,
-                backgroundColor = boardState.color(),
+                color = { color(solutionState) },
                 items = {
                     persistentListOf(
                         IconItem(
@@ -70,7 +75,7 @@ fun SudokuSolverScreen(
         },
         bottomBar = {
             DefaultBottomBar(
-                dividerColor = boardState.color(),
+                color = { color(solutionState) },
                 onClickSolve = { onSolveBoardClick() },
                 onEnterValue = { onUpdateValueClick(it) }
             )
@@ -83,8 +88,18 @@ fun SudokuSolverScreen(
                 .fillMaxSize(),
             board = boardState.board.toPersistentList(),
             selectedPosition = boardState.selectedPosition(),
-            boardColor = boardState.color()
-        ) { boardState.updateSelectedPositionWith(it) }
+            color = { color(solutionState) }
+        ) { boardState.updateSelectedPosition(it) }
+    }
+}
+
+
+@Composable
+fun color(state: SolutionState) : Color {
+    return when(state) {
+        SolutionState.SUCCESS -> successGreen500
+        SolutionState.ERROR -> colors.error
+        else -> colors.primary
     }
 }
 
