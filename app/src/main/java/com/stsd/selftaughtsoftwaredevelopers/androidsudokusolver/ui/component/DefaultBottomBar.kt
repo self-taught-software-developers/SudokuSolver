@@ -1,5 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.rounded.ClearAll
@@ -31,11 +32,16 @@ fun DefaultBottomBar(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    Column {
+    Column(
+        modifier = modifier.padding(vertical = spacing.small),
+        verticalArrangement = Arrangement.spacedBy(spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ThemedDivider(color = color())
 
         ThemedFab(
             modifier = Modifier
-                .padding(spacing.small)
+                .themedBorder(color = color())
                 .align(Alignment.CenterHorizontally),
             enabled = enabled,
             color = { color() },
@@ -57,17 +63,17 @@ fun DefaultBottomBar(
             }
         )
 
-        ThemedDivider(color = color())
-
         FlowRow(
-            modifier = modifier.padding(vertical = spacing.small),
+            modifier = Modifier,
             mainAxisSize = SizeMode.Expand,
             mainAxisAlignment = FlowMainAxisAlignment.Center,
             crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
             repeat(9) {
                 ThemedNumericButton(
-                    modifier = Modifier.padding(spacing.small),
+                    modifier = Modifier
+                        .padding(spacing.small)
+                        .themedBorder(color = color()),
                     enabled = enabled,
                     backgroundColor = color(),
                     numericValue = (it + 1),
@@ -76,7 +82,9 @@ fun DefaultBottomBar(
             }
 
             ThemedIconButton(
-                modifier = Modifier.padding(spacing.small),
+                modifier = Modifier
+                    .padding(spacing.small)
+                    .themedBorder(color = color()),
                 enabled = enabled,
                 backgroundColor = color(),
                 imageVector = rounded.PlayCircleOutline,

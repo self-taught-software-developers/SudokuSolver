@@ -1,7 +1,6 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.alphas
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.shapes
-import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.icon.rounded
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
@@ -34,11 +32,6 @@ fun ThemedFab(
     Row(
         modifier = modifier
             .clip(shape = shapes.small)
-            .border(
-                shape = shapes.small,
-                width = sizes.xSmall,
-                color = color().copy(alpha = alphas.medium_30)
-            )
             .height(IntrinsicSize.Min)
             .background(color().copy(alpha = alphas.small_10)),
         verticalAlignment = Alignment.CenterVertically,
