@@ -164,7 +164,9 @@ data class BoardState(
                         )
                     }
                 }
-                complete(all { it.isValid } && any { it.text.isEmpty() })
+                val result = board.all { it.isValid } && board.any { it.text.isEmpty() }
+                println(result)
+                complete(result)
             }
         }.await()
     }

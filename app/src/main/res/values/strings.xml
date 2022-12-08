@@ -11,4 +11,8 @@
         \n\"Click on the ICON to request CAMERA PERMISSION\"
     </string>
 
+    <string name="SUBTITLE_email">
+        Send Email with:
+    </string>
+
 </resources>

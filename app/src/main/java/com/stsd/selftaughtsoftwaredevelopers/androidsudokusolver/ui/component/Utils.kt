@@ -14,9 +14,11 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke.Companion.DefaultMiter
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.BuildConfig
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TileState
 import kotlinx.collections.immutable.PersistentList
+import timber.log.Timber
 import java.util.stream.IntStream
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -81,18 +83,31 @@ fun findEmptyPosition(board: Array<Array<Int>>): List<Int> {
     return emptyList()
 }
 
+fun String.logIt() {
+    if (BuildConfig.DEBUG) {
+        try {
+            Timber.d(this)
+        } catch (_: Exception) { }
+    }
+}
+
 fun validatePlacement(
     number: Int,
     position: Position,
     board: Array<Array<Int>>
 ): Boolean {
     if (number == 0) return true
+
     // validate row
-    if (board[position.x].contains(number)) return false
+    if (board[position.x].count { it == number } >= 2) {
+        "failed row".logIt()
+        return false
+    }
 
     // validate column
-    for (i in board) {
-        if (i[position.y] == number) return false
+    if (board.count { it[position.y] == number } >= 2) {
+        "failed column".logIt()
+        return false
     }
 
     val x = position.y / 3
@@ -100,7 +115,10 @@ fun validatePlacement(
 
     for (row in IntStream.range(y * 3, (y * 3) + 3)) {
         for (column in IntStream.range(x * 3, (x * 3) + 3)) {
-            if (board[row][column] == number && Position(row, column) != position) return false
+            if (board[row][column] == number && Position(row, column) != position) {
+                "failed subgrid | ${Position(row, column)}".logIt()
+                return false
+            }
         }
     }
 
@@ -110,7 +128,7 @@ fun validatePlacement(
 fun validatePlacement(
     board: Array<Array<Int>>,
     number: Int,
-    position: List<Int> // todo change to xy
+    position: List<Int>
 ): Boolean {
     if (number == 0) return true
     // validate row

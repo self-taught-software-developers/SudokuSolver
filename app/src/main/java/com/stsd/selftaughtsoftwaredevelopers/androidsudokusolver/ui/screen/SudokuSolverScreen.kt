@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.DefaultTopBar
@@ -18,6 +19,7 @@ import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.BoardS
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.SolutionState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.TimeState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.AllPreviews
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util.navigateToEmail
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -46,10 +48,12 @@ fun SudokuSolverScreen(
             )
         },
         bottomBar = {
+            val context = LocalContext.current
+
             DefaultBottomBar(
                 color = { color(solutionState) },
                 onUndoLastClick = { onUndoLastClick() },
-                onFeatureRequest = { },
+                onFeatureRequest = { context.navigateToEmail() },
                 onUndoAllClick = { onUndoAllClick() },
                 onClickSolve = { onSolveBoardClick() },
                 onEnterValue = { onUpdateValueClick(it) }
