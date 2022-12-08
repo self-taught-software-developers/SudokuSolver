@@ -12,7 +12,6 @@ fun Context.navigateToEmail(
     receiver: String = RECEIVER_EMAIL,
     subject: String = EMAIL_SUBJECT
 ) {
-
     Intent(Intent.ACTION_SEND).apply {
         putExtra(Intent.EXTRA_EMAIL, arrayOf(receiver))
         putExtra(Intent.EXTRA_SUBJECT, subject)

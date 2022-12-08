@@ -101,7 +101,6 @@ data class BoardState(
     }
 
     suspend fun solveTheBoard() {
-
         if (solvable()) {
             setBoard(findSolutionInstantly(fromUiBoard()))
         } else {
