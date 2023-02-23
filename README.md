@@ -86,44 +86,7 @@ Here's why:
 <!-- USAGE EXAMPLES -->
 <!-- ## Usage
  -->
-<!-- ROADMAP -->
-## Roadmap
 
-- [x] Allow users to create a Sudoku board
-- [x] Validate a user created Sudoku board
-- [x] Solve a user created Sudoku board 
-- [x] Display a Solved board
-
-- [x] Create graphical assets
-- [x] Publish to the Google app store
-
-- [ ] Allow users to upload of a Sudoku board
-  - [ ] Anaylze the image
-  - [ ] Generate a Sudoku board from the anaylzed image
-  - [ ] Validate generated Sudoku board
-  - [ ] Solve generated Sudoku board
-  - [ ] Display a Solved board
-  
-- [ ] Allow users to take a photo of a Sudoku board
-  - [ ] Anaylze the image
-  - [ ] Generate a Sudoku board from the anaylzed image
-  - [ ] Validate generated Sudoku board
-  - [ ] Solve generated Sudoku board
-  - [ ] Display a Solved board
-  
-- [ ] Allow users to use their camera to recognize a Sudoku board
-  - [ ] Generate a Sudoku board from the anaylzed frames
-  - [ ] Validate generated Sudoku board
-  - [ ] Solve generated Sudoku board
-  - [ ] Display a Solved board
-
-- [ ] Multi-language Support
-    - [ ] Spanish
-    - [ ] German
-    
-  - [ ] Allow users select different Grid Sizes to solve.
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
