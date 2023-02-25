@@ -1,10 +1,12 @@
 <div align="center">
 
-  <h3 align="center">Sudoku Solver App</h3>
+  <img src=https://raw.githubusercontent.com/Self-Taught-Software-Developers/SudokuSolver/main/Artboard%201.png width="150" height="150">
+  
+  <h2 align="center">Sudoku Solver App</h2>
 
   <p align="center">
     <br />
-    <a href="">View Demo</a>
+    <a href="https://play.google.com/store/apps/details?id=com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver">Download on the App Store</a>
     ·
     <a href="https://github.com/Self-Taught-Software-Developers/SudokuSolver/issues">Report Bug</a>
     ·
@@ -39,8 +41,12 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-<!-- ## About The Project-->
-<!-- Here's why:-->
+<!-- ## About The Project
+<!-- 
+Here's why:
+* 
+* 
+*  -->
 
 ### Built With
 
@@ -80,38 +86,7 @@
 <!-- USAGE EXAMPLES -->
 <!-- ## Usage
  -->
-<!-- ROADMAP -->
-## Roadmap
 
-- [ ] Allow users to create a Sudoku board
-- [ ] Validate a user created Sudoku board
-- [ ] Solve a user created Sudoku board 
-- [ ] Display a Solved board
-
-- [ ] Create graphical assets
-- [ ] Publish to the Google app store
-
-- [ ] Allow users to take a photo of a Sudoku board
-  - [ ] Analyze the image
-  - [ ] Generate a Sudoku board from the analyzed image
-  - [ ] Validate generated Sudoku board
-  - [ ] Solve generated Sudoku board
-  - [ ] Display a Solved board
-
-- [ ] Allow users to upload of a Sudoku board
-  - [ ] Analyze the image
-  - [ ] Generate a Sudoku board from the analyzed image
-  - [ ] Validate generated Sudoku board
-  - [ ] Solve generated Sudoku board
-  - [ ] Display a Solved board
-
-- [ ] Multi-language Support
-    - [ ] Spanish
-    - [ ] German
-    
-  - [ ] Allow users select different Grid Sizes to solve.
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
