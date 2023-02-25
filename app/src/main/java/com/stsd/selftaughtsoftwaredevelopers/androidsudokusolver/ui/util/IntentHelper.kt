@@ -3,6 +3,7 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.util
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.BuildConfig
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R
 
 const val RECEIVER_EMAIL = "cerve.v55@gmail.com"
@@ -22,6 +23,7 @@ fun Context.navigateToEmail(
                Model: ${Build.MODEL}
                Manufacture: ${Build.MANUFACTURER}
                Android version: ${Build.VERSION.RELEASE}
+               App version: ${BuildConfig.VERSION_NAME}
             """.trimIndent()
         )
         type = "message/rfc822"
