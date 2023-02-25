@@ -2,20 +2,22 @@ package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
+import androidx.compose.ui.unit.Dp
 
-fun Modifier.defaultBorder(color: Color) : Modifier = composed {
-
-   this.border(
+fun Modifier.defaultBorder(
+    borderColor: Color,
+    borderWidth: Dp,
+    borderShape: CornerBasedShape
+): Modifier = this
+    .clip(shape = borderShape)
+    .border(
         border = BorderStroke(
-            width = CustomTheme.sizing.xx_small,
-            color = color
+            width = borderWidth,
+            color = borderColor
         ),
-        shape = CustomTheme.shapes.medium
+        shape = borderShape
     )
-
-}

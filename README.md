@@ -1,12 +1,10 @@
 <div align="center">
 
-  <img src=https://raw.githubusercontent.com/Self-Taught-Software-Developers/SudokuSolver/main/Artboard%201.png width="150" height="150">
-  
-  <h2 align="center">Sudoku Solver App</h2>
+  <h3 align="center">Sudoku Solver App</h3>
 
   <p align="center">
     <br />
-    <a href="https://play.google.com/store/apps/details?id=com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver">Download on the App Store</a>
+    <a href="">View Demo</a>
     ·
     <a href="https://github.com/Self-Taught-Software-Developers/SudokuSolver/issues">Report Bug</a>
     ·
@@ -41,12 +39,8 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-<!-- ## About The Project
-<!-- 
-Here's why:
-* 
-* 
-*  -->
+<!-- ## About The Project-->
+<!-- Here's why:-->
 
 ### Built With
 
@@ -89,30 +83,24 @@ Here's why:
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Allow users to create a Sudoku board
-- [x] Validate a user created Sudoku board
-- [x] Solve a user created Sudoku board 
-- [x] Display a Solved board
+- [ ] Allow users to create a Sudoku board
+- [ ] Validate a user created Sudoku board
+- [ ] Solve a user created Sudoku board 
+- [ ] Display a Solved board
 
-- [x] Create graphical assets
-- [x] Publish to the Google app store
+- [ ] Create graphical assets
+- [ ] Publish to the Google app store
+
+- [ ] Allow users to take a photo of a Sudoku board
+  - [ ] Analyze the image
+  - [ ] Generate a Sudoku board from the analyzed image
+  - [ ] Validate generated Sudoku board
+  - [ ] Solve generated Sudoku board
+  - [ ] Display a Solved board
 
 - [ ] Allow users to upload of a Sudoku board
-  - [ ] Anaylze the image
-  - [ ] Generate a Sudoku board from the anaylzed image
-  - [ ] Validate generated Sudoku board
-  - [ ] Solve generated Sudoku board
-  - [ ] Display a Solved board
-  
-- [ ] Allow users to take a photo of a Sudoku board
-  - [ ] Anaylze the image
-  - [ ] Generate a Sudoku board from the anaylzed image
-  - [ ] Validate generated Sudoku board
-  - [ ] Solve generated Sudoku board
-  - [ ] Display a Solved board
-  
-- [ ] Allow users to use their camera to recognize a Sudoku board
-  - [ ] Generate a Sudoku board from the anaylzed frames
+  - [ ] Analyze the image
+  - [ ] Generate a Sudoku board from the analyzed image
   - [ ] Validate generated Sudoku board
   - [ ] Solve generated Sudoku board
   - [ ] Display a Solved board

@@ -1,77 +1,108 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Surface
-import androidx.compose.material.icons.rounded.BorderClear
-import androidx.compose.material.icons.rounded.PublishedWithChanges
-import androidx.compose.material.icons.rounded.Replay
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.rounded.ClearAll
+import androidx.compose.material.icons.rounded.ForwardToInbox
+import androidx.compose.material.icons.rounded.PlayCircleOutline
+import androidx.compose.material.icons.rounded.Undo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.R
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
+import com.cerve.co.material3extension.designsystem.rounded
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
+import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.model.IconItem
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun DefaultBottomBar(
-    onUndoRecentChange: () -> Unit,
-    onClearBoard: () -> Unit,
-    onSolveBoard: () -> Unit,
-    onEnterNewValue: (String) -> Unit
+    color: @Composable () -> Color,
+    onFeatureRequest: () -> Unit,
+    onUndoLastClick: () -> Unit,
+    onUndoAllClick: () -> Unit,
+    onClickSolve: () -> Unit,
+    onEnterValue: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
+    Column(
+        modifier = modifier.padding(vertical = spacing.small),
+        verticalArrangement = Arrangement.spacedBy(spacing.medium),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ThemedDivider(color = color())
 
-    val padding = LocalPadding.current
-
-    Column {
-
-        TwoRowsOfButtonsOffset { number ->
-            onEnterNewValue(number)
-        }
-
-        Row(
+        ThemedFab(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = padding.small),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
+                .themedBorder(color = color())
+                .align(Alignment.CenterHorizontally),
+            enabled = enabled,
+            color = { color() },
+            items = {
+                persistentListOf(
+                    IconItem(
+                        icon = rounded.ForwardToInbox,
+                        onClick = onFeatureRequest
+                    ),
+                    IconItem(
+                        icon = rounded.Undo,
+                        onClick = onUndoLastClick
+                    ),
+                    IconItem(
+                        icon = rounded.ClearAll,
+                        onClick = onUndoAllClick
+                    )
+                )
+            }
+        )
+
+        FlowRow(
+            modifier = Modifier,
+            mainAxisSize = SizeMode.Expand,
+            mainAxisAlignment = FlowMainAxisAlignment.Center,
+            crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
+            repeat(9) {
+                ThemedNumericButton(
+                    modifier = Modifier
+                        .padding(spacing.small)
+                        .themedBorder(color = color()),
+                    enabled = enabled,
+                    backgroundColor = color(),
+                    numericValue = (it + 1),
+                    onClick = onEnterValue
+                )
+            }
 
-            IconButton(
-                imageVector = rounded.Replay,
-                text = stringResource(id = R.string.BUTTON_undo)
-            ) { onUndoRecentChange() }
-
-            IconButton(
-                imageVector = rounded.BorderClear,
-                text = stringResource(id = R.string.BUTTON_erase)
-            ) { onClearBoard() }
-
-            IconButton(
-                backgroundColor = CustomTheme.colors.onSurface.copy(alpha = 0.05F),
-                imageVector = rounded.PublishedWithChanges,
-                text = stringResource(id = R.string.BUTTON_solve)
-            ) { onSolveBoard() }
-
+            ThemedIconButton(
+                modifier = Modifier
+                    .padding(spacing.small)
+                    .themedBorder(color = color()),
+                enabled = enabled,
+                backgroundColor = color(),
+                imageVector = rounded.PlayCircleOutline,
+                onClick = onClickSolve
+            )
         }
     }
-
-
-
 }
 
-//preview
 @Preview
 @Composable
 fun DefaultBottomBarPreview() {
     DefaultBottomBar(
-        onUndoRecentChange = { },
-        onClearBoard = { },
-        onSolveBoard = { }
-    ) {
-
-    }
+        onUndoAllClick = { },
+        onUndoLastClick = { },
+        onFeatureRequest = { },
+        onClickSolve = { },
+        onEnterValue = { },
+        color = { Color.Green }
+    )
 }

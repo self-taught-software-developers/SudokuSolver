@@ -1,152 +1,103 @@
 package com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiObjects
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.MainAxisAlignment
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.CustomTheme
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalPadding
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.theme.LocalSizing
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.alphas
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.colors
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.shapes
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.sizes
+import com.cerve.co.material3extension.designsystem.ExtendedTheme.spacing
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ButtonWithNumber(num: Int, onButtonClick: (String) -> Unit) {
-
-    val sizing = LocalSizing.current
-    val padding = LocalPadding.current
-
-    Surface(modifier = Modifier
-        .padding(padding.small)
-        .clip(shape = CustomTheme.shapes.small)
-        .clickable { onButtonClick(num.toString()) }
-        .size(sizing.xxx_large),
-
-        color = CustomTheme.colors.onSurface.copy(alpha = 0.05F)) {
-
-        Box(contentAlignment = Alignment.Center) {
-
-            Text(
-                text = num.toString(), textAlign = TextAlign.Center
-            )
-
-        }
-
-
-    }
-}
-
-
-@Composable
-fun TwoRowsOfButtonsOffset(onButtonClick: (String) -> Unit) {
-
-    FlowRow(
-        modifier = Modifier.fillMaxWidth(), mainAxisAlignment = MainAxisAlignment.Center
-    ) {
-        for (i in 1..9) {
-            ButtonWithNumber(num = i) {
-                onButtonClick(it)
-            }
-        }
-    }
-}
-
-@Composable
-fun IconButton(
-    modifier: Modifier = Modifier, imageVector: ImageVector, text: String, onClick: () -> Unit
-) {
-
-    val sizing = LocalSizing.current
-    val padding = LocalPadding.current
-
-    IconButton(
-        onClick = { onClick() },
-        modifier = modifier
-            .defaultMinSize(sizing.xxx_large)
-            .padding(padding.small)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = imageVector, contentDescription = imageVector.name
-            )
-            Text(
-                text = text.uppercase(),
-                style = MaterialTheme.typography.caption.copy(fontSize = 10.sp),
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-
-    }
-
-}
-
-@Composable
-fun IconButton(
+fun ThemedNumericButton(
+    enabled: Boolean,
+    numericValue: Int,
     modifier: Modifier = Modifier,
-    backgroundColor: Color,
-    imageVector: ImageVector,
-    text: String,
-    onClick: () -> Unit
+    backgroundColor: Color = colors.primary,
+    onClick: (String) -> Unit = { }
 ) {
-
-    val sizing = LocalSizing.current
-    val padding = LocalPadding.current
     Surface(
-        color = backgroundColor, shape = CustomTheme.shapes.small
+        modifier = modifier.size(sizes.large + sizes.medium),
+        shape = shapes.small,
+        color = backgroundColor.copy(alpha = alphas.small_10),
+        contentColor = colors.onSurface,
+        enabled = enabled,
+        onClick = { onClick(numericValue.toString()) }
     ) {
-        IconButton(
-            onClick = { onClick() },
-            modifier = modifier
-                .defaultMinSize(sizing.xxx_large)
-                .padding(padding.small)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    imageVector = imageVector, contentDescription = imageVector.name
-                )
-                Text(
-                    text = text.uppercase(),
-                    style = MaterialTheme.typography.caption.copy(fontSize = 10.sp),
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
+        BoxWithConstraints(contentAlignment = Alignment.Center) {
+            Text(
+                text = numericValue.toString(),
+                fontSize = (maxHeight / 2).value.sp
+            )
         }
     }
-
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-@Preview
-fun Preview() {
-    TwoRowsOfButtonsOffset {
-
+fun ThemedIconButton(
+    enabled: () -> Boolean,
+    icon: ImageVector,
+    modifier: Modifier = Modifier,
+    border: BorderStroke? = null,
+    backgroundColor: Color = colors.primary,
+    onClick: () -> Unit = { }
+) {
+    Surface(
+        modifier = modifier,
+        shape = shapes.small,
+        color = if (enabled()) {
+            Color.Transparent
+        } else { backgroundColor.copy(alpha = alphas.medium_30) },
+        contentColor = colors.onSurface,
+        border = border,
+        enabled = enabled(),
+        onClick = { onClick() }
+    ) {
+        Icon(
+            modifier = Modifier.padding(spacing.small),
+            imageVector = icon,
+            contentDescription = icon.name
+        )
     }
 }
 
-@Preview
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun IconButtonPreview() {
-    IconButton(
-        imageVector = Icons.Default.EmojiObjects, text = "IDEA"
+fun ThemedIconButton(
+    enabled: Boolean,
+    imageVector: ImageVector,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = colors.primary,
+    onClick: () -> Unit = { }
+) {
+    Surface(
+        modifier = modifier.size(sizes.large + sizes.medium),
+        shape = shapes.small,
+        color = backgroundColor.copy(alpha = alphas.medium_30),
+        contentColor = colors.onSurface,
+        enabled = enabled,
+        onClick = { onClick() }
     ) {
-
+        BoxWithConstraints(contentAlignment = Alignment.Center) {
+            Icon(
+                modifier = Modifier.size((maxHeight / 2)),
+                imageVector = imageVector,
+                contentDescription = imageVector.name
+            )
+        }
     }
 }

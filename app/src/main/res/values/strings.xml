@@ -1,8 +1,18 @@
 <resources>
 
     <string name="app_name">Sudoku Hero</string>
-    <string name="BUTTON_undo">Undo</string>
-    <string name="BUTTON_erase">Erase</string>
-    <string name="BUTTON_solve">Solve</string>
+
+    <string name="SUBTITLE_camera_show_rationale">
+        The camera is important for this feature.
+        \n\"Click on the ICON to request CAMERA PERMISSION\"
+    </string>
+    <string name="SUBTITLE_camera_permission_denied">
+        Camera not available.
+        \n\"Click on the ICON to request CAMERA PERMISSION\"
+    </string>
+
+    <string name="SUBTITLE_email">
+        Send Email with:
+    </string>
 
 </resources>
