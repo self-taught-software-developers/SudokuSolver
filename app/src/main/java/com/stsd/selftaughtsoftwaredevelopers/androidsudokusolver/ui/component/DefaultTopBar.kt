@@ -105,7 +105,8 @@ fun LandscapeTopBar(
 
             }
             Text(text = stringResource(id = R.string.app_name))
-//        ThemedVerticalDivider(color = color())
+
         }
+        ThemedVerticalDivider(color = color())
     }
 }
