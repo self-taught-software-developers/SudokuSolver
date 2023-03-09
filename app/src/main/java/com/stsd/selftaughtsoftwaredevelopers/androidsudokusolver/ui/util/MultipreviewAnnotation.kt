@@ -42,6 +42,11 @@ annotation class FontScalePreviews
     group = "devices",
     device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480"
 )
+
+@Preview(
+    showSystemUi = true,
+    device = "spec:width=411dp,height=891dp,dpi=420,isRound=false,chinSize=0dp,orientation=landscape"
+)
 annotation class DevicePreviews
 
 /**
