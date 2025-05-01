@@ -1,22 +1,13 @@
-buildscript {
-    ext {
-        compose_version = '1.3.1'
-        kotlin_version = '1.7.20'
-    }
-
-    dependencies {
-        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
-        classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
-        classpath ("com.google.firebase:perf-plugin:1.4.2")
-        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
-        classpath("com.twitter.compose.rules:ktlint:0.0.26")
-    }
-
-}// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '8.9.2' apply false
-    id 'com.android.library' version '8.9.2' apply false
-    id("org.jmailen.kotlinter") version "3.12.0" apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
-    id "com.google.gms.google-services" version "4.3.14" apply true
+
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.multiplatform.library) apply false
+
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+
+    alias(libs.plugins.compose.compiler) apply false
 }
