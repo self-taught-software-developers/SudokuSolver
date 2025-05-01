@@ -50,11 +50,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = JvmTarget.JVM_21.target
+        jvmTarget = JvmTarget.JVM_11.target
     }
 }
 
@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.android.compose.ui.tooling.preview)
     implementation(libs.android.compose.material3)
     implementation(libs.android.compose.activity)
+    implementation(libs.android.splash.screen)
 
     implementation(libs.play.app.update)
 

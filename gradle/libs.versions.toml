@@ -23,7 +23,11 @@ androidx_activity_compose_version = "1.10.1"
 serialization_version = "1.8.0"
 play_in_app_update_version = "2.1.0"
 
+android_ss_version = "1.0.1"
+
 [libraries]
+
+android-splash-screen = { module = "androidx.core:core-splashscreen", version.ref = "android_ss_version" }
 
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin_version" }
 koin-core = { module = "io.insert-koin:koin-core"}
