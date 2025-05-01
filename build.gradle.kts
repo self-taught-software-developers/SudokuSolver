@@ -5,10 +5,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44.2'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
-        classpath 'com.google.firebase:perf-plugin:1.4.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath ("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
+        classpath ("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
+        classpath ("com.google.firebase:perf-plugin:1.4.2")
+        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("com.twitter.compose.rules:ktlint:0.0.26")
     }
 
