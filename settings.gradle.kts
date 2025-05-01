@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Android Sudoku Solver"
 include(":app")
+include(":shared")

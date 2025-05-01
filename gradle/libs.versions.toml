@@ -24,6 +24,11 @@ serialization_version = "1.8.0"
 play_in_app_update_version = "2.1.0"
 
 android_ss_version = "1.0.1"
+kotlinStdlibVersion = "2.1.20"
+kotlinTestVersion = "2.1.20"
+runnerVersion = "1.6.2"
+coreVersion = "1.6.1"
+junitVersion = "1.2.1"
 
 [libraries]
 
@@ -57,6 +62,11 @@ ui-canvas = { module = "io.github.cerve-development:ui-canvas", version.ref = "u
 
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version"}
 play-app-update = { module = "com.google.android.play:app-update-ktx", version.ref = "play_in_app_update_version" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlibVersion" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTestVersion" }
+runner = { group = "androidx.test", name = "runner", version.ref = "runnerVersion" }
+core = { group = "androidx.test", name = "core", version.ref = "coreVersion" }
+junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp_version" }
