@@ -1,0 +1,71 @@
+[versions]
+agp_version = "8.9.2"
+kotlin_version = "2.1.20"
+ksp_version = "2.1.20-1.0.32"
+
+koin_version = "4.1.0-Beta7"
+koin_annotation_version = "2.0.0"
+
+ui_components_version = "0.92.3"
+ui_navigation_version = "0.3.0"
+ui_helper_version = "0.5.9"
+ui_canvas_version = "0.1.7"
+
+data_result_version = "0.0.26"
+
+compose_version = "1.8.0"
+compose_plugin_version = "1.7.3"
+compose_material3_version = "1.3.2"
+compose_viewmodel_version = "2.8.4"
+compose_navigation_version = "2.9.0-alpha15"
+androidx_activity_compose_version = "1.10.1"
+
+serialization_version = "1.8.0"
+play_in_app_update_version = "2.1.0"
+
+[libraries]
+
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin_version" }
+koin-core = { module = "io.insert-koin:koin-core"}
+koin-compose = { module = "io.insert-koin:koin-compose" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
+
+koin-annotation-bom = { module = "io.insert-koin:koin-annotations-bom", version.ref = "koin_annotation_version" }
+koin-annotation = { module = "io.insert-koin:koin-annotations" }
+koin-annotation-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin_annotation_version" }
+
+android-compose-activity = { module = "androidx.activity:activity-compose", version.ref = "androidx_activity_compose_version" }
+android-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose_version" }
+android-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose_version" }
+android-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose_version" }
+android-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose_material3_version" }
+
+compose-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose_viewmodel_version" }
+compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "compose_navigation_version" }
+
+data-result = { module = "io.github.cerve-development:data-result", version.ref = "data_result_version" }
+
+ui-helper = { module = "io.github.cerve-development:ui-helper", version.ref = "ui_helper_version" }
+ui-components = { module = "io.github.cerve-development:ui-components", version.ref = "ui_components_version" }
+ui-navigation = { module = "io.github.cerve-development:ui-navigation", version.ref = "ui_navigation_version" }
+ui-canvas = { module = "io.github.cerve-development:ui-canvas", version.ref = "ui_canvas_version" }
+
+serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version"}
+play-app-update = { module = "com.google.android.play:app-update-ktx", version.ref = "play_in_app_update_version" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp_version" }
+android-library = { id = "com.android.library", version.ref = "agp_version" }
+android-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp_version" }
+
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
+
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_version" }
+
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin_version" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp_version" }
+
+compose = { id = "org.jetbrains.compose", version.ref = "compose_plugin_version" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin_version" }
+
