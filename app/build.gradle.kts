@@ -60,6 +60,7 @@ android {
 
 dependencies {
 
+    implementation(project(":shared"))
     implementation(libs.android.compose.ui)
     implementation(libs.android.compose.ui.tooling.preview)
     implementation(libs.android.compose.material3)

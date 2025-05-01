@@ -48,7 +48,6 @@ kotlin {
         commonMain {
             dependencies {
 //                implementation(projects.model)
-//                implementation(projects.cache)
 //                implementation(projects.resources)
 
                 with(compose) {

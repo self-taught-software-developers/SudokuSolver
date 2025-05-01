@@ -1,3 +1,4 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
         google()
@@ -13,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Android Sudoku Solver"
+rootProject.name = "SudokuSolver"
 include(":app")
 include(":shared")
