@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver"
-    compileSdk = 33
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver"
         minSdk = 28
-        targetSdk = 33
+        targetSdk = 35
         versionCode = 3
         versionName = "0.1.$versionCode"
     }
