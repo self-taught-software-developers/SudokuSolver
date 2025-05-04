@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "SudokuSolver"
 include(":app")
 include(":shared")
+include(":resources")

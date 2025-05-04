@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver"
-        minSdk = 28
+        minSdk = 29
         targetSdk = 35
         versionCode = 3
         versionName = "0.1.$versionCode"

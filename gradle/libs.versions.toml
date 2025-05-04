@@ -3,13 +3,13 @@ agp_version = "8.9.2"
 kotlin_version = "2.1.20"
 ksp_version = "2.1.20-1.0.32"
 
-koin_version = "4.0.4"
+koin_version = "4.1.0-Beta7"
 koin_annotation_version = "2.0.0"
 
 ui_components_version = "0.92.3"
 ui_navigation_version = "0.3.0"
 ui_helper_version = "0.5.9"
-ui_canvas_version = "0.1.7"
+ui_canvas_version = "0.1.8"
 
 data_result_version = "0.0.26"
 
@@ -29,6 +29,11 @@ kotlinTestVersion = "2.1.20"
 runnerVersion = "1.6.2"
 coreVersion = "1.6.1"
 junitVersion = "1.2.1"
+kotlinStdlib = "2.1.20"
+kotlinTest = "2.1.20"
+runner = "1.6.2"
+core = "1.6.1"
+junit = "1.2.1"
 
 [libraries]
 
@@ -62,6 +67,11 @@ ui-canvas = { module = "io.github.cerve-development:ui-canvas", version.ref = "u
 
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_version"}
 play-app-update = { module = "com.google.android.play:app-update-ktx", version.ref = "play_in_app_update_version" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
+runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+core = { group = "androidx.test", name = "core", version.ref = "core" }
+junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp_version" }

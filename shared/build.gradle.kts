@@ -14,7 +14,7 @@ plugins {
 kotlin {
 
     applyDefaultHierarchyTemplate()
-    jvmToolchain(JvmTarget.JVM_11.target.toInt())
+    jvmToolchain(21)
 
 // Target declarations - add or remove as needed below. These define
 // which platforms this KMP module supports.
@@ -22,7 +22,7 @@ kotlin {
     androidLibrary {
         namespace = "com.stsd.selftaughtsoftwaredevelopers.shared"
         compileSdk = 35
-        minSdk = 28
+        minSdk = 29
     }
 
 // For iOS targets, this is also where you should
@@ -47,8 +47,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-//                implementation(projects.model)
-//                implementation(projects.resources)
+                implementation(projects.resources)
 
                 with(compose) {
                     implementation(ui)
