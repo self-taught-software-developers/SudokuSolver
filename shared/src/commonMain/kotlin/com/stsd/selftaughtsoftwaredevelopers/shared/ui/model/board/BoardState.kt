@@ -2,24 +2,44 @@ package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
+import com.cerve.development.ui.canvas.model.CerveCanvasState
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.div
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
 import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.SolutionState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.TimeState
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState.Companion.EMPTY_TILE
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.koin.core.KoinApplication.Companion.init
 import kotlin.collections.get
 
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
+    val canvasState: CerveCanvasState
 ) {
-    val board: SnapshotStateList<TileState> = mutableStateListOf()
+    val board: SnapshotStateList<TileState> = List(81) {
+        TileState()
+    }.toMutableStateList()
+
+    fun upsert(tile: TileState) {
+        val index = board.indexOfFirst { element ->
+            element.position == tile.position
+        }
+
+        if (index != -1) {
+            board.removeAt(index)
+        }
+
+        board.add(tile) // Add if not found
+    }
+
     private val placementBackStack: SnapshotStateList<Position?> = mutableStateListOf()
 
     init {
@@ -168,4 +188,108 @@ data class BoardState(
 //            }
 //        }.await()
 //    }
+
+    fun solveSudokuListNullableInt(board: MutableList<TileState>): Boolean {
+        val n = 9
+        for (i in 0 until n * n) {
+            if (board[i].value == null) {
+                val row = i / n
+                val col = i % n
+                for (digit in 1..9) {
+                    if (isValidNullableInt(board, row, col, digit)) {
+                        board[i] = board[i].copy(digit)
+                        if (solveSudokuListNullableInt(board)) {
+                            return true
+                        } else {
+                            board[i] = board[i].copy(null) // Backtrack
+                        }
+                    }
+                }
+                return false // Trigger backtracking
+            }
+        }
+        return true // Board is full, solution found
+    }
+
+    fun isValidNullableInt(board: List<TileState?>, row: Int, col: Int, digit: Int): Boolean {
+        val n = 9
+
+        // Check row
+        for (c in 0 until n) {
+            if (board[row * n + c]?.value == digit) {
+                return false
+            }
+        }
+
+        // Check column
+        for (r in 0 until n) {
+            if (board[r * n + col]?.value == digit) {
+                return false
+            }
+        }
+
+        // Check 3x3 subgrid
+        val startRow = row - row % 3
+        val startCol = col - col % 3
+        for (r in 0 until 3) {
+            for (c in 0 until 3) {
+                if (board[(startRow + r) * n + (startCol + c)]?.value == digit) {
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
+    fun findAllSudokuSolutions(board: MutableList<Int?>): List<List<Int?>> {
+        val n = 9
+        val solutions = mutableListOf<List<Int?>>()
+
+        fun isValid(currentBoard: List<Int?>, row: Int, col: Int, digit: Int): Boolean {
+            // Check row
+            for (c in 0 until n) {
+                if (currentBoard[row * n + c] == digit) return false
+            }
+            // Check column
+            for (r in 0 until n) {
+                if (currentBoard[r * n + col] == digit) return false
+            }
+            // Check 3x3 subgrid
+            val startRow = row - row % 3
+            val startCol = col - col % 3
+            for (r in 0 until 3) {
+                for (c in 0 until 3) {
+                    if (currentBoard[(startRow + r) * n + (startCol + c)] == digit) return false
+                }
+            }
+            return true
+        }
+
+        fun solve(currentBoard: MutableList<Int?>): Boolean {
+            for (i in 0 until n * n) {
+                if (currentBoard[i] == null) {
+                    val row = i / n
+                    val col = i % n
+                    for (digit in 1..9) {
+                        if (isValid(currentBoard, row, col, digit)) {
+                            currentBoard[i] = digit
+                            if (solve(currentBoard)) {
+                                return true // Keep searching for more solutions
+                            } else {
+                                currentBoard[i] = null // Backtrack
+                            }
+                        }
+                    }
+                    return false // Trigger backtracking
+                }
+            }
+            // If no empty cells are found, we have a solution
+            solutions.add(currentBoard.toList()) // Add a copy of the solution
+            return true // Continue searching for other solutions
+        }
+
+        solve(board)
+        return solutions
+    }
 }

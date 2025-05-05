@@ -160,14 +160,14 @@ fun ColumnScope.placeTiles(
 ) = this.apply {
     board.chunked(9).forEach { row ->
 
-        Row {
-            row.forEach { tile ->
-                Tile(
-                    modifier = modifier.size(tileSize),
-                    value = tile.value(),
-                    color = tile.tileColor(selected = selectedTile, color = tileColor)
-                ) { onTileSelected(tile.position) }
-            }
-        }
+//        Row {
+//            row.forEach { tile ->
+//                Tile(
+//                    modifier = modifier.size(tileSize),
+//                    value = tile.value(),
+//                    color = tile.tileColor(selected = selectedTile, color = tileColor)
+//                ) { onTileSelected(tile.position) }
+//            }
+//        }
     }
 }

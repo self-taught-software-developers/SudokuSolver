@@ -1,75 +1,91 @@
 package com.stsd.selftaughtsoftwaredevelopers.shared.ui.component
 
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import com.cerve.development.ui.component.theme.ExtendedTheme
-import com.cerve.development.ui.component.theme.ExtendedTheme.colors
-import com.cerve.development.ui.component.theme.ExtendedTheme.dimensions
-import com.cerve.development.ui.component.theme.ExtendedTheme.shapes
-import com.cerve.development.ui.component.theme.ExtendedTheme.sizes
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.drawSudokuGrid
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.placeTiles
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
-import kotlin.math.sqrt
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontVariation.width
+import androidx.compose.ui.text.rememberTextMeasurer
+import com.cerve.development.ui.canvas.component.CerveCanvasWithDrawScope
+import com.cerve.development.ui.canvas.model.CerveCanvasColors
+import com.cerve.development.ui.canvas.model.CerveCell
+import com.cerve.development.ui.canvas.model.CerveOffset.Companion.offset
+import com.cerve.development.ui.canvas.model.CerveSize
+import com.cerve.development.ui.canvas.operators.CerveCanvasDefaults
+import com.cerve.development.ui.canvas.operators.CerveCanvasDefaults.canvasGridConfigurations
+import com.cerve.development.ui.canvas.operators.rememberCanvasGridProperties
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
 
 @Composable
-fun SudokuBoard(
-    board: List<TileState>,
-    color: @Composable () -> Color,
+fun BoxWithConstraintsScope.SudokuBoard(
+    state: BoardState,
     modifier: Modifier = Modifier,
-    selectedPosition: Position? = null,
-    onPositionUpdate: (Position) -> Unit = { }
+    colors: CerveCanvasColors = CerveCanvasDefaults.canvasColors
 ) {
-    val selected = remember(selectedPosition) {
-        derivedStateOf { board.firstOrNull { selectedPosition == it.position } }
+    val textMeasurer = rememberTextMeasurer()
+    val canvasGridProperties = rememberCanvasGridProperties(state.canvasState.gridLineCount)
+
+    val style = TextStyle(
+        color = Color.Black,
+//            platformStyle = PlatformTextStyle(includeFontPadding = false)
+    )
+
+    val cells = remember(state.canvasState.gridLineCount) {
+        mutableListOf<CerveCell>().apply {
+            for (row in 0 until state.canvasState.gridLineCount) {
+                for (col in 0 until state.canvasState.gridLineCount) {
+                    val shift = Offset(row.toFloat(), col.toFloat())
+                        .times(canvasGridProperties.spacing.toFloat())
+                    val cell = CerveCell(
+                        topLeft = shift.offset,
+                        cellSize = CerveSize(canvasGridProperties.spacing)
+                    )
+
+                    add(cell)
+                }
+            }
+        }
     }
 
-    val vector by remember(board.size) {
-        mutableStateOf(sqrt(board.size.toFloat()).toInt())
-    }
 
-    BoxWithConstraints(
+    CerveCanvasWithDrawScope(
         modifier = modifier
-            .fillMaxSize()
-            .padding(dimensions.medium),
-        contentAlignment = Alignment.Center
+            .matchParentSize()
+            .clip(RectangleShape),
+        canvasState = state.canvasState,
+        colors = colors,
+        canvasGridConfigurations = canvasGridConfigurations(colors).copy(step = 3),
+        canvasGridProperties = canvasGridProperties,
+        selectedGridCells = cells
     ) {
-        val dimensions = minOf(maxWidth, maxHeight)
-        val tileSize by remember(dimensions) {
-            mutableStateOf(dimensions / vector)
+
+        state.board.forEach { tile ->
+            val valueSize = textMeasurer.measure(tile.text, style).size
+
+            val topLeft = tile.centered(
+                spacing = canvasGridProperties.spacing,
+                valueOffset = Offset(
+                    x = valueSize.width.toFloat(),
+                    y = valueSize.height.toFloat()
+                )
+            )
+
+            topLeft?.let {
+                drawText(
+                    textMeasurer = textMeasurer,
+                    text = tile.text,
+                    style = style,
+                    topLeft = topLeft
+                )
+            }
         }
 
-        Column(
-            modifier = Modifier
-                .size(dimensions)
-                .drawSudokuGrid(
-                    color = color(),
-                    vector = vector
-                )
-                .defaultBorder(
-                    borderColor = color(),
-                    borderShape = shapes.medium,
-                    borderWidth = ExtendedTheme.dimensions.thin
-                )
-        ) {
-            placeTiles(
-                board = board,
-                tileColor = colors.secondary.copy(alpha = 0.2f),
-                tileSize = tileSize,
-                selectedTile = selected.value
-            ) { onPositionUpdate(it) }
-        }
     }
 }

@@ -8,8 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidDeviceTest.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidDeviceTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidHostTest.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidHostTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidMain.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleMain.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleTest.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleTest.iml" />

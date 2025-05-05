@@ -31,7 +31,7 @@ fun NavGraphBuilder.SudokuSolverHubNavigationGraph(
         uiState.StateWrapper { state ->
             SudokuSolverScreen(
                 state = state,
-                onSolveBoardClick = {  },
+                onSolveBoardClick = vm::solveBoard,
                 onUpdateValueClick = vm::changeValue,
                 onUndoLastClick = {  },
                 onUndoAllClick = {  },

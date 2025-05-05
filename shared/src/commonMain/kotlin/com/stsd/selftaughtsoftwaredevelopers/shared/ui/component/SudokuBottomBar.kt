@@ -40,7 +40,7 @@ fun SudokuBottomBar(
     onRedoLastClick: () -> Unit = { },
     onUndoAllClick: () -> Unit = { },
     onSolveClick: () -> Unit = { },
-    onEnterValue: (String) -> Unit = { }
+    onEnterValue: (Int) -> Unit = { }
 ) {
     Column(
         modifier = modifier
@@ -83,7 +83,7 @@ fun SudokuBottomBar(
         ) {
             TileValue.entries.forEach { tile ->
                 CerveButton(
-                    text = tile.value,
+                    text = tile.value.toString(),
                 ) { onEnterValue(tile.value) }
             }
         }
