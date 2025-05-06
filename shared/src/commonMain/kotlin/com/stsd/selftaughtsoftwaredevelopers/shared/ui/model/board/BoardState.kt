@@ -3,41 +3,50 @@ package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.geometry.Offset
 import com.cerve.development.ui.canvas.model.CerveCanvasState
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.div
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.findEmptyPosition
-import com.stsd.selftaughtsoftwaredevelopers.androidsudokusolver.ui.component.validatePlacement
+import com.cerve.development.ui.canvas.model.CerveCell
+import com.cerve.development.ui.canvas.model.CerveOffset.Companion.offset
+import com.cerve.development.ui.canvas.model.CerveSize
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.SolutionState
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.TimeState
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState.Companion.EMPTY_TILE
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import org.koin.core.KoinApplication.Companion.init
-import kotlin.collections.get
 
 data class BoardState(
     val dimensions: GridState = GridState.GRID_3X3,
     val canvasState: CerveCanvasState
 ) {
-    val board: SnapshotStateList<TileState> = List(81) {
-        TileState()
+    val board: SnapshotStateList<TileState> = List(81) { index ->
+        TileState(
+            point = index.getPosition
+        )
     }.toMutableStateList()
 
+    fun getCell(index: Int, size: Int) : CerveCell {
+        val row = (index / 9).times(size).toFloat()
+        val column = (index % 9).times(size).toFloat()
+
+        val shift = Offset(x = row, column)
+        return CerveCell(
+            topLeft = shift.offset,
+            cellSize = CerveSize(size)
+        )
+    }
+
+    val Int.getPosition : Position get() = run {
+        Position(
+            row = this@getPosition / dimensions.vector(),
+            column = this@getPosition % dimensions.vector()
+        )
+    }
     fun upsert(tile: TileState) {
-        val index = board.indexOfFirst { element ->
-            element.position == tile.position
-        }
-
-        if (index != -1) {
-            board.removeAt(index)
-        }
-
-        board.add(tile) // Add if not found
+//        val index = board.indexOfFirst { element ->
+//            element.position == tile.position
+//        }
+//
+//        if (index != -1) {
+//            board.removeAt(index)
+//        }
+//
+//        board.add(tile) // Add if not found
     }
 
     private val placementBackStack: SnapshotStateList<Position?> = mutableStateListOf()

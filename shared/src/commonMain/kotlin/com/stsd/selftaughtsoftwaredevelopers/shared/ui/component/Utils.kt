@@ -87,18 +87,18 @@ fun validatePlacement(
 ): Boolean {
     if (number == 0) return true
 
-    // validate row
-    if (board[position.x].count { it == number } >= 2) {
-        return false
-    }
-
-    // validate column
-    if (board.count { it[position.y] == number } >= 2) {
-        return false
-    }
-
-    val x = position.y / 3
-    val y = position.x / 3
+//    // validate row
+//    if (board[position.x].count { it == number } >= 2) {
+//        return false
+//    }
+//
+//    // validate column
+//    if (board.count { it[position.y] == number } >= 2) {
+//        return false
+//    }
+//
+//    val x = position.y / 3
+//    val y = position.x / 3
 
 //    for (row in IntStream.range(y * 3, (y * 3) + 3)) {
 //        for (column in IntStream.range(x * 3, (x * 3) + 3)) {
@@ -147,7 +147,7 @@ fun BoxWithConstraintsScope.calculateLocalPx(density: Density, extra: Dp? = null
 fun Triple<Float, Float, *>.toIntPair() = Pair(this.first.toInt(), this.second.toInt())
 
 fun Int.vector() = this.toDouble().pow(2).toInt()
-fun Position.div(divisor: Int) = Position(x = x / divisor, y = y / divisor)
+//fun Position.div(divisor: Int) = Position(x = x / divisor, y = y / divisor)
 
 @Composable
 fun ColumnScope.placeTiles(

@@ -32,12 +32,12 @@ class SudokuSolverViewModel : ViewModel() {
     fun changeValue(value: Int) {
         _uiState.getState?.let { state ->
             state.canvasState.selectedCells.lastOrNull()?.let { cell ->
-                state.upsert(
-                    TileState(
-                        value = value,
-                        position = cell.offset
-                    )
-                )
+//                state.upsert(
+//                    TileState(
+//                        value = value,
+//                        position = cell.offset
+//                    )
+//                )
             }
 
         }
@@ -47,6 +47,7 @@ class SudokuSolverViewModel : ViewModel() {
         _uiState.getState?.let { state ->
             state.solveSudokuListNullableInt(state.board)
             println(state.board.map { it.value })
+            println(state.board.map { it.point })
         }
     }
 }

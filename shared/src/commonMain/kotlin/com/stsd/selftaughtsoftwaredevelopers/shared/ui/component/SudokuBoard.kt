@@ -33,27 +33,8 @@ fun BoxWithConstraintsScope.SudokuBoard(
     val canvasGridProperties = rememberCanvasGridProperties(state.canvasState.gridLineCount)
 
     val style = TextStyle(
-        color = Color.Black,
-//            platformStyle = PlatformTextStyle(includeFontPadding = false)
+        color = Color.Black
     )
-
-    val cells = remember(state.canvasState.gridLineCount) {
-        mutableListOf<CerveCell>().apply {
-            for (row in 0 until state.canvasState.gridLineCount) {
-                for (col in 0 until state.canvasState.gridLineCount) {
-                    val shift = Offset(row.toFloat(), col.toFloat())
-                        .times(canvasGridProperties.spacing.toFloat())
-                    val cell = CerveCell(
-                        topLeft = shift.offset,
-                        cellSize = CerveSize(canvasGridProperties.spacing)
-                    )
-
-                    add(cell)
-                }
-            }
-        }
-    }
-
 
     CerveCanvasWithDrawScope(
         modifier = modifier
@@ -62,8 +43,7 @@ fun BoxWithConstraintsScope.SudokuBoard(
         canvasState = state.canvasState,
         colors = colors,
         canvasGridConfigurations = canvasGridConfigurations(colors).copy(step = 3),
-        canvasGridProperties = canvasGridProperties,
-        selectedGridCells = cells
+        canvasGridProperties = canvasGridProperties
     ) {
 
         state.board.forEach { tile ->
@@ -77,14 +57,13 @@ fun BoxWithConstraintsScope.SudokuBoard(
                 )
             )
 
-            topLeft?.let {
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = tile.text,
-                    style = style,
-                    topLeft = topLeft
-                )
-            }
+            drawText(
+                textMeasurer = textMeasurer,
+                text = tile.text,
+                style = style,
+                topLeft = topLeft
+            )
+
         }
 
     }
