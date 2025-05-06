@@ -18,7 +18,7 @@ data class BoardState(
         TileState(
             point = index.getPosition
         )
-    }.toMutableStateList()
+    }.also { println(it) }.toMutableStateList()
 
     fun getCell(index: Int, size: Int) : CerveCell {
         val row = (index / 9).times(size).toFloat()
@@ -38,15 +38,15 @@ data class BoardState(
         )
     }
     fun upsert(tile: TileState) {
-//        val index = board.indexOfFirst { element ->
-//            element.position == tile.position
-//        }
-//
-//        if (index != -1) {
-//            board.removeAt(index)
-//        }
-//
-//        board.add(tile) // Add if not found
+        val index = board.indexOfFirst { element ->
+            element.point == tile.point
+        }
+
+        if (index != -1) {
+            board.removeAt(index)
+        }
+
+        board.add(tile) // Add if not found
     }
 
     private val placementBackStack: SnapshotStateList<Position?> = mutableStateListOf()

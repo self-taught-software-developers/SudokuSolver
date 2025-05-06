@@ -29,6 +29,7 @@ import com.stsd.selftaughtsoftwaredevelopers.resources.Res
 import com.stsd.selftaughtsoftwaredevelopers.resources.app_name
 import com.stsd.selftaughtsoftwaredevelopers.resources.solve
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.icon.rounded
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileValue
 import org.jetbrains.compose.resources.stringResource
 

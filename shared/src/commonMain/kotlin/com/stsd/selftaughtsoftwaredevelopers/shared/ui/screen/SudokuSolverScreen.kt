@@ -27,6 +27,7 @@ import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.SudokuBoard
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.SudokuBottomBar
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.SudokuTopBar
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
 
 @Composable
 fun SudokuSolverScreen(
@@ -39,6 +40,7 @@ fun SudokuSolverScreen(
     onUndoAllClick: () -> Unit = { },
     onNavigateToSettings: () -> Unit = { }
 ) {
+
 
     CerveScaffold(
         modifier = modifier,

@@ -10,10 +10,12 @@ import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.InitM
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.asStateFlow
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.getState
 import com.cerve.development.ui.state.observer.UIInitStateInstanceUpdate.update
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import kotlin.math.roundToInt
 
 @KoinViewModel
 class SudokuSolverViewModel : ViewModel() {
@@ -32,22 +34,28 @@ class SudokuSolverViewModel : ViewModel() {
     fun changeValue(value: Int) {
         _uiState.getState?.let { state ->
             state.canvasState.selectedCells.lastOrNull()?.let { cell ->
-//                state.upsert(
-//                    TileState(
-//                        value = value,
-//                        position = cell.offset
-//                    )
-//                )
-            }
 
+                val point = Position(
+                    row = (cell.offset.y.div(cell.size.width).roundToInt()),
+                    column = cell.offset.x.div(cell.size.height).roundToInt()
+                )
+
+                state.upsert(
+                    tile = TileState(
+                        value = value,
+                        point = point
+                    )
+                )
+            }
         }
     }
 
     fun solveBoard() = viewModelScope.launch {
         _uiState.getState?.let { state ->
-            state.solveSudokuListNullableInt(state.board)
             println(state.board.map { it.value })
             println(state.board.map { it.point })
+            state.solveSudokuListNullableInt(state.board)
+            println(state.board.map { it.value })
         }
     }
 }
