@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import com.cerve.development.ui.component.theme.ExtendedTheme
 import com.cerve.development.ui.component.theme.ExtendedTheme.colors
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState.Companion.toTileText
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -61,14 +60,14 @@ fun Tile(
                 )
             }
         ) { targetCount ->
-            Text(
-                modifier = Modifier.wrapContentHeight(),
-                text = toTileText(targetCount),
-                textAlign = TextAlign.Center,
-                style = ExtendedTheme
-                    .typography
-                    .titleMedium
-            )
+//            Text(
+//                modifier = Modifier.wrapContentHeight(),
+//                text = toTileText(targetCount),
+//                textAlign = TextAlign.Center,
+//                style = ExtendedTheme
+//                    .typography
+//                    .titleMedium
+//            )
         }
     }
 }

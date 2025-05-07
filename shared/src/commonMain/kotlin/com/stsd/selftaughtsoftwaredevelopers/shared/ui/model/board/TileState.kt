@@ -4,12 +4,11 @@ import androidx.compose.ui.geometry.Offset
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
 
 data class TileState(
-    val value: Int? = null,
-    val point: Position,
-    val isValid: Boolean = true
+    val value: Int = 0,
+    val point: Position
 ) {
 
-    val text: String = (value ?: "").toString()
+    val text: String get() = if (value == 0) EMPTY_TILE else value.toString()
 
     fun centered(
         spacing: Int,
@@ -27,12 +26,5 @@ data class TileState(
 
     companion object {
         const val EMPTY_TILE = ""
-        val toTileText = { value: Int ->
-            if (value == 0) {
-                EMPTY_TILE
-            } else {
-                value.toString()
-            }
-        }
     }
 }

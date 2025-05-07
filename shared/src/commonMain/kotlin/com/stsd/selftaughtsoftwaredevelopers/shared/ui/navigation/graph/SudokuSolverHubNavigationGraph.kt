@@ -33,8 +33,9 @@ fun NavGraphBuilder.SudokuSolverHubNavigationGraph(
                 state = state,
                 onSolveBoardClick = vm::solveBoard,
                 onUpdateValueClick = vm::changeValue,
-                onUndoLastClick = {  },
-                onUndoAllClick = {  },
+                onUndoLastClick = vm::undoLast,
+                onRedoLastClick = vm::redoLast,
+                onUndoAllClick = vm::cleaAll,
                 onNavigateToSettings = {
                     navController.navigate(route = AppDestinations.SettingsDestination.Hub)
                 }

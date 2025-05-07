@@ -3,16 +3,16 @@ package com.stsd.selftaughtsoftwaredevelopers.shared.ui.state
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cerve.development.ui.canvas.model.CerveCanvasInteractionType
-import com.cerve.development.ui.canvas.model.CerveCanvasLineData
 import com.cerve.development.ui.canvas.model.CerveCanvasState
 import com.cerve.development.ui.canvas.operators.CerveCanvasDefaults
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.InitMutableUIStateFlow
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.asStateFlow
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.getState
-import com.cerve.development.ui.state.observer.UIInitStateInstanceUpdate.update
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import kotlin.math.roundToInt
@@ -37,7 +37,8 @@ class SudokuSolverViewModel : ViewModel() {
 
                 val point = Position(
                     row = (cell.offset.y.div(cell.size.width).roundToInt()),
-                    column = cell.offset.x.div(cell.size.height).roundToInt()
+                    column = cell.offset.x.div(cell.size.height).roundToInt(),
+                    multiplier = state.dimensions.multiplier
                 )
 
                 state.upsert(
@@ -50,12 +51,22 @@ class SudokuSolverViewModel : ViewModel() {
         }
     }
 
-    fun solveBoard() = viewModelScope.launch {
+    fun undoLast() = viewModelScope.launch(Dispatchers.IO) {
+        _uiState.getState?.undoLast()
+    }
+
+    fun redoLast() = viewModelScope.launch(Dispatchers.IO)  {
+        _uiState.getState?.redoLast()
+    }
+
+    fun cleaAll() = viewModelScope.launch(Dispatchers.IO)  {
+        _uiState.getState?.undoAll()
+    }
+
+    fun solveBoard() = viewModelScope.launch(Dispatchers.IO) {
         _uiState.getState?.let { state ->
             println(state.board.map { it.value })
-            println(state.board.map { it.point })
-            state.solveSudokuListNullableInt(state.board)
-            println(state.board.map { it.value })
+            state.findSolutionInstantly(state.board)
         }
     }
 }
