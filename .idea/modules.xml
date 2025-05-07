@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SudokuSolver.app.unitTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidMain.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.androidMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleMain.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleTest.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.appleTest.iml" />
@@ -23,7 +22,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.iosX64Test.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.iosX64Test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.nativeMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/resources/SudokuSolver.resources.nativeTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.iml" filepath="$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.androidMain.iml" filepath="$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.androidMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.appleMain.iml" filepath="$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.appleMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.appleTest.iml" filepath="$PROJECT_DIR$/.idea/modules/shared/SudokuSolver.shared.appleTest.iml" />

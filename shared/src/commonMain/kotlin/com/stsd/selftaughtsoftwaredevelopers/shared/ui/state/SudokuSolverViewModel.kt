@@ -10,6 +10,7 @@ import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.asSta
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.getState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.PlacementOrigin
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -31,7 +32,7 @@ class SudokuSolverViewModel : ViewModel() {
     }
     val uiState = _uiState.asStateFlow()
 
-    fun changeValue(value: Int) {
+    fun changeValue(value: Int) = viewModelScope.launch(Dispatchers.IO) {
         _uiState.getState?.let { state ->
             state.canvasState.selectedCells.lastOrNull()?.let { cell ->
 
@@ -44,29 +45,26 @@ class SudokuSolverViewModel : ViewModel() {
                 state.upsert(
                     tile = TileState(
                         value = value,
-                        point = point
+                        point = point,
+                        origin = PlacementOrigin.user
                     )
                 )
             }
         }
     }
 
-    fun undoLast() = viewModelScope.launch(Dispatchers.IO) {
-        _uiState.getState?.undoLast()
+    fun delete() = viewModelScope.launch(Dispatchers.IO)  {
+        _uiState.getState?.delete()
     }
 
-    fun redoLast() = viewModelScope.launch(Dispatchers.IO)  {
-        _uiState.getState?.redoLast()
+    fun reset() = viewModelScope.launch(Dispatchers.IO)  {
+        _uiState.getState?.reset()
     }
 
-    fun cleaAll() = viewModelScope.launch(Dispatchers.IO)  {
-        _uiState.getState?.undoAll()
-    }
 
     fun solveBoard() = viewModelScope.launch(Dispatchers.IO) {
         _uiState.getState?.let { state ->
-            println(state.board.map { it.value })
-            state.findSolutionInstantly(state.board)
+            state.findSolution(state.board)
         }
     }
 }

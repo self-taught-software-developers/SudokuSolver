@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.cerve.development.ui.navigation.TypeSafeAppDestination
 import com.stsd.selftaughtsoftwaredevelopers.shared.di.createKoinConfiguration
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.navigation.destination.AppDestinations
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.theme.SudokuSolverTheme
 import org.koin.compose.KoinMultiplatformApplication
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -16,15 +17,17 @@ fun AppNavigationGraph(
     startDestination: TypeSafeAppDestination = AppDestinations.SolverDestination
 ) {
 
-    KoinMultiplatformApplication(config = createKoinConfiguration()) {
-        val navController : NavHostController = rememberNavController()
+    SudokuSolverTheme {
+        KoinMultiplatformApplication(config = createKoinConfiguration()) {
+            val navController: NavHostController = rememberNavController()
 
-        NavHost(
-            navController = navController,
-            startDestination = startDestination
-        ) {
-            SudokuSolverHubNavigationGraph(navController)
-            SudokuSettingsHubNavigationGraph(navController)
+            NavHost(
+                navController = navController,
+                startDestination = startDestination
+            ) {
+                SudokuSolverHubNavigationGraph(navController)
+                SudokuSettingsHubNavigationGraph(navController)
+            }
         }
     }
 }
