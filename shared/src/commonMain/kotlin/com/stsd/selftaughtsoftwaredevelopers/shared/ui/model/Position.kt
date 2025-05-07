@@ -1,7 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model
 
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.unit.sp
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.GridDimensions
 
 data class Position(
     val row: Int,
@@ -16,13 +16,4 @@ data class Position(
 
     val toOffset get() = Offset(x = column.toFloat(), y = row.toFloat())
 
-    companion object {
-        fun Int.findPosition(multiplier: Int, vector : Int) : Position {
-            return Position(
-                row = this / vector,
-                column = this % vector,
-                multiplier = multiplier
-            )
-        }
-    }
 }

@@ -5,7 +5,7 @@ import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
 
 data class TileState(
     val value: Int = 0,
-    val point: Position,
+    val position: Position,
     val origin: PlacementOrigin
 ) {
 
@@ -21,12 +21,12 @@ data class TileState(
             y = (spacing / 2).toFloat()
         )
 
-        return point.toOffset.times(spacing.toFloat())
+        return position.toOffset.times(spacing.toFloat())
             .plus(spacingCenterOffset).minus(valueCenter)
     }
 
     fun topLeft(spacing: Int) : Offset {
-        return point.toOffset.times(spacing.toFloat())
+        return position.toOffset.times(spacing.toFloat())
     }
 
     companion object {

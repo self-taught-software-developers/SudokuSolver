@@ -41,12 +41,14 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
-<!-- ## About The Project
+<!-- ## About The Project -->
+
 <!-- 
 Here's why:
 * 
 * 
-*  -->
+*  
+-->
 
 ### Built With
 
@@ -63,8 +65,8 @@ Here's why:
 * [MVVM - MAD Architecture](https://developer.android.com/topic/architecture/intro)
 
 <!-- GETTING STARTED -->
-<!-- ## Getting Started
- -->
+<!-- ## Getting Started -->
+
 ### Prerequisites
 
 * [Chipmunk - Production](https://developer.android.com/studio)
@@ -84,8 +86,7 @@ Here's why:
    ```
    
 <!-- USAGE EXAMPLES -->
-<!-- ## Usage
- -->
+<!-- ## Usage -->
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -121,8 +122,7 @@ Project Lead:
 Project Organization: 
 * [Self-Taught Software Developers](https://www.linkedin.com/company/self-taught-software-developers/)
 
-<!-- ## Acknowledgments
- -->
+<!-- ## Acknowledgments -->
 <!-- 
 * [Choose an Open Source License](https://choosealicense.com)
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
@@ -131,4 +131,5 @@ Project Organization:
 * [Img Shields](https://shields.io)
 * [GitHub Pages](https://pages.github.com)
 * [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search) -->
+* [React Icons](https://react-icons.github.io/react-icons/search)
+-->

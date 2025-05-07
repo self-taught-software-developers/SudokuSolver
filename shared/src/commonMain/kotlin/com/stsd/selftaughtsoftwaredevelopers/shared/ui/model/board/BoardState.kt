@@ -1,31 +1,21 @@
 package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board
 
-import androidx.compose.runtime.toMutableStateList
 import com.cerve.development.ui.canvas.model.CerveCanvasState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.findEmptyPosition
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.isValidPlacement
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position.Companion.findPosition
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.TimeState
 import kotlinx.coroutines.delay
 
 data class BoardState(
-    val dimensions: GridState = GridState.GRID_3X3,
+    val dimensions: GridDimensions = GridDimensions.GRID_3X3,
     val canvasState: CerveCanvasState
 ) {
-    val board = List(dimensions.cellCount) { index ->
-        TileState(
-            point = index.findPosition(
-                dimensions.multiplier,
-                dimensions.vector
-            ),
-            origin = PlacementOrigin.solver
-        )
-    }.toMutableStateList()
+
+    val board = dimensions.generateSudokuBoard()
 
     fun upsert(at: Int? = null, tile: TileState) {
-
         val index = at ?: board.indexOfFirst { element ->
-            element.point == tile.point
+            element.position == tile.position
         }
 
         if (index != -1) {
@@ -33,22 +23,22 @@ data class BoardState(
         }
     }
 
-    suspend fun delete() {
+    fun delete() {
         board.forEachIndexed { index, tileState ->
-            delay(TimeState.INSTANT_SPEED.time)
             upsert(at = index, tileState.copy(value = 0))
         }
     }
 
-    suspend fun reset() {
+    fun reset() {
         board.forEachIndexed { index, tileState ->
-            delay(TimeState.INSTANT_SPEED.time)
-            if (tileState.origin == PlacementOrigin.solver) {
-                upsert(at = index, tileState.copy(value = 0)) }
+            if (tileState.origin == PlacementOrigin.Solver) {
+                upsert(at = index, tileState.copy(value = 0))
+            }
         }
     }
 
-    fun findSolution(board: MutableList<TileState>): List<TileState> {
+    suspend fun findSolution(board: MutableList<TileState>): List<TileState> {
+        delay(TimeState.INSTANT_SPEED.time)
         findEmptyPosition(board).also { position ->
             if (position == null) {
                 return board
@@ -56,12 +46,12 @@ data class BoardState(
                 (1..9).forEach { value ->
                     val candidate = TileState(
                         value = value,
-                        point = position,
-                        origin = PlacementOrigin.solver
+                        position = position,
+                        origin = PlacementOrigin.Solver
                     )
                     if (isValidPlacement(candidate, board)) {
 
-                        val index = board.indexOfFirst { it.point == position }
+                        val index = board.indexOfFirst { it.position == position }
                         upsert(index, candidate)
 
                         if (findEmptyPosition(findSolution(board)) == null) {

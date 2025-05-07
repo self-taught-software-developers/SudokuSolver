@@ -36,7 +36,7 @@ class SudokuSolverViewModel : ViewModel() {
         _uiState.getState?.let { state ->
             state.canvasState.selectedCells.lastOrNull()?.let { cell ->
 
-                val point = Position(
+                val position = Position(
                     row = (cell.offset.y.div(cell.size.width).roundToInt()),
                     column = cell.offset.x.div(cell.size.height).roundToInt(),
                     multiplier = state.dimensions.multiplier
@@ -45,8 +45,8 @@ class SudokuSolverViewModel : ViewModel() {
                 state.upsert(
                     tile = TileState(
                         value = value,
-                        point = point,
-                        origin = PlacementOrigin.user
+                        position = position,
+                        origin = PlacementOrigin.User
                     )
                 )
             }
@@ -60,7 +60,6 @@ class SudokuSolverViewModel : ViewModel() {
     fun reset() = viewModelScope.launch(Dispatchers.IO)  {
         _uiState.getState?.reset()
     }
-
 
     fun solveBoard() = viewModelScope.launch(Dispatchers.IO) {
         _uiState.getState?.let { state ->

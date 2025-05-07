@@ -18,7 +18,6 @@ import com.stsd.selftaughtsoftwaredevelopers.resources.app_name
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.TimeState
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SudokuTopBar(
     modifier: Modifier = Modifier,

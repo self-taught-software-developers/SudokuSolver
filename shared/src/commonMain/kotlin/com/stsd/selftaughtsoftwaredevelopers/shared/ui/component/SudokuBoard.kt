@@ -2,23 +2,17 @@ package com.stsd.selftaughtsoftwaredevelopers.shared.ui.component
 
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.text.rememberTextMeasurer
 import com.cerve.development.ui.canvas.component.CerveCanvasWithDrawScope
 import com.cerve.development.ui.canvas.model.CerveCanvasColors
-import com.cerve.development.ui.canvas.model.CerveCell
-import com.cerve.development.ui.canvas.model.CerveOffset.Companion.offset
-import com.cerve.development.ui.canvas.model.CerveSize
 import com.cerve.development.ui.canvas.operators.CerveCanvasDefaults
 import com.cerve.development.ui.canvas.operators.CerveCanvasDefaults.canvasGridConfigurations
 import com.cerve.development.ui.canvas.operators.rememberCanvasGridProperties
@@ -61,7 +55,7 @@ fun BoxWithConstraintsScope.SudokuBoard(
                 )
             )
 
-            if (tile.origin == PlacementOrigin.user) {
+            if (tile.origin == PlacementOrigin.User) {
                 drawRect(
                     topLeft = tile.topLeft(canvasGridProperties.spacing),
                     color = colors.eraserColor.copy(alpha = 0.2f),
@@ -77,10 +71,10 @@ fun BoxWithConstraintsScope.SudokuBoard(
                 )
 
                 when {
-                    position == tile.point -> false
-                    position.row == tile.point.row -> true
-                    position.column == tile.point.column -> true
-                    position.subgrid == tile.point.subgrid -> true
+                    position == tile.position -> false
+                    position.row == tile.position.row -> true
+                    position.column == tile.position.column -> true
+                    position.subgrid == tile.position.subgrid -> true
                     else -> false
                 }
             } ?: false
