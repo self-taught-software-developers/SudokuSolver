@@ -13,10 +13,6 @@ fun createKoinConfiguration() : KoinConfiguration {
 
 val sharedModule get() = module {
     includes(
-//        daoModule,
-//        databaseModule,
-        StateModule().module,
-//        DomainModule().module,
-//        RepositoryModule().module
+        StateModule().module
     )
 }

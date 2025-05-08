@@ -1,11 +1,11 @@
 package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board
 
 import androidx.compose.ui.geometry.Offset
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
+import com.cerve.development.ui.canvas.model.CervePosition
 
 data class TileState(
     val value: Int = 0,
-    val position: Position,
+    val position: CervePosition,
     val origin: PlacementOrigin
 ) {
 
@@ -21,12 +21,12 @@ data class TileState(
             y = (spacing / 2).toFloat()
         )
 
-        return position.toOffset.times(spacing.toFloat())
+        return position.offset.offset.times(spacing.toFloat())
             .plus(spacingCenterOffset).minus(valueCenter)
     }
 
     fun topLeft(spacing: Int) : Offset {
-        return position.toOffset.times(spacing.toFloat())
+        return position.offset.offset.times(spacing.toFloat())
     }
 
     companion object {

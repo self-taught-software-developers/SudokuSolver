@@ -4,11 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cerve.development.ui.canvas.model.CerveCanvasInteractionType
 import com.cerve.development.ui.canvas.model.CerveCanvasState
-import com.cerve.development.ui.canvas.operators.CerveCanvasDefaults
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.InitMutableUIStateFlow
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.asStateFlow
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.getState
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.PlacementOrigin
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
@@ -16,15 +14,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import kotlin.math.roundToInt
 
 @KoinViewModel
 class SudokuSolverViewModel : ViewModel() {
 
     private val _uiState = InitMutableUIStateFlow {
         val canvasState = CerveCanvasState(
-            initialLines = CerveCanvasDefaults
-                .canvasLines.copy(gridLineCount = 9),
+            gridLineCount = 9,
             initialInteractionType = CerveCanvasInteractionType.CellSingleSelector
         )
 
@@ -34,13 +30,9 @@ class SudokuSolverViewModel : ViewModel() {
 
     fun changeValue(value: Int) = viewModelScope.launch(Dispatchers.IO) {
         _uiState.getState?.let { state ->
-            state.canvasState.selectedCells.lastOrNull()?.let { cell ->
+            state.canvasState.selectedCell?.let { cell ->
 
-                val position = Position(
-                    row = (cell.offset.y.div(cell.size.width).roundToInt()),
-                    column = cell.offset.x.div(cell.size.height).roundToInt(),
-                    multiplier = state.dimensions.multiplier
-                )
+                val position = cell.position(state.dimensions.multiplier)
 
                 state.upsert(
                     tile = TileState(

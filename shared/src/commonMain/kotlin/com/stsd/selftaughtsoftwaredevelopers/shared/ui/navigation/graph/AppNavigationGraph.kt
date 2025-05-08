@@ -25,8 +25,8 @@ fun AppNavigationGraph(
                 navController = navController,
                 startDestination = startDestination
             ) {
-                SudokuSolverHubNavigationGraph(navController)
-                SudokuSettingsHubNavigationGraph(navController)
+                sudokuSolverHubNavigationGraph(navController)
+                sudokuSettingsHubNavigationGraph(navController)
             }
         }
     }

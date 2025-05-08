@@ -20,6 +20,11 @@ fun SudokuSolverScreen(
 
     CerveScaffold(
         modifier = modifier,
+        topBar = {
+            SudokuTopBar {
+
+            }
+        },
         bottomBar = {
             SudokuBottomBar(
                 onResetClick = onResetClick,

@@ -2,7 +2,7 @@ package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.Position
+import com.cerve.development.ui.canvas.model.CervePosition
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -15,11 +15,11 @@ enum class GridDimensions(val multiplier: Int) {
 
     private fun findPositionFromIndex(
         index: Int
-    ) : Position {
-        return Position(
+    ) : CervePosition {
+        return CervePosition(
             row = index / vector,
             column = index % vector,
-            multiplier = multiplier
+            subgridSize = multiplier
         )
     }
 
