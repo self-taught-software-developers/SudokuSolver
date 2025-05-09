@@ -7,9 +7,11 @@ import com.cerve.development.ui.canvas.model.CerveCanvasState
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.InitMutableUIStateFlow
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.asStateFlow
 import com.cerve.development.ui.state.helper.UIInitStateInstance.Companion.getState
+import com.cerve.development.ui.state.observer.UIInitStateInstanceUpdate.stateOrNullScope
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.PlacementOrigin
 import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
+import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.isValidPlacement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -33,14 +35,22 @@ class SudokuSolverViewModel : ViewModel() {
             state.canvasState.selectedCell?.let { cell ->
 
                 val position = cell.position(state.dimensions.multiplier)
-
-                state.upsert(
-                    tile = TileState(
-                        value = value,
-                        position = position,
-                        origin = PlacementOrigin.User
-                    )
+                val candidate = TileState(
+                    value = value,
+                    position = position,
+                    origin = PlacementOrigin.User
                 )
+
+                val isValidPlacement = isValidPlacement(
+                    candidate = candidate,
+                    board = state.board
+                )
+
+                val tileState = if (isValidPlacement) {
+                    candidate
+                } else candidate.copy(origin = PlacementOrigin.UserError)
+
+                state.upsert(tile = tileState)
             }
         }
     }
@@ -53,9 +63,8 @@ class SudokuSolverViewModel : ViewModel() {
         _uiState.getState?.reset()
     }
 
-    fun solveBoard() = viewModelScope.launch(Dispatchers.IO) {
-        _uiState.getState?.let { state ->
-            state.findSolution(state.board)
-        }
+    fun solveBoard() = _uiState.stateOrNullScope {
+        findSolution(board)
+        this
     }
 }

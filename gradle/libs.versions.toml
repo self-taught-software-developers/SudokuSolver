@@ -8,7 +8,7 @@ koin_annotation_version = "2.0.0"
 
 ui_components_version = "0.92.3"
 ui_navigation_version = "0.3.0"
-ui_helper_version = "0.5.9"
+ui_helper_version = "0.6.0"
 ui_canvas_version = "0.1.9"
 
 data_result_version = "0.0.26"

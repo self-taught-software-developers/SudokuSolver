@@ -1,7 +1,6 @@
-package com.stsd.selftaughtsoftwaredevelopers.shared.ui.component
+package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board
 
 import com.cerve.development.ui.canvas.model.CervePosition
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.TileState
 
 fun findEmptyPosition(board: List<TileState>): CervePosition? {
     return board.find { tile -> tile.value == 0 }?.position

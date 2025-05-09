@@ -25,9 +25,10 @@ fun NavGraphBuilder.sudokuSolverHubNavigationGraph(
         val vm = koinViewModel<SudokuSolverViewModel>()
         val uiState by vm.uiState.collectAsState()
 
-        uiState.StateWrapper { state ->
+        uiState.StateWrapper { state, isLoading ->
             SudokuSolverScreen(
                 state = state,
+                isLoading = isLoading,
                 onSolveBoardClick = vm::solveBoard,
                 onUpdateValueClick = vm::changeValue,
                 onDeleteClick = vm::delete,

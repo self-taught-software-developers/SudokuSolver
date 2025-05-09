@@ -53,6 +53,7 @@ fun SudokuBottomBar(
         ) {
             TileValue.entries.forEach { tile ->
                 CerveButton(
+                    enabled = enabled,
                     text = tile.value.toString(),
                 ) { onEnterValue(tile.value) }
             }
@@ -66,11 +67,13 @@ fun SudokuBottomBar(
             )
         ) {
             CerveIconButton(
+                enabled = enabled,
                 containerColor = colors.secondaryContainer,
                 imageVector = Icons.Default.RestartAlt
             ) { onResetClick() }
 
             CerveIconButton(
+                enabled = enabled,
                 containerColor = colors.secondaryContainer,
                 imageVector = Icons.Default.Delete
             ) { onDeleteClick() }

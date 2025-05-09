@@ -11,6 +11,7 @@ import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board.BoardState
 @Composable
 fun SudokuSolverScreen(
     state: BoardState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     onSolveBoardClick: () -> Unit = { },
     onUpdateValueClick: (Int) -> Unit = { },
@@ -27,6 +28,7 @@ fun SudokuSolverScreen(
         },
         bottomBar = {
             SudokuBottomBar(
+                enabled = !isLoading,
                 onResetClick = onResetClick,
                 onDeleteClick = onDeleteClick,
                 onSolveClick = onSolveBoardClick,

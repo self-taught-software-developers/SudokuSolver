@@ -1,10 +1,7 @@
 package com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.board
 
+import com.cerve.development.data.result.CerveResult
 import com.cerve.development.ui.canvas.model.CerveCanvasState
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.findEmptyPosition
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.component.isValidPlacement
-import com.stsd.selftaughtsoftwaredevelopers.shared.ui.model.TimeState
-import kotlinx.coroutines.delay
 
 data class BoardState(
     val dimensions: GridDimensions = GridDimensions.GRID_3X3,
@@ -37,11 +34,12 @@ data class BoardState(
         }
     }
 
-    suspend fun findSolution(board: MutableList<TileState>): List<TileState> {
-        delay(TimeState.INSTANT_SPEED.time)
-        findEmptyPosition(board).also { position ->
+    fun findSolution(board: MutableList<TileState>): CerveResult<List<TileState>?> {
+        return if (board.none { tile -> tile.origin == PlacementOrigin.UserError }) {
+            val position = findEmptyPosition(board)
+
             if (position == null) {
-                return board
+                return CerveResult.Success(board)
             } else {
                 (1..9).forEach { value ->
                     val candidate = TileState(
@@ -54,16 +52,26 @@ data class BoardState(
                         val index = board.indexOfFirst { it.position == position }
                         upsert(index, candidate)
 
-                        if (findEmptyPosition(findSolution(board)) == null) {
-                            return board
-                        }
+                        findSolution(board).data?.let { board ->
+                            if (findEmptyPosition(board) == null) {
+                                return CerveResult.Success(board)
+                            }
+                        } ?: CerveResult.Error(
+                            value = board,
+                            errorMessage = ""
+                        )
 
                         upsert(index, candidate.copy(value = 0))
 
                     }
                 }
-                return board
+                return CerveResult.Success(board)
             }
+        } else {
+            CerveResult.Error(
+                value = board,
+                errorMessage = ""
+            )
         }
     }
 
